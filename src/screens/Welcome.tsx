@@ -1,14 +1,25 @@
 import React from "react";
 import {View, Text, StyleSheet} from "react-native";
 import Button from "@ant-design/react-native/lib/button";
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
+
+import { RootStackParamList } from "../navigation/MainNavigation"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "LoginScreen">>
+
 export const Welcome = () => {
+
+    const navigation = useNavigation<NavigateType>();
+
     return (
         <View style={styles.welcomeBlock}>
             <Text style={styles.titleWelcome}>Feel the
                 rhytm</Text>
             <Text style={styles.descrWelcome}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</Text>
 
-            <Button style={styles.welcomeBtn}>
+            <Button style={styles.welcomeBtn} onPress={() => navigation.navigate('LoginScreen')}>
                 <Text style={styles.btnText}>
                 Get started!
                 </Text>
