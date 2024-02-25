@@ -18,7 +18,6 @@ export const Header = ({ isCustomHeader, title }: { isCustomHeader: boolean; tit
 const styles = StyleSheet.create({
     headerCustom: {
         marginTop: 20,
-        paddingHorizontal: 16,
         flexDirection: "column",
         gap: 45,
     },
