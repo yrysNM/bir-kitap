@@ -1,12 +1,10 @@
-import { View, Text } from "react-native";
-import { Page } from "../layouts/Page";
+import { Page } from "../layouts/Page"
+import { Header } from "../components/Header"
 
 export const Login = () => {
-  return (
-    <Page>
-      <View>
-        <Text>Login</Text>
-      </View>
-    </Page>
-  );
-};
+    return (
+        <Page>
+            <Header isCustomHeader={false} title={"Welcome back"} />
+        </Page>
+    )
+}
