@@ -38,14 +38,12 @@ export const CreateAccount = () => {
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
                 <InputStyle inputTitle={"Date of Birth"}>
-                    <View style={{ height: 40, flex: 1, width: "100%"}}>
-                        <Provider>
-                            <List>
-                                <DatePicker mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format={"DD-MM-YYYY"}>
-                                    <List.Item arrow="horizontal">Select Date</List.Item>
-                                </DatePicker>
-                            </List>
-                        </Provider>
+                    <View style={{ height: 40, flex: 1, width: "100%" }}>
+                        <List>
+                            <DatePicker mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format={"DD-MM-YYYY"}>
+                                <List.Item arrow="horizontal">Select Date</List.Item>
+                            </DatePicker>
+                        </List>
                     </View>
                 </InputStyle>
             </View>
