@@ -37,9 +37,11 @@ export const CreateAccount = () => {
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
                 <InputStyle inputTitle={"Date of Birth"}>
-                    <View style={{ height: 40, flex: 1, width: "100%" }}>
-                        <DatePicker mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format={"DD-MM-YYYY"}>
-                            <List.Item arrow="horizontal">Select Date</List.Item>
+                    <View style={styles.datePickerInput}>
+                        <DatePicker mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format="YYYY-MM-DD">
+                            <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
+                                Select Date
+                            </List.Item>
                         </DatePicker>
                     </View>
                 </InputStyle>
@@ -49,6 +51,16 @@ export const CreateAccount = () => {
 }
 
 const styles = StyleSheet.create({
+    datePickerInput: {
+        height: 60,
+        width: "100%",
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderColor: "#000",
+        borderRadius: 20,
+        justifyContent: "center",
+        overflow: "hidden",
+    },
     input: {
         width: "100%",
         borderStyle: "solid",
@@ -59,6 +71,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         borderRadius: 20,
         marginLeft: -15,
+        marginRight: -15,
     },
     inputExtensionText: {
         marginLeft: 5,
