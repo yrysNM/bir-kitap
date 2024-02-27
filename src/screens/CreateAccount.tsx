@@ -3,6 +3,7 @@ import { Page } from "../layouts/Page"
 import { View, StyleSheet, Text } from "react-native"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
+import Button from "@ant-design/react-native/lib/button"
 import { useState } from "react"
 import { InputStyle } from "../components/InputStyle"
 import List from "@ant-design/react-native/lib/list"
@@ -45,12 +46,38 @@ export const CreateAccount = () => {
                         </DatePicker>
                     </View>
                 </InputStyle>
+
+                <View style={styles.footerInfo}>
+                    <Button style={styles.footerBtn}>
+                        <Text style={styles.footerBtnText}>Sign up</Text>
+                    </Button>
+
+                    <View>
+                        <View></View>
+                        <Text>or</Text>
+                        <View></View>
+                    </View>
+                </View>
             </View>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    footerInfo: {
+        marginTop: 50,
+    },
+    footerBtn: {
+        borderRadius: 20,
+        width: "100%",
+        height: 54,
+        backgroundColor: "#0c1e34",
+    },
+    footerBtnText: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#f9faf8",
+    },
     datePickerInput: {
         height: 60,
         width: "100%",
