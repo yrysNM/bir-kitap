@@ -5,7 +5,6 @@ import InputItem from "@ant-design/react-native/lib/input-item"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
 import { useState } from "react"
 import { InputStyle } from "../components/InputStyle"
-import Provider from "@ant-design/react-native/lib/provider"
 import List from "@ant-design/react-native/lib/list"
 
 export const CreateAccount = () => {
@@ -39,11 +38,9 @@ export const CreateAccount = () => {
                 </InputStyle>
                 <InputStyle inputTitle={"Date of Birth"}>
                     <View style={{ height: 40, flex: 1, width: "100%" }}>
-                        <List>
-                            <DatePicker mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format={"DD-MM-YYYY"}>
-                                <List.Item arrow="horizontal">Select Date</List.Item>
-                            </DatePicker>
-                        </List>
+                        <DatePicker mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format={"DD-MM-YYYY"}>
+                            <List.Item arrow="horizontal">Select Date</List.Item>
+                        </DatePicker>
                     </View>
                 </InputStyle>
             </View>
