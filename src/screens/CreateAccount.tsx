@@ -7,10 +7,20 @@ import Button from "@ant-design/react-native/lib/button"
 import { useState } from "react"
 import { InputStyle } from "../components/InputStyle"
 import List from "@ant-design/react-native/lib/list"
+import useApi from "../hook/useApi"
+
+interface iRegister {
+    email: string
+    fullName: string
+    phone: string
+    password: string
+    gender: string
+    birth: Date
+}
 
 export const CreateAccount = () => {
     const [dateBirth, setDateBirth] = useState<Date | undefined>(undefined)
-    const [info, setInfo] = useState<{ email: string; fullName: string; phone: string; password: string; gender: string; birth: Date }>({
+    const [info, setInfo] = useState<iRegister>({
         birth: new Date(),
         email: "",
         fullName: "",
@@ -18,6 +28,12 @@ export const CreateAccount = () => {
         password: "",
         phone: "",
     })
+    const { fetchData, data, isLoading, error } = useApi<iRegister>("/auth/register", "get", info)
+
+    const onSubmit = () => {
+        fetchData()
+        console.log(data, isLoading, error)
+    }
 
     return (
         <Page>
@@ -48,15 +64,17 @@ export const CreateAccount = () => {
                 </InputStyle>
 
                 <View style={styles.footerInfo}>
-                    <Button style={styles.footerBtn}>
+                    <Button style={styles.footerBtn} onPress={() => onSubmit()}>
                         <Text style={styles.footerBtnText}>Sign up</Text>
                     </Button>
 
-                    <View>
-                        <View></View>
+                    <View style={styles.orText}>
+                        <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
                         <Text>or</Text>
-                        <View></View>
+                        <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
                     </View>
+
+                    <Text style={styles.logText}>Already have an account? Log in</Text>
                 </View>
             </View>
         </Page>
@@ -66,6 +84,19 @@ export const CreateAccount = () => {
 const styles = StyleSheet.create({
     footerInfo: {
         marginTop: 50,
+    },
+    orText: {
+        marginTop: 14,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        gap: 11,
+    },
+    logText: {
+        textAlign: "center",
+        marginTop: 30,
+        fontSize: 14,
+        fontWeight: "700",
     },
     footerBtn: {
         borderRadius: 20,
