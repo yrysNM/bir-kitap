@@ -28,7 +28,7 @@ export const CreateAccount = () => {
         password: "",
         phone: "",
     })
-    const { fetchData, data, isLoading, error } = useApi<iRegister>("/auth/register", "get", info)
+    const { fetchData, data, isLoading, error } = useApi<iRegister>("/todos/1", "GET", info)
 
     const onSubmit = () => {
         fetchData()
