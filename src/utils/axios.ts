@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios"
+import axios, { AxiosResponse, AxiosInstance } from "axios"
 // import SyncStorage from "sync-storage"
 interface ApiResponse<T> {
     data: T
@@ -7,7 +7,7 @@ interface ApiResponse<T> {
 const accessToken = ""
 
 const instance: AxiosInstance = axios.create({
-    baseURL: "https://jsonplaceholder.typicode.com",
+    baseURL: "http://192.168.1.112:8080",
     timeout: 15000,
     headers: {
         "Content-Type": "application/json",
@@ -16,8 +16,7 @@ const instance: AxiosInstance = axios.create({
 })
 
 instance.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
-        console.log(config)
+    (config) => {
         return config
     },
     (error: unknown) => {

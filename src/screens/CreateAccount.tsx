@@ -14,8 +14,8 @@ interface iRegister {
     fullName: string
     phone: string
     password: string
-    gender: string
     birth: Date
+    gender: string
 }
 
 export const CreateAccount = () => {
@@ -24,15 +24,24 @@ export const CreateAccount = () => {
         birth: new Date(),
         email: "",
         fullName: "",
-        gender: "",
         password: "",
         phone: "",
+        gender: "male",
     })
-    const { fetchData, data, isLoading, error } = useApi<iRegister>("/todos/1", "GET", info)
+    const { fetchData, data, isLoading, error } = useApi<iRegister>("/auth/register", "POST")
 
-    const onSubmit = () => {
-        fetchData()
-        console.log(data, isLoading, error)
+    const onSubmit = async () => {
+        if (isNotEmpty()) {
+            await fetchData({
+                ...info,
+                birth: new Date(info.birth).getTime(),
+            })
+            console.log(data, isLoading, error)
+        }
+    }
+
+    const isNotEmpty = () => {
+        return Object.values(info).every((item) => item)
     }
 
     return (
