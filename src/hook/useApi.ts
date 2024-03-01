@@ -16,13 +16,11 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
 
     const fetchData = async (body?: unknown) => {
         setIsLoading(true)
-        console.log(body, url, method)
         await http(url, {
             data: body,
             method,
         })
             .then((res) => {
-                console.log(res)
                 setData(res.data)
                 setError(null)
             })
