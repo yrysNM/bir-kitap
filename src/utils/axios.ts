@@ -1,13 +1,15 @@
 import axios, { AxiosResponse, AxiosInstance } from "axios"
-// import SyncStorage from "sync-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
 interface ApiResponse<T> {
     data: T
 }
 
-const accessToken = ""
+let accessToken = "";
+AsyncStorage.getItem('token').then(res => accessToken = JSON.parse(res || ""));
 
 const instance: AxiosInstance = axios.create({
-    baseURL: "http://192.168.1.112:8080",
+    baseURL: "http://192.168.1.9:8080",
     timeout: 15000,
     headers: {
         "Content-Type": "application/json",

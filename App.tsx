@@ -1,9 +1,11 @@
 import { MainNavigation } from "./src/navigation/MainNavigation"
 import { useEffect, useState } from "react"
 import { loadAsync } from "expo-font"
-import { Text } from "react-native"
 import enUS from "@ant-design/react-native/lib/locale-provider/en_US"
 import Provider from "@ant-design/react-native/lib/provider"
+import { Provider as ProviderRedux } from "react-redux"
+import store from "./src/redux/store"
+import { Image } from "react-native"
 
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
@@ -13,7 +15,7 @@ export default function App() {
     }, [])
 
     if (fontLoaded) {
-        return <Text>Loading</Text>
+        return  <Image source={{uri: "./assets/splash.png"}} style={{height: "100%", width: "100%"}} resizeMode="contain"/>
     }
 
     async function _loadAssets() {
@@ -24,8 +26,10 @@ export default function App() {
         setFontLoaded(false)
     }
     return (
-        <Provider locale={enUS}>
-            <MainNavigation />
-        </Provider>
+        <ProviderRedux store={store}>
+            <Provider locale={enUS}>
+                <MainNavigation />
+            </Provider>
+        </ProviderRedux>
     )
 }

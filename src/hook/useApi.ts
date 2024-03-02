@@ -3,14 +3,14 @@ import http from "../utils/axios"
 import { useState } from "react"
 
 interface UseApiResult<T> {
-    data: T | null
+    res: T | null
     error: AxiosError<unknown> | null
     isLoading: boolean
-    fetchData: (body: unknown) => void
+    fetchData: (body: unknown) => Promise<void>
 }
 
 const useApi = <T>(url: string, method: string): UseApiResult<T> => {
-    const [data, setData] = useState<T | null>(null)
+    const [res, setRes] = useState<T | null>(null)
     const [error, setError] = useState<AxiosError<unknown> | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -21,18 +21,18 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
             method,
         })
             .then((res) => {
-                setData(res.data)
+                setRes(res.data)
                 setError(null)
             })
             .catch((err) => {
                 setError(err)
-                setData(null)
+                setRes(null)
             })
             .finally(() => {
                 setIsLoading(false)
             })
     }
-    return { data, error, isLoading, fetchData }
+    return { res, error, isLoading, fetchData }
 }
 
 export default useApi
