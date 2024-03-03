@@ -14,7 +14,7 @@ import { Fuse } from "../layouts/Fuse"
 import { useAppDispatch } from "../hook/useStore"
 import { setUserInfo } from "../redux/features/userInfoSlice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import AuthAPI from "../api/authApi"
+import { RegistrationAPI } from "../api/authApi"
 import { IUserInfo } from "../api/authApi"
 import { useNavigation } from "@react-navigation/native"
 
@@ -36,7 +36,7 @@ export const CreateAccount = () => {
         phone: "",
         gender: "",
     })
-    const { res, isLoading, error, fetchData } = AuthAPI("/auth/register", "POST")
+    const { res, isLoading, error, fetchData } = RegistrationAPI()
 
     useEffect(() => {
         if (!isLoading && res?.result_code === 0) {
@@ -84,7 +84,7 @@ export const CreateAccount = () => {
                 <Header isCustomHeader={true} title={"Create an account"} />
                 <View style={{ marginTop: 20, gap: 11 }}>
                     <InputStyle inputTitle={"E-mail"}>
-                        <InputItem type="text" style={styles.input} value={info.email} onChange={(value) => setInfo((info) => ({ ...info, email: value }))} placeholder={"example@gmail.com"} />
+                        <InputItem type="email-address" style={styles.input} value={info.email} onChange={(value) => setInfo((info) => ({ ...info, email: value }))} placeholder={"example@gmail.com"} />
                     </InputStyle>
                     <InputStyle inputTitle={"Nickname"}>
                         <InputItem type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />

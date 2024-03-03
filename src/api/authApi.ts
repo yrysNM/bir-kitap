@@ -1,12 +1,12 @@
 import useApi from "../hook/useApi"
 
-export interface IAuth extends IResponse {
+export interface IRegistration extends IResponse {
     data: {
         id: string
         refreshToken: string
         token: string
         tokenExpireToken: number
-        userInfo: IUserInfo,
+        userInfo: IUserInfo
     }
 }
 
@@ -19,12 +19,27 @@ export interface IUserInfo {
     gender: string
 }
 
-export default  function AuthAPI(url: string, method: string) {
-    const {res, isLoading, error, fetchData} = useApi<IAuth>(url, method);
-    
-    
+export interface ILogin {
+    username: string
+    password: string
+}
+
+export function RegistrationAPI() {
+    const { res, isLoading, error, fetchData } = useApi<IRegistration>("/auth/register", "POST")
+
     return {
-        res, 
+        res,
+        isLoading,
+        error,
+        fetchData,
+    }
+}
+
+export function LoginAPI() {
+    const { res, isLoading, error, fetchData } = useApi<ILogin>("/auth/login", "POST")
+
+    return {
+        res,
         isLoading,
         error,
         fetchData,
