@@ -136,12 +136,12 @@ export const CreateAccount = () => {
                             <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
                         </View>
 
-                        <Text style={styles.logText}>
-                            Already have an account?
-                            <TouchableOpacity onPress={() => navigator.navigate("LoginScreen" as never)}>
-                                <Text>Log in</Text>
+                        <View style={{ alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 3 }}>
+                            <Text style={styles.logText}>Already have an account?</Text>
+                            <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigator.navigate("LoginScreen" as never)}>
+                                <Text style={styles.logText}>Log in</Text>
                             </TouchableOpacity>
-                        </Text>
+                        </View>
                     </View>
                 </View>
             </Fuse>
@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
     },
     logText: {
         textAlign: "center",
-        marginTop: 30,
+        marginTop: 5,
+        marginBottom: 20,
         fontSize: 14,
         fontWeight: "700",
     },

@@ -7,6 +7,7 @@ import { CreateAccount } from "../screens/CreateAccount"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useEffect, useState } from "react"
 import { Home } from "../screens/Home"
+import { useAppSelector } from "../hook/useStore"
 
 export type RootStackParamList = {
     Root: undefined
@@ -19,11 +20,15 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export const MainNavigation = () => {
+    const {userInfo} = useAppSelector(state => state.userInfoSlice);
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     useEffect(() => {
+        /**
+         * @TODO fix error  The action 'NAVIGATE' with payload {"name":"HomeScreen"} was not handled by any navigator.
+         */
         checkAuthStatus()
-    }, [])
+    }, [userInfo]);
 
     async function checkAuthStatus() {
         try {
@@ -46,7 +51,7 @@ export const MainNavigation = () => {
     return (
         <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
             <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
-                {isLoggedIn ? (
+                {!isLoggedIn ? (
                     <>
                         <Stack.Screen name="WelcomeScreen" component={Welcome} />
                         <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />

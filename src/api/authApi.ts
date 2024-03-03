@@ -36,7 +36,7 @@ export function RegistrationAPI() {
 }
 
 export function LoginAPI() {
-    const { res, isLoading, error, fetchData } = useApi<ILogin>("/auth/login", "POST")
+    const { res, isLoading, error, fetchData } = useApi<IRegistration>("/auth/login", "POST")
 
     return {
         res,
