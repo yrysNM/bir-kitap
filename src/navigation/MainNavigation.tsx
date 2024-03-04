@@ -4,7 +4,7 @@ import { Welcome } from "../screens/Welcome"
 import { Login } from "../screens/Login"
 import { CreateAccount } from "../screens/CreateAccount"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
 import { useAppSelector } from "../hook/useStore"
@@ -24,6 +24,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 export const MainNavigation = () => {
     const navigation = useNavigation()
     const { userInfo } = useAppSelector((state) => state.userInfoSlice)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     useEffect(() => {
         checkAuthStatus()
@@ -37,6 +38,7 @@ export const MainNavigation = () => {
                 const currentTime = Date.now() / 1000
 
                 if (currentTime < currentTime + tokenTime) {
+                    setIsLoggedIn(true)
                     navigation.navigate("HomeScreen" as never)
                 } else {
                     navigation.navigate("LoginScreen" as never)
@@ -50,12 +52,16 @@ export const MainNavigation = () => {
 
     return (
         <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
-            <Stack.Screen name="WelcomeScreen" component={Welcome} />
-            <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
-            <Stack.Screen name="LoginScreen" component={Login} />
-            <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
-
-            <Stack.Screen name="HomeScreen" component={Home} />
+            {isLoggedIn ? (
+                <Stack.Screen name="HomeScreen" component={Home} />
+            ) : (
+                <>
+                    <Stack.Screen name="WelcomeScreen" component={Welcome} />
+                    <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
+                    <Stack.Screen name="LoginScreen" component={Login} />
+                    <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
+                </>
+            )}
         </Stack.Navigator>
     )
 }

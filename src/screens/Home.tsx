@@ -19,6 +19,7 @@ export const Home = () => {
 
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
+        console.log(token)
         webViewEl.current?.injectJavaScript(`window.postMessage(${token}, '*')`)
     }
 
