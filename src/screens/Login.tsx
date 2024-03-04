@@ -41,7 +41,6 @@ export const Login = () => {
             )
 
             dispatch(setUserInfo(res.data.userInfo))
-            navigation.navigate("HomeScreen" as never)
         }
     }
 

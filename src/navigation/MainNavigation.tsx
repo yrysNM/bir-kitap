@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { StyleSheet } from "react-native"
 import { Welcome } from "../screens/Welcome"
 import { Login } from "../screens/Login"
 import { CreateAccount } from "../screens/CreateAccount"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
 import { useAppSelector } from "../hook/useStore"
 
@@ -20,15 +20,13 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export const MainNavigation = () => {
-    const {userInfo} = useAppSelector(state => state.userInfoSlice);
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const navigation = useNavigation()
+    const { userInfo } = useAppSelector((state) => state.userInfoSlice)
 
     useEffect(() => {
-        /**
-         * @TODO fix error  The action 'NAVIGATE' with payload {"name":"HomeScreen"} was not handled by any navigator.
-         */
+
         checkAuthStatus()
-    }, [userInfo]);
+    }, [userInfo])
 
     async function checkAuthStatus() {
         try {
@@ -38,8 +36,9 @@ export const MainNavigation = () => {
                 const currentTime = Date.now() / 1000
 
                 if (currentTime < currentTime + tokenTime) {
-                    setIsLoggedIn(true)
+                    navigation.navigate("HomeScreen" as never)
                 } else {
+                    navigation.navigate("LoginScreen" as never)
                     AsyncStorage.removeItem("token")
                 }
             }
@@ -49,19 +48,13 @@ export const MainNavigation = () => {
     }
 
     return (
-        <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
-            <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
-                {!isLoggedIn ? (
-                    <>
-                        <Stack.Screen name="WelcomeScreen" component={Welcome} />
-                        <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
-                        <Stack.Screen name="LoginScreen" component={Login} />
-                    </>
-                ) : (
-                    <Stack.Screen name="HomeScreen" component={Home} />
-                )}
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
+            <Stack.Screen name="WelcomeScreen" component={Welcome} />
+            <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
+            <Stack.Screen name="LoginScreen" component={Login} />
+
+            <Stack.Screen name="HomeScreen" component={Home} />
+        </Stack.Navigator>
     )
 }
 const styles = StyleSheet.create({

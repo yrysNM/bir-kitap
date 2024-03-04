@@ -6,6 +6,7 @@ import Provider from "@ant-design/react-native/lib/provider"
 import { Provider as ProviderRedux } from "react-redux"
 import store from "./src/redux/store"
 import { Image } from "react-native"
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
 
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
@@ -15,7 +16,7 @@ export default function App() {
     }, [])
 
     if (fontLoaded) {
-        return  <Image source={{uri: "./assets/splash.png"}} style={{height: "100%", width: "100%"}} resizeMode="contain"/>
+        return <Image source={{ uri: "./assets/splash.png" }} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
     }
 
     async function _loadAssets() {
@@ -28,7 +29,9 @@ export default function App() {
     return (
         <ProviderRedux store={store}>
             <Provider locale={enUS}>
-                <MainNavigation />
+                <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
+                    <MainNavigation />
+                </NavigationContainer>
             </Provider>
         </ProviderRedux>
     )
