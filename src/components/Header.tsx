@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     },
     headerCommon: {
         marginTop: 20,
-        paddingHorizontal: 16,
         flexDirection: "row",
         gap: 30,
         alignItems: "center",

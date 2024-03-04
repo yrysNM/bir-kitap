@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
 import { useAppSelector } from "../hook/useStore"
+import { ForgotPassword } from "../screens/ForgotPassword"
 
 export type RootStackParamList = {
     Root: undefined
@@ -15,6 +16,7 @@ export type RootStackParamList = {
     LoginScreen: undefined
     CreateAccountScreen: undefined
     HomeScreen: undefined
+    ForgotPasswordScreen: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -24,7 +26,6 @@ export const MainNavigation = () => {
     const { userInfo } = useAppSelector((state) => state.userInfoSlice)
 
     useEffect(() => {
-
         checkAuthStatus()
     }, [userInfo])
 
@@ -52,6 +53,7 @@ export const MainNavigation = () => {
             <Stack.Screen name="WelcomeScreen" component={Welcome} />
             <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
             <Stack.Screen name="LoginScreen" component={Login} />
+            <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
 
             <Stack.Screen name="HomeScreen" component={Home} />
         </Stack.Navigator>

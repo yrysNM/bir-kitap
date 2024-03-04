@@ -25,6 +25,7 @@ export const CreateAccount = () => {
         { label: "Female", value: "female", icon: "woman" },
         { label: "Male", value: "male", icon: "man" },
     ])
+    const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
     const [isSelectGender, setIsSelectGender] = useState<boolean>(false)
     const [isSucessModal, setIsSucessModal] = useState<boolean>(false)
     const [dateBirth, setDateBirth] = useState<Date | undefined>(undefined)
@@ -93,8 +94,8 @@ export const CreateAccount = () => {
                         <InputItem type="phone" style={styles.input} placeholder="+7" value={info.phone} onChange={(value) => setInfo((info) => ({ ...info, phone: value }))} />
                     </InputStyle>
                     <InputStyle inputTitle={"Password"}>
-                        <InputItem type="password" style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
-
+                        <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                        {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                         <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                     </InputStyle>
                     <InputStyle inputTitle={"Date of Birth"}>
@@ -153,6 +154,12 @@ export const CreateAccount = () => {
 }
 
 const styles = StyleSheet.create({
+    iconEye: {
+        position: "absolute",
+        right: 18,
+        top: 43,
+        color: "#000",
+    },
     footerInfo: {
         marginTop: 50,
     },

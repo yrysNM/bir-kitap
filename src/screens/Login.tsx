@@ -1,7 +1,7 @@
 import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
 import { useEffect, useState } from "react"
-import { View, StyleSheet, Text } from "react-native"
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import { ILogin, LoginAPI } from "../api/authApi"
@@ -11,6 +11,7 @@ import { useAppDispatch } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { setUserInfo } from "../redux/features/userInfoSlice"
 import { Fuse } from "../layouts/Fuse"
+import Icon from "@ant-design/react-native/lib/icon"
 
 export const Login = () => {
     const navigation = useNavigation()
@@ -19,6 +20,7 @@ export const Login = () => {
         username: "",
         password: "",
     })
+    const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
     const { res, isLoading, error, fetchData } = LoginAPI()
 
     useEffect(() => {
@@ -55,8 +57,8 @@ export const Login = () => {
                     </InputStyle>
 
                     <InputStyle inputTitle={"Password"}>
-                        <InputItem type="password" style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
-
+                        <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                        {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                         <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                     </InputStyle>
                 </View>
@@ -65,7 +67,9 @@ export const Login = () => {
                         <Text style={styles.btnText}>Login in</Text>
                     </Button>
 
-                    <Text style={styles.forGotPasWordText}>Forgot password?</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen" as never)}>
+                        <Text style={styles.forGotPasWordText}>Forgot password?</Text>
+                    </TouchableOpacity>
 
                     <View>
                         <View style={styles.orText}>
@@ -85,6 +89,12 @@ export const Login = () => {
 }
 
 const styles = StyleSheet.create({
+    iconEye: {
+        position: "absolute",
+        right: 18,
+        top: 43,
+        color: "#000",
+    },
     input: {
         width: "100%",
         borderStyle: "solid",
