@@ -1,11 +1,20 @@
-import { ReactNode } from "react"
+import { ReactNode, useMemo, useState } from "react"
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native"
+import Modal from "@ant-design/react-native/lib/modal"
 
 export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error: string | undefined; children: ReactNode }) => {
+    const [isErrorModalActive, setIsErrorModalActive] = useState<boolean>(false)
+
+    useMemo(() => {
+        if (error && error.length > 0) {
+            setIsErrorModalActive(true)
+        }
+    }, [error])
+
     if (isLoading) {
         return (
             <View style={styles.loading}>
-                 <ActivityIndicator size="large" color="#015C84" />
+                <ActivityIndicator size="large" color="#015C84" />
                 <Text>Loading</Text>
             </View>
         )
@@ -13,20 +22,21 @@ export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error
 
     if (error && error.length > 0) {
         return (
-            <View>
-                <Text>{error}</Text>
-            </View>
+            <Modal animationType="slide" transparent maskClosable visible={isErrorModalActive} onClose={() => setIsErrorModalActive(false)}>
+                <View>
+                    <Text>{error}</Text>
+                </View>
+            </Modal>
         )
     }
 
-    return children;
+    return children
 }
 
-
 const styles = StyleSheet.create({
-    loading:{
+    loading: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
+        justifyContent: "center",
+        alignItems: "center",
+    },
 })
