@@ -9,7 +9,7 @@ let accessToken = ""
 AsyncStorage.getItem("token").then((res) => (accessToken = JSON.parse(res || "")))
 
 const instance: AxiosInstance = axios.create({
-    baseURL: "http://192.168.1.112:8080",
+    baseURL: "http://192.168.1.9:8080",
     timeout: 15000,
     headers: {
         "Content-Type": "application/json",

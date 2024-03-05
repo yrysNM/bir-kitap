@@ -1,12 +1,11 @@
 import { ReactNode } from "react"
-import Icon from "@ant-design/react-native/lib/icon"
-import { View, Text } from "react-native"
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native"
 
 export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error: string | undefined; children: ReactNode }) => {
     if (isLoading) {
         return (
-            <View>
-                <Icon name="loading" size="md" />
+            <View style={styles.loading}>
+                 <ActivityIndicator size="large" color="#015C84" />
                 <Text>Loading</Text>
             </View>
         )
@@ -22,3 +21,12 @@ export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error
 
     return children;
 }
+
+
+const styles = StyleSheet.create({
+    loading:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+})
