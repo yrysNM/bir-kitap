@@ -4,17 +4,18 @@ import React, { useEffect, useRef, useState } from "react"
 import { Page } from "../layouts/Page"
 import { WebView } from "react-native-webview"
 import { useAppSelector } from "../hook/useStore"
+import { useNavigation } from "@react-navigation/native"
 
 export const Home = () => {
     const webViewEl = useRef<WebView>(null)
     const { userInfo } = useAppSelector((state) => state.userInfoSlice)
     const [showWebView, setShowWebView] = useState(false)
+    const navigation = useNavigation();
 
     useEffect(() => {
-        AsyncStorage.clear()    
+        // AsyncStorage.clear()    
         console.log("___________USERINFO__________")
         console.log(userInfo)
-        // injectWebViewData()
         // getToken()
     }, [])
 
@@ -49,6 +50,10 @@ export const Home = () => {
             <View style={{ position: "relative", height: "100%", width: "100%" }}>
                 <TouchableOpacity onPress={() => setShowWebView(true)}>
                     <Text>BOOK CROSSING</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate('GenreScreen' as never)}>
+                    <Text>Genre</Text>
                 </TouchableOpacity>
             </View>
         </Page>

@@ -4,21 +4,41 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 interface ApiResponse<T> {
     data: T
 }
+const getToken = async () => {
+    try {
+        const token = await AsyncStorage.getItem("token")
 
-let accessToken = ""
-AsyncStorage.getItem("token").then((res) => (accessToken = res ? JSON.parse(res) : 'empty-token'))
-console.log(accessToken);
+        /**
+         * @TODO change exception token 
+         */
+        if(!token) {
+            console.error("Token not found!!!")
+            return "";
+        }
+
+        return JSON.parse(token)
+    } catch (error) {
+        console.error("Error retrieving token from AsyncStorage:", error)
+        return null
+    }
+}
+
 const instance: AxiosInstance = axios.create({
     baseURL: "https://api.birkitap.kz/",
     timeout: 15000,
     headers: {
         "Content-Type": "application/json",
-        Authorization: accessToken.length ? `Bearer ${accessToken}` : null,
     },
 })
 
 instance.interceptors.request.use(
-    (config) => {
+    async (config) => {
+        const {token} = await getToken()
+
+        if(token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+
         return config
     },
     (error: unknown) => {

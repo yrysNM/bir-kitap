@@ -52,7 +52,6 @@ export const CreateAccount = () => {
             )
 
             dispatch(setUserInfo(res.data.userInfo))
-            navigator.navigate("GenreScreen" as never)
         }
 
         const timerSucessModal = setTimeout(() => {

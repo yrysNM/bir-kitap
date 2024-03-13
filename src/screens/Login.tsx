@@ -28,7 +28,9 @@ export const Login = () => {
     }, [isLoading])
 
     const onLogin = async () => {
-        await fetchData(info);
+        await fetchData(info).then(() => {
+            console.log(res);
+        });
     }
 
     const initialData = async () => {
@@ -43,7 +45,6 @@ export const Login = () => {
             )
 
             dispatch(setUserInfo(res.data.userInfo))
-            navigation.navigate('GenreScreen' as never)
         }
     }
 

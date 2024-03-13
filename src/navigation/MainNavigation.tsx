@@ -35,18 +35,24 @@ export const MainNavigation = () => {
     async function checkAuthStatus() {
         try {
             const authToken = await AsyncStorage.getItem("token")
+            console.log(authToken);
             if (authToken !== null) {
                 const tokenTime = JSON.parse(authToken || "").tokenExpireToken
                 const currentTime = Date.now() / 1000
-                console.log((currentTime + tokenTime) | 0, currentTime)
                 if (currentTime < currentTime + tokenTime) {
                     setIsLoggedIn(true)
                     /**
-                     * @TODO add fuse for navigation 
-                     * if create account => genre list page
-                     * else if login  => main page 
+                     * @TODO replace navigations
+                     * LoginScreen => Home page
+                     * else => GenreScreen page
                      */
-                    navigation.navigate("HomeScreen" as never)
+                    const routes = navigation.getState()?.routes;
+                    const prevRoute = routes[routes.length - 1];
+                    if(prevRoute.name === 'LoginScreen') {
+                        navigation.navigate("GenreScreen" as never);
+                    }else {
+                        navigation.navigate("HomeScreen" as never)
+                    }
                 } else {
                     navigation.navigate("LoginScreen" as never)
                     AsyncStorage.removeItem("token")
