@@ -33,6 +33,7 @@ export const MainNavigation = () => {
     async function checkAuthStatus() {
         try {
             const authToken = await AsyncStorage.getItem("token")
+            console.log(authToken)
             if (authToken !== null) {
                 const tokenTime = JSON.parse(authToken || "").tokenExpireToken
                 const currentTime = Date.now() / 1000

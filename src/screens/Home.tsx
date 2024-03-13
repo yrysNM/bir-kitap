@@ -30,7 +30,7 @@ export const Home = () => {
                     ref={webViewEl}
                     style={{ height: "100%", width: "100%" }}
                     onLoadEnd={injectWebViewData}
-                    source={{ uri: "http://192.168.1.108:5173/" }}
+                    source={{ uri: "http://192.168.1.118:5173/" }}
                     javaScriptEnabled
                     onMessage={(event) => {
                         console.log(event)
