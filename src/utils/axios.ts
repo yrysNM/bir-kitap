@@ -6,10 +6,10 @@ interface ApiResponse<T> {
 }
 
 let accessToken = ""
-AsyncStorage.getItem("token").then((res) => (accessToken = JSON.parse(res || "")))
-
+AsyncStorage.getItem("token").then((res) => (accessToken = res ? JSON.parse(res) : 'empty-token'))
+console.log(accessToken);
 const instance: AxiosInstance = axios.create({
-    baseURL: "http://api.birkitap.kz/",
+    baseURL: "https://api.birkitap.kz/",
     timeout: 15000,
     headers: {
         "Content-Type": "application/json",

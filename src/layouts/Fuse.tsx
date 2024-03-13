@@ -23,8 +23,8 @@ export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error
     if (error && error.length > 0) {
         return (
             <Modal animationType="slide" transparent maskClosable visible={isErrorModalActive} onClose={() => setIsErrorModalActive(false)}>
-                <View>
-                    <Text>{error}</Text>
+                <View style={styles.error}>
+                    <Text style={styles.errorText}>{error}</Text>
                 </View>
             </Modal>
         )
@@ -39,4 +39,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    error: {
+        paddingHorizontal: 10, 
+        paddingVertical: 20, 
+        borderRadius: 10,
+    }, 
+    errorText: {
+        fontSize: 20,
+        fontWeight: '500',
+    }
 })

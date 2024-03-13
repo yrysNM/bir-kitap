@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
 import { useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
+import { CategoryList } from "../screens/CategoryList"
 
 export type RootStackParamList = {
     Root: undefined
@@ -17,6 +18,7 @@ export type RootStackParamList = {
     CreateAccountScreen: undefined
     HomeScreen: undefined
     ForgotPasswordScreen: undefined
+    GenreScreen: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -33,13 +35,17 @@ export const MainNavigation = () => {
     async function checkAuthStatus() {
         try {
             const authToken = await AsyncStorage.getItem("token")
-            console.log(authToken)
             if (authToken !== null) {
                 const tokenTime = JSON.parse(authToken || "").tokenExpireToken
                 const currentTime = Date.now() / 1000
-
+                console.log((currentTime + tokenTime) | 0, currentTime)
                 if (currentTime < currentTime + tokenTime) {
                     setIsLoggedIn(true)
+                    /**
+                     * @TODO add fuse for navigation 
+                     * if create account => genre list page
+                     * else if login  => main page 
+                     */
                     navigation.navigate("HomeScreen" as never)
                 } else {
                     navigation.navigate("LoginScreen" as never)
@@ -54,7 +60,10 @@ export const MainNavigation = () => {
     return (
         <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
             {isLoggedIn ? (
-                <Stack.Screen name="HomeScreen" component={Home} />
+                <>
+                    <Stack.Screen name="HomeScreen" component={Home} />
+                    <Stack.Screen name="GenreScreen" component={CategoryList} />
+                </>
             ) : (
                 <>
                     <Stack.Screen name="WelcomeScreen" component={Welcome} />

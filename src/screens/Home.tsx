@@ -11,9 +11,10 @@ export const Home = () => {
     const [showWebView, setShowWebView] = useState(false)
 
     useEffect(() => {
-        // AsyncStorage.clear()
+        AsyncStorage.clear()    
         console.log("___________USERINFO__________")
         console.log(userInfo)
+        // injectWebViewData()
         // getToken()
     }, [])
 
