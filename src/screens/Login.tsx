@@ -28,9 +28,9 @@ export const Login = () => {
     }, [isLoading])
 
     const onLogin = async () => {
-        await fetchData(info).then(() => {
-            console.log(res);
-        });
+        await fetchData(info).then((res) => {
+            console.log(res)
+        })
     }
 
     const initialData = async () => {

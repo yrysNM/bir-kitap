@@ -1,6 +1,6 @@
-import axios, { AxiosResponse, AxiosInstance } from "axios"
+import axios, { AxiosResponse, AxiosInstance, AxiosError } from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
+import NavigationService from "../utils/navigation"
 interface ApiResponse<T> {
     data: T
 }
@@ -9,11 +9,11 @@ const getToken = async () => {
         const token = await AsyncStorage.getItem("token")
 
         /**
-         * @TODO change exception token 
+         * @TODO change exception token
          */
-        if(!token) {
+        if (!token) {
             console.error("Token not found!!!")
-            return "";
+            return ""
         }
 
         return JSON.parse(token)
@@ -33,15 +33,12 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
     async (config) => {
-        const {token} = await getToken()
+        const { token } = await getToken()
 
-        if(token) {
-            config.headers.Authorization = `Bearer ${token}`
-        }
-
+        config.headers.Authorization = `Bearer ${token}`
         return config
     },
-    (error: unknown) => {
+    (error: AxiosError) => {
         return Promise.reject(error)
     },
 )
@@ -50,7 +47,11 @@ instance.interceptors.response.use(
     (response: AxiosResponse<ApiResponse<unknown>>) => {
         return response
     },
-    (error: unknown) => {
+    (error: AxiosError) => {
+        if (error.response && error.response.status === 401) {
+            console.log("401 error")
+            NavigationService.navigate("LoginScreen" as never)
+        }
         return Promise.reject(error)
     },
 )

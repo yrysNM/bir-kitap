@@ -6,7 +6,7 @@ interface UseApiResult<T> {
     res: T | null
     error: AxiosError<unknown> | null
     isLoading: boolean
-    fetchData: (body: unknown) => Promise<void>
+    fetchData: (body: unknown) => Promise<unknown>
 }
 
 const useApi = <T>(url: string, method: string): UseApiResult<T> => {
@@ -14,15 +14,16 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
     const [error, setError] = useState<AxiosError<unknown> | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const fetchData = async (body?: unknown) => {
+    const fetchData = async (body?: unknown): Promise<unknown> => {
         setIsLoading(true)
-        await http(url, {
+        return await http(url, {
             data: body,
             method,
         })
             .then((res) => {
                 setRes(res.data)
                 setError(null)
+                return res
             })
             .catch((err) => {
                 setError(err)

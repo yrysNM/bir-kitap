@@ -1,11 +1,11 @@
-import { ReactNode, useMemo, useState } from "react"
+import { ReactNode, useState, useEffect } from "react"
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native"
 import Modal from "@ant-design/react-native/lib/modal"
 
 export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error: string | undefined; children: ReactNode }) => {
     const [isErrorModalActive, setIsErrorModalActive] = useState<boolean>(false)
 
-    useMemo(() => {
+    useEffect(() => {
         if (error && error.length > 0) {
             setIsErrorModalActive(true)
         }
@@ -40,12 +40,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     error: {
-        paddingHorizontal: 10, 
-        paddingVertical: 20, 
+        paddingHorizontal: 10,
+        paddingVertical: 20,
         borderRadius: 10,
-    }, 
+    },
     errorText: {
         fontSize: 20,
-        fontWeight: '500',
-    }
+        fontWeight: "500",
+    },
 })

@@ -35,7 +35,6 @@ export const MainNavigation = () => {
     async function checkAuthStatus() {
         try {
             const authToken = await AsyncStorage.getItem("token")
-            console.log(authToken);
             if (authToken !== null) {
                 const tokenTime = JSON.parse(authToken || "").tokenExpireToken
                 const currentTime = Date.now() / 1000
@@ -46,11 +45,11 @@ export const MainNavigation = () => {
                      * LoginScreen => Home page
                      * else => GenreScreen page
                      */
-                    const routes = navigation.getState()?.routes;
-                    const prevRoute = routes[routes.length - 1];
-                    if(prevRoute.name === 'LoginScreen') {
-                        navigation.navigate("GenreScreen" as never);
-                    }else {
+                    const routes = navigation.getState()?.routes
+                    const prevRoute = routes?.length ? routes[routes.length - 1] : null
+                    if (prevRoute && prevRoute.name === "LoginScreen") {
+                        navigation.navigate("GenreScreen" as never)
+                    } else {
                         navigation.navigate("HomeScreen" as never)
                     }
                 } else {

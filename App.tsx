@@ -6,7 +6,8 @@ import Provider from "@ant-design/react-native/lib/provider"
 import { Provider as ProviderRedux } from "react-redux"
 import store from "./src/redux/store"
 import { Image } from "react-native"
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { DefaultTheme, NavigationContainer, NavigationContainerRef } from "@react-navigation/native"
+import NavigationService from "./src/utils/navigation"
 
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
@@ -29,7 +30,7 @@ export default function App() {
     return (
         <ProviderRedux store={store}>
             <Provider locale={enUS}>
-                <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
+                <NavigationContainer ref={(ref) => NavigationService.setTopLevelNavigator(ref as NavigationContainerRef<[]>)} theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
                     <MainNavigation />
                 </NavigationContainer>
             </Provider>
