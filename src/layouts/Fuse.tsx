@@ -1,12 +1,14 @@
 import { ReactNode, useState, useEffect } from "react"
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native"
+import { View, Text, ActivityIndicator, StyleSheet, Dimensions } from "react-native"
 import Modal from "@ant-design/react-native/lib/modal"
+import { useAppSelector } from "../hook/useStore"
 
-export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error: string | undefined; children: ReactNode }) => {
+export const Fuse = ({ children }: { children: ReactNode }) => {
     const [isErrorModalActive, setIsErrorModalActive] = useState<boolean>(false)
+    const { error, isLoading } = useAppSelector((state) => state.mainSlice)
 
     useEffect(() => {
-        if (error && error.length > 0) {
+        if (error && Object.keys(error).length > 0) {
             setIsErrorModalActive(true)
         }
     }, [error])
@@ -20,17 +22,16 @@ export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error
         )
     }
 
-    if (error && error.length > 0) {
-        return (
+    return (
+        <>
+            <View style={{ height: Dimensions.get("window").height }}>{children}</View>
             <Modal animationType="slide" transparent maskClosable visible={isErrorModalActive} onClose={() => setIsErrorModalActive(false)}>
                 <View style={styles.error}>
-                    <Text style={styles.errorText}>{error}</Text>
+                    <Text style={styles.errorText}>{error?.message}</Text>
                 </View>
             </Modal>
-        )
-    }
-
-    return children
+        </>
+    )
 }
 
 const styles = StyleSheet.create({

@@ -25,22 +25,20 @@ export interface ILogin {
 }
 
 export function RegistrationAPI() {
-    const { res, isLoading, error, fetchData } = useApi<IRegistration>("/auth/register", "POST")
+    const { res, error, fetchData } = useApi<IRegistration>("/auth/register", "POST")
 
     return {
         res,
-        isLoading,
         error,
         fetchData,
     }
 }
 
 export function LoginAPI() {
-    const { res, isLoading, error, fetchData } = useApi<IRegistration>("/auth/login", "POST")
+    const { res, error, fetchData } = useApi<IRegistration>("/auth/login", "POST")
 
     return {
         res,
-        isLoading,
         error,
         fetchData,
     }

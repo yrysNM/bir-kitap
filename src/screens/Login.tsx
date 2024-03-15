@@ -1,92 +1,81 @@
-import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import { ILogin, LoginAPI } from "../api/authApi"
 import Button from "@ant-design/react-native/lib/button"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useAppDispatch } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
-import { setUserInfo } from "../redux/features/userInfoSlice"
-import { Fuse } from "../layouts/Fuse"
+import { setHasLogin, setUserInfo } from "../redux/features/mainSlice"
 import Icon from "@ant-design/react-native/lib/icon"
 
 export const Login = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
+    const { isLoading } = useAppSelector((state) => state.mainSlice)
     const [info, setInfo] = useState<ILogin>({
         username: "",
         password: "",
     })
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
-    const { res, isLoading, error, fetchData } = LoginAPI()
-
-    useEffect(() => {
-        initialData()
-    }, [isLoading])
+    const { fetchData } = LoginAPI()
 
     const onLogin = async () => {
-        await fetchData(info).then((res) => {
-            console.log(res)
+        await fetchData(info).then(async (res) => {
+            if (!isLoading && res?.result_code === 0) {
+                await AsyncStorage.setItem(
+                    "token",
+                    JSON.stringify({
+                        token: res.data.token,
+                        refresh_token: res.data.refreshToken,
+                        tokenExpireToken: res.data.tokenExpireToken,
+                    }),
+                )
+                dispatch(setHasLogin(true))
+                dispatch(setUserInfo(res.data.userInfo))
+            }
         })
     }
 
-    const initialData = async () => {
-        if (!isLoading && res?.result_code === 0) {
-            await AsyncStorage.setItem(
-                "token",
-                JSON.stringify({
-                    token: res.data.token,
-                    refresh_token: res.data.refreshToken,
-                    tokenExpireToken: res.data.tokenExpireToken,
-                }),
-            )
-
-            dispatch(setUserInfo(res.data.userInfo))
-        }
-    }
-
     return (
-        <Page>
-            <Fuse isLoading={isLoading} error={error?.message}>
-                <Header isCustomHeader={true} title={"Welcome back"} />
+        <>
+            <Header isCustomHeader={true} title={"Welcome back"} />
 
-                <View style={{ marginTop: 20, gap: 35 }}>
-                    <InputStyle inputTitle={"E-mail"}>
-                        <InputItem type="email-address" style={styles.input} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
-                    </InputStyle>
+            <View style={{ marginTop: 20, gap: 35 }}>
+                <InputStyle inputTitle={"E-mail"}>
+                    <InputItem type="email-address" style={styles.input} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
+                </InputStyle>
 
-                    <InputStyle inputTitle={"Password"}>
-                        <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
-                        {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
-                        <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
-                    </InputStyle>
-                </View>
-                <View style={styles.loginBtnWrapper}>
-                    <Button style={{ ...styles.btnWrapper, backgroundColor: "#005479" }} onPress={onLogin}>
-                        <Text style={styles.btnText}>Login in</Text>
-                    </Button>
+                <InputStyle inputTitle={"Password"}>
+                    <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                    {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
+                    <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
+                </InputStyle>
+            </View>
+            <View style={styles.loginBtnWrapper}>
+                <Button style={{ ...styles.btnWrapper, backgroundColor: "#005479" }} onPress={onLogin}>
+                    <Text style={styles.btnText}>Login in</Text>
+                </Button>
 
-                    <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen" as never)}>
-                        <Text style={styles.forGotPasWordText}>Forgot password?</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen" as never)}>
+                    <Text style={styles.forGotPasWordText}>Forgot password?</Text>
+                </TouchableOpacity>
 
-                    <View>
-                        <View style={styles.orText}>
-                            <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
-                            <Text>or</Text>
-                            <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
-                        </View>
+                <View>
+                    <View style={styles.orText}>
+                        <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
+                        <Text>or</Text>
+                        <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
                     </View>
-
-                    <Button style={{ ...styles.btnWrapper, backgroundColor: "#0C1E34", marginTop: 40 }} onPress={() => navigation.navigate("CreateAccountScreen" as never)}>
-                        <Text style={styles.btnText}>Create an account</Text>
-                    </Button>
                 </View>
-            </Fuse>
-        </Page>
+
+                <Button style={{ ...styles.btnWrapper, backgroundColor: "#0C1E34", marginTop: 40 }} onPress={() => navigation.navigate("CreateAccountScreen" as never)}>
+                    <Text style={styles.btnText}>Create an account</Text>
+                </Button>
+            </View>
+        </>
     )
 }
 

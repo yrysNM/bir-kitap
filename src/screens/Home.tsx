@@ -1,19 +1,18 @@
 import { Text, TouchableOpacity, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
-import { Page } from "../layouts/Page"
 import { WebView } from "react-native-webview"
 import { useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 
 export const Home = () => {
     const webViewEl = useRef<WebView>(null)
-    const { userInfo } = useAppSelector((state) => state.userInfoSlice)
+    const { userInfo } = useAppSelector((state) => state.mainSlice)
     const [showWebView, setShowWebView] = useState(false)
-    const navigation = useNavigation();
+    const navigation = useNavigation()
 
     useEffect(() => {
-        // AsyncStorage.clear()    
+        // AsyncStorage.clear()
         console.log("___________USERINFO__________")
         console.log(userInfo)
         // getToken()
@@ -46,16 +45,14 @@ export const Home = () => {
     }
 
     return (
-        <Page>
-            <View style={{ position: "relative", height: "100%", width: "100%" }}>
-                <TouchableOpacity onPress={() => setShowWebView(true)}>
-                    <Text>BOOK CROSSING</Text>
-                </TouchableOpacity>
+        <View style={{ position: "relative", height: "100%", width: "100%" }}>
+            <TouchableOpacity onPress={() => setShowWebView(true)}>
+                <Text>BOOK CROSSING</Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('GenreScreen' as never)}>
-                    <Text>Genre</Text>
-                </TouchableOpacity>
-            </View>
-        </Page>
+            <TouchableOpacity onPress={() => navigation.navigate("GenreScreen" as never)}>
+                <Text>Genre</Text>
+            </TouchableOpacity>
+        </View>
     )
 }
