@@ -16,7 +16,6 @@ export const Home = () => {
         console.log("___________USERINFO__________")
         console.log(userInfo)
         // getToken()
-        injectWebViewData();
     }, [])
 
     async function injectWebViewData() {

@@ -29,6 +29,9 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
     async (config) => {
+        /**
+         * @TODO add exception for token is undefined or not
+         */
         const { token } = await getToken()
 
         config.headers.Authorization = `Bearer ${token}`

@@ -14,7 +14,7 @@ import { IUserInfo } from "../api/authApi"
 import { useNavigation } from "@react-navigation/native"
 
 export const CreateAccount = () => {
-    const navigator = useNavigation()
+    const navigation = useNavigation()
     const [genderList] = useState<{ label: string; value: string; icon: IconNames }[]>([
         { label: "Female", value: "female", icon: "woman" },
         { label: "Male", value: "male", icon: "man" },
@@ -34,7 +34,11 @@ export const CreateAccount = () => {
 
     const onSubmit = async () => {
         if (isNotEmpty()) {
-            await fetchData({ ...info, birth: new Date(info.birth).getTime() })
+            await fetchData({ ...info, birth: new Date(info.birth).getTime() }).then((res) => {
+                if (res.result_code === 0) {
+                    navigation.navigate("LoginScreen" as never)
+                }
+            })
         } else {
             console.log("not validated")
         }
@@ -108,7 +112,7 @@ export const CreateAccount = () => {
 
                     <View style={{ alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 3 }}>
                         <Text style={styles.logText}>Already have an account?</Text>
-                        <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigator.navigate("LoginScreen" as never)}>
+                        <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigation.navigate("LoginScreen" as never)}>
                             <Text style={styles.logText}>Log in</Text>
                         </TouchableOpacity>
                     </View>
