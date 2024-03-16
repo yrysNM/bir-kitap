@@ -32,7 +32,8 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
             })
             .catch((err) => {
                 if (err.response.status === 401) {
-                    AsyncStorage.removeItem("token")
+                    console.log('401 error');
+                    AsyncStorage.setItem("token", '');
                     dispatch(setHasLogin(false))
                     navigation.navigate("LoginScreen" as never)
                 }

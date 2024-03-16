@@ -2,13 +2,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { StyleSheet } from "react-native"
 import { Login } from "../screens/Login"
 import { CreateAccount } from "../screens/CreateAccount"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useEffect } from "react"
-import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
-import { useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
-import { CategoryList } from "../screens/CategoryList"
+import { Genre } from "../screens/Genre"
+import { useEffect } from "react"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { setHasLogin } from "../redux/features/mainSlice"
 
 export type RootStackParamList = {
     Root: undefined
@@ -23,48 +23,29 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export const MainNavigation = () => {
-    const navigation = useNavigation()
-    const { userInfo, hasLogin } = useAppSelector((state) => state.mainSlice)
+    const { hasLogin } = useAppSelector((state) => state.mainSlice)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        checkAuthStatus()
-    }, [userInfo])
-
-    async function checkAuthStatus() {
-        try {
-            const authToken = await AsyncStorage.getItem("token")
-            // const tokenTime = JSON.parse(authToken || "").tokenExpireToken
-            // const currentTime = Date.now() / 1000
-            const token = authToken ? JSON.parse(authToken).token : null
-            if (token && hasLogin) {
-                /**
-                 * @TODO replace navigations
-                 * LoginScreen => Home page
-                 * else => GenreScreen page
-                 */
-                console.log("_______NAVIGATION__________")
-                console.log(token, hasLogin)
-                const routes = navigation.getState()?.routes
-                const prevRoute = routes?.length ? routes[routes.length - 1] : null
-                if (prevRoute && prevRoute.name === "LoginScreen") {
-                    navigation.navigate("GenreScreen" as never)
+        AsyncStorage.getItem("token")
+            .then((token) => {
+                if (token) {
+                    dispatch(setHasLogin(true))
                 } else {
-                    navigation.navigate("HomeScreen" as never)
+                    dispatch(setHasLogin(false))
                 }
-            } else {
-                await AsyncStorage.removeItem("token")
-                navigation.navigate("LoginScreen" as never)
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [])
+
     return (
         <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
             {hasLogin ? (
                 <>
                     <Stack.Screen name="HomeScreen" component={Home} />
-                    <Stack.Screen name="GenreScreen" component={CategoryList} />
+                    <Stack.Screen name="GenreScreen" component={Genre} />
                 </>
             ) : (
                 <>

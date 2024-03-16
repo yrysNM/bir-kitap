@@ -14,7 +14,7 @@ import Icon from "@ant-design/react-native/lib/icon"
 export const Login = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
-    const { isLoading } = useAppSelector((state) => state.mainSlice)
+    const { isLoading, hasLogin } = useAppSelector((state) => state.mainSlice)
     const [info, setInfo] = useState<ILogin>({
         username: "",
         password: "",
@@ -37,6 +37,7 @@ export const Login = () => {
                 dispatch(setUserInfo(res.data.userInfo))
             }
         })
+        if (hasLogin) navigation.navigate("HomeScreen" as never)
     }
 
     return (

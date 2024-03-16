@@ -9,6 +9,7 @@ import { ActivityIndicator, View } from "react-native"
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { Fuse } from "./src/layouts/Fuse"
 import { Page } from "./src/layouts/Page"
+
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
 

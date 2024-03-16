@@ -13,18 +13,15 @@ export const Fuse = ({ children }: { children: ReactNode }) => {
         }
     }, [error])
 
-    if (isLoading) {
-        return (
-            <View style={styles.loading}>
-                <ActivityIndicator size="large" color="#015C84" />
-                <Text>Loading</Text>
-            </View>
-        )
-    }
-
     return (
         <>
             <View style={{ height: Dimensions.get("window").height }}>{children}</View>
+            {isLoading && (
+                <View style={styles.loading}>
+                    <ActivityIndicator size="large" color="#015C84" />
+                    <Text>Loading</Text>
+                </View>
+            )}
             <Modal animationType="slide" transparent maskClosable visible={isErrorModalActive} onClose={() => setIsErrorModalActive(false)}>
                 <View style={styles.error}>
                     <Text style={styles.errorText}>{error?.message}</Text>

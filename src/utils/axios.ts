@@ -7,10 +7,6 @@ const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem("token")
 
-        /**
-         * @TODO change exception token
-         */
-        console.log(token)
         if (!token) {
             console.log("Token not found!!!")
             return ""
