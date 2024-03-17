@@ -1,17 +1,17 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { StyleSheet } from "react-native"
-import { Welcome } from "../screens/Welcome"
 import { Login } from "../screens/Login"
 import { CreateAccount } from "../screens/CreateAccount"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useEffect, useState } from "react"
-import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
-import { useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
 import NewHome from "../screens/NewHome"
 import EditProfile from "../screens/EditProfile"
 import ChangePassword from "../screens/ChangePassword"
+import { Genre } from "../screens/Genre"
+import { useEffect } from "react"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { setHasLogin } from "../redux/features/mainSlice"
 
 export type RootStackParamList = {
     Root: undefined
@@ -23,51 +23,44 @@ export type RootStackParamList = {
     NewHomeScreen: undefined
     EditProfileScreen: undefined
     ChangePasswordScreen: undefined
+    GenreScreen: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export const MainNavigation = () => {
-    const navigation = useNavigation()
-    const { userInfo } = useAppSelector((state) => state.userInfoSlice)
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const { hasLogin } = useAppSelector((state) => state.mainSlice)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        checkAuthStatus()
-    }, [userInfo])
-
-    async function checkAuthStatus() {
-        try {
-            const authToken = await AsyncStorage.getItem("token")
-            if (authToken !== null) {
-                const tokenTime = JSON.parse(authToken || "").tokenExpireToken
-                const currentTime = Date.now() / 1000
-
-                if (currentTime < currentTime + tokenTime) {
-                    setIsLoggedIn(true)
-                    navigation.navigate("HomeScreen" as never)
+        AsyncStorage.getItem("token")
+            .then((token) => {
+                if (token) {
+                    dispatch(setHasLogin(true))
                 } else {
-                    navigation.navigate("LoginScreen" as never)
-                    AsyncStorage.removeItem("token")
+                    dispatch(setHasLogin(false))
                 }
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [])
 
     return (
         <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: styles.navigator }}>
-            {isLoggedIn ? (
-                <Stack.Screen name="HomeScreen" component={Home} />
+            {hasLogin ? (
+                <>
+                    <Stack.Screen name="HomeScreen" component={Home} />
+                    <Stack.Screen name="GenreScreen" component={Genre} />
+                </>
             ) : (
                 <>
                     <Stack.Screen name="NewHomeScreen" component={NewHome} />
                     <Stack.Screen name="EditProfileScreen" component={EditProfile} />
                     <Stack.Screen name="ChangePasswordScreen" component={ChangePassword} />
-                    <Stack.Screen name="WelcomeScreen" component={Welcome} />
-                    <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
+                    {/* <Stack.Screen name="WelcomeScreen" component={Welcome} /> */}
                     <Stack.Screen name="LoginScreen" component={Login} />
+                    <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
                     <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
                 </>
             )}

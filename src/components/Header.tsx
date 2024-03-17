@@ -2,14 +2,16 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import Icon from "@ant-design/react-native/lib/icon"
 import { useNavigation } from "@react-navigation/native"
 
-export const Header = ({ isCustomHeader, title }: { isCustomHeader: boolean; title?: string }) => {
+export const Header = ({ isCustomHeader, title, isGoBack = false }: { isCustomHeader?: boolean; title?: string; isGoBack?: boolean }) => {
     const navigation = useNavigation()
 
     return (
         <View style={isCustomHeader ? styles.headerCustom : styles.headerCommon}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Icon style={styles.icon} name="arrow-left" />
-            </TouchableOpacity>
+            {isGoBack && (
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icon style={styles.icon} name="arrow-left" />
+                </TouchableOpacity>
+            )}
             <Text style={isCustomHeader ? styles.title : styles.titleCommon}>{title}</Text>
         </View>
     )
@@ -19,7 +21,6 @@ const styles = StyleSheet.create({
     headerCustom: {
         marginTop: 20,
         flexDirection: "column",
-        gap: 45,
     },
     icon: {
         color: "#000",
@@ -27,10 +28,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     title: {
+        marginTop: 45,
         fontWeight: "600",
         fontSize: 34,
     },
     titleCommon: {
+        marginLeft: 45,
         fontWeight: "600",
         fontSize: 20,
     },
