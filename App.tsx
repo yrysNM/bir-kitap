@@ -5,8 +5,8 @@ import enUS from "@ant-design/react-native/lib/locale-provider/en_US"
 import Provider from "@ant-design/react-native/lib/provider"
 import { Provider as ProviderRedux } from "react-redux"
 import store from "./src/redux/store"
-import { ActivityIndicator, View } from "react-native"
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { Loading } from "./src/components/Loading"
 
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
@@ -18,11 +18,7 @@ export default function App() {
     }, [])
 
     if (fontLoaded) {
-        return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <ActivityIndicator size="large" color="#015C84" />
-            </View>
-        )
+        return <Loading />
     }
 
     async function _loadAssets() {

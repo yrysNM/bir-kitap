@@ -1,7 +1,8 @@
 import { ReactNode, useState, useEffect } from "react"
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native"
+import { View, Text, StyleSheet } from "react-native"
 import Modal from "@ant-design/react-native/lib/modal"
 import { useAppSelector } from "../hook/useStore"
+import { Loading } from "../components/Loading"
 
 export const Fuse = ({ children }: { children: ReactNode }) => {
     const [isErrorModalActive, setIsErrorModalActive] = useState<boolean>(false)
@@ -15,10 +16,7 @@ export const Fuse = ({ children }: { children: ReactNode }) => {
     return (
         <>
             {isLoading && (
-                <View style={styles.loading}>
-                    <ActivityIndicator size="large" color="#015C84" />
-                    <Text>Loading</Text>
-                </View>
+               <Loading />
             )}
             {children}
             <Modal animationType="slide" transparent maskClosable visible={isErrorModalActive} onClose={() => setIsErrorModalActive(false)}>

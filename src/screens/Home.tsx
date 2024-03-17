@@ -2,14 +2,17 @@ import { Text, TouchableOpacity, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView } from "react-native-webview"
-import { useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
+import { setLoading } from "../redux/features/mainSlice"
+import { Fuse } from "../layouts/Fuse"
 
 export const Home = () => {
     const webViewEl = useRef<WebView>(null)
+    const dispatch = useAppDispatch()
     const { userInfo } = useAppSelector((state) => state.mainSlice)
-    const [showWebView, setShowWebView] = useState(false)
+    const [showWebView, setShowWebView] = useState(true)
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -28,19 +31,29 @@ export const Home = () => {
     if (showWebView) {
         return (
             <View style={{ position: "relative", height: "100%", width: "100%" }}>
-                <WebView
-                    ref={webViewEl}
-                    style={{ height: "100%", width: "100%" }}
-                    onLoadEnd={injectWebViewData}
-                    source={{ uri: "http://192.168.1.118:5173/" }}
-                    javaScriptEnabled
-                    onMessage={(event) => {
-                        console.log(event)
-                    }}
-                />
-                <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
-                    <Text>Close</Text>
-                </TouchableOpacity>
+                <Fuse>
+                    <WebView
+                        ref={webViewEl}
+                        style={{ height: "100%", width: "100%" }}
+                        onLoadEnd={injectWebViewData}
+                        source={{ uri: "http://192.168.1.3:5173/" }}
+                        javaScriptEnabled
+                        onMessage={(event) => {
+                            console.log(event)
+                        }}
+                        onLoadProgress={({ nativeEvent }) => {
+                            console.log(nativeEvent.progress)
+                            if (nativeEvent.progress !== 1) {
+                                dispatch(setLoading(true))
+                            } else {
+                                dispatch(setLoading(false))
+                            }
+                        }}
+                    />
+                    <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
+                        <Text>Close</Text>
+                    </TouchableOpacity>
+                </Fuse>
             </View>
         )
     }
