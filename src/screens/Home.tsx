@@ -19,7 +19,6 @@ export const Home = () => {
         // AsyncStorage.clear()
         console.log("___________USERINFO__________")
         console.log(userInfo)
-        // getToken()
     }, [])
 
     async function injectWebViewData() {
