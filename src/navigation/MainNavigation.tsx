@@ -5,6 +5,9 @@ import { CreateAccount } from "../screens/CreateAccount"
 import { Home } from "../screens/Home"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
+import NewHome from "../screens/NewHome"
+import EditProfile from "../screens/EditProfile"
+import ChangePassword from "../screens/ChangePassword"
 import { Genre } from "../screens/Genre"
 import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -17,6 +20,9 @@ export type RootStackParamList = {
     CreateAccountScreen: undefined
     HomeScreen: undefined
     ForgotPasswordScreen: undefined
+    NewHomeScreen: undefined
+    EditProfileScreen: undefined
+    ChangePasswordScreen: undefined
     GenreScreen: undefined
 }
 
@@ -49,6 +55,10 @@ export const MainNavigation = () => {
                 </>
             ) : (
                 <>
+                    <Stack.Screen name="NewHomeScreen" component={NewHome} />
+                    <Stack.Screen name="EditProfileScreen" component={EditProfile} />
+                    <Stack.Screen name="ChangePasswordScreen" component={ChangePassword} />
+                    {/* <Stack.Screen name="WelcomeScreen" component={Welcome} /> */}
                     <Stack.Screen name="LoginScreen" component={Login} />
                     <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
                     <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />

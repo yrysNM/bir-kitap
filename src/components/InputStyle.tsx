@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         gap: 8,
         alignItems: "flex-start",
+        marginBottom: 11
     },
     inputTitle: {
         fontSize: 17,

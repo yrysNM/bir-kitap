@@ -2,7 +2,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import Icon from "@ant-design/react-native/lib/icon"
 import { useNavigation } from "@react-navigation/native"
 
-export const Header = ({ isCustomHeader, title, isGoBack = false }: { isCustomHeader: boolean; title: string; isGoBack?: boolean }) => {
+export const Header = ({ isCustomHeader, title, isGoBack = false }: { isCustomHeader?: boolean; title?: string; isGoBack?: boolean }) => {
     const navigation = useNavigation()
 
     return (
