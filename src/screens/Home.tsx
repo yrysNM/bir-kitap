@@ -17,31 +17,31 @@ export const Home = () => {
         // getToken()
     }, [])
 
-    async function injectWebViewData() {
-        const token = await AsyncStorage.getItem("token")
-        console.log(token)
-        webViewEl.current?.injectJavaScript(`window.postMessage(${token}, '*')`)
-    }
+    // async function injectWebViewData() {
+    //     const token = await AsyncStorage.getItem("token")
+    //     console.log(token)
+    //     webViewEl.current?.injectJavaScript(`window.postMessage(${token}, '*')`)
+    // }
 
-    if (showWebView) {
-        return (
-            <View style={{ position: "relative", height: "100%", width: "100%" }}>
-                <WebView
-                    ref={webViewEl}
-                    style={{ height: "100%", width: "100%" }}
-                    onLoadEnd={injectWebViewData}
-                    source={{ uri: "http://192.168.1.112:5173/" }}
-                    javaScriptEnabled
-                    onMessage={(event) => {
-                        console.log(event)
-                    }}
-                />
-                <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
-                    <Text>Close</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
+    // if (showWebView) {
+    //     return (
+    //         <View style={{ position: "relative", height: "100%", width: "100%" }}>
+    //             <WebView
+    //                 ref={webViewEl}
+    //                 style={{ height: "100%", width: "100%" }}
+    //                 onLoadEnd={injectWebViewData}
+    //                 source={{ uri: "http://192.168.1.112:5173/" }}
+    //                 javaScriptEnabled
+    //                 onMessage={(event) => {
+    //                     console.log(event)
+    //                 }}
+    //             />
+    //             <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
+    //                 <Text>Close</Text>
+    //             </TouchableOpacity>
+    //         </View>
+    //     )
+    // }
 
     return (
         <Page>

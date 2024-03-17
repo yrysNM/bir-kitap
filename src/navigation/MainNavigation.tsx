@@ -9,6 +9,9 @@ import { useNavigation } from "@react-navigation/native"
 import { Home } from "../screens/Home"
 import { useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
+import NewHome from "../screens/NewHome"
+import EditProfile from "../screens/EditProfile"
+import ChangePassword from "../screens/ChangePassword"
 
 export type RootStackParamList = {
     Root: undefined
@@ -17,6 +20,9 @@ export type RootStackParamList = {
     CreateAccountScreen: undefined
     HomeScreen: undefined
     ForgotPasswordScreen: undefined
+    NewHomeScreen: undefined
+    EditProfileScreen: undefined
+    ChangePasswordScreen: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -56,6 +62,9 @@ export const MainNavigation = () => {
                 <Stack.Screen name="HomeScreen" component={Home} />
             ) : (
                 <>
+                    <Stack.Screen name="NewHomeScreen" component={NewHome} />
+                    <Stack.Screen name="EditProfileScreen" component={EditProfile} />
+                    <Stack.Screen name="ChangePasswordScreen" component={ChangePassword} />
                     <Stack.Screen name="WelcomeScreen" component={Welcome} />
                     <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
                     <Stack.Screen name="LoginScreen" component={Login} />

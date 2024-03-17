@@ -7,7 +7,7 @@ export const Fuse = ({ isLoading, error, children }: { isLoading: boolean; error
         return (
             <View>
                 <Icon name="loading" size="md" />
-                <Text>Loading</Text>
+                <Text>вфвфывфыв</Text>
             </View>
         )
     }
