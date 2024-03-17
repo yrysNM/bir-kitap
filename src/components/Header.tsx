@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     headerCustom: {
         marginTop: 20,
         flexDirection: "column",
-        gap: 45,
     },
     icon: {
         color: "#000",
@@ -29,10 +28,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     title: {
+        marginTop: 45,
         fontWeight: "600",
         fontSize: 34,
     },
     titleCommon: {
+        marginLeft: 45,
         fontWeight: "600",
         fontSize: 20,
     },

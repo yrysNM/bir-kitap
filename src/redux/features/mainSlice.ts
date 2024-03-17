@@ -28,7 +28,7 @@ export const mainSlice = createSlice({
         setHasLogin(state, action: PayloadAction<boolean>) {
             state.hasLogin = action.payload
         },
-        setError(state, action: PayloadAction<AxiosError>) {
+        setError(state, action: PayloadAction<AxiosError | null>) {
             state.error = action.payload
         },
     },
