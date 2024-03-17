@@ -22,7 +22,6 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
             method,
         })
             .then((res) => {
-                dispatch(setLoading(false))
                 setRes(res.data)
                 dispatch(setError(null))
                 return res.data
@@ -37,6 +36,9 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
                 dispatch(setLoading(false))
                 dispatch(setError(err))
                 setRes(null)
+            })
+            .finally(() => {
+                dispatch(setLoading(false))
             })
     }
     return { res, fetchData }

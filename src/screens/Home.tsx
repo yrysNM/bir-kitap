@@ -24,7 +24,6 @@ export const Home = () => {
 
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
-        console.log(token)
         webViewEl.current?.injectJavaScript(`window.postMessage(${token}, '*')`)
     }
 
@@ -34,15 +33,15 @@ export const Home = () => {
                 <Fuse>
                     <WebView
                         ref={webViewEl}
+                        webviewDebuggingEnabled={true}
                         style={{ height: "100%", width: "100%" }}
-                        onLoadEnd={injectWebViewData}
+                        onLoadStart={injectWebViewData}
                         source={{ uri: "http://192.168.1.3:5173/" }}
                         javaScriptEnabled
                         onMessage={(event) => {
                             console.log(event)
                         }}
                         onLoadProgress={({ nativeEvent }) => {
-                            console.log(nativeEvent.progress)
                             if (nativeEvent.progress !== 1) {
                                 dispatch(setLoading(true))
                             } else {

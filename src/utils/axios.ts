@@ -3,21 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 interface ApiResponse<T> {
     data: T
 }
-const getToken = async () => {
-    try {
-        const token = await AsyncStorage.getItem("token")
-
-        if (!token) {
-            console.log("Token not found!!!")
-            return ""
-        }
-
-        return JSON.parse(token)
-    } catch (error) {
-        console.error("Error retrieving token from AsyncStorage:", error)
-        return null
-    }
-}
 
 const instance: AxiosInstance = axios.create({
     baseURL: "https://api.birkitap.kz/",
@@ -29,12 +14,12 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
     async (config) => {
-        /**
-         * @TODO add exception for token is undefined or not
-         */
-        const { token } = await getToken()
+        const token = await AsyncStorage.getItem("token").then((value) => (value ? JSON.parse(value).token : null))
 
-        config.headers.Authorization = `Bearer ${token}`
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+        }
+
         return config
     },
     (error: AxiosError) => {
