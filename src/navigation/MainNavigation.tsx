@@ -52,13 +52,12 @@ export const MainNavigation = () => {
                 <>
                     <Stack.Screen name="HomeScreen" component={Home} />
                     <Stack.Screen name="GenreScreen" component={Genre} />
-                </>
-            ) : (
-                <>
                     <Stack.Screen name="NewHomeScreen" component={NewHome} />
                     <Stack.Screen name="EditProfileScreen" component={EditProfile} />
                     <Stack.Screen name="ChangePasswordScreen" component={ChangePassword} />
-                    {/* <Stack.Screen name="WelcomeScreen" component={Welcome} /> */}
+                </>
+            ) : (
+                <>
                     <Stack.Screen name="LoginScreen" component={Login} />
                     <Stack.Screen name="CreateAccountScreen" component={CreateAccount} />
                     <Stack.Screen name="ForgotPasswordScreen" component={ForgotPassword} />
