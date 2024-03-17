@@ -3,8 +3,11 @@ import { GenreAPI } from "../api/genreApi"
 import { Header } from "../components/Header"
 import { View, Text, StyleSheet } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
+import { useNavigation } from "@react-navigation/native"
+import { Page } from "../layouts/Page"
 
 export const Genre = () => {
+    const navigation = useNavigation()
     const { fetchData } = GenreAPI()
     const [dataList, setDataList] = useState<{ id: string; title: string }[]>()
     const [info, setInfo] = useState<{ genres: string[] }>({ genres: [] })
@@ -31,7 +34,7 @@ export const Genre = () => {
     }
 
     return (
-        <>
+        <Page>
             <Header isCustomHeader={false} title="What genre do you prefer?" />
 
             <View style={{ marginTop: 20 }}>
@@ -40,18 +43,18 @@ export const Genre = () => {
 
             <View style={styles.genreWrapper}>
                 {dataList?.map((item) => (
-                    <Button key={item.id} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.id) ? "#005479" : "#F9FAF8", borderColor: isSelectGenre(item.id) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.id)}>
+                    <Button key={item.id} activeStyle={false} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.id) ? "#005479" : "#F9FAF8", borderColor: isSelectGenre(item.id) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.id)}>
                         <Text style={{ ...styles.genreText, color: isSelectGenre(item.id) ? "#F9FAF8" : "#000" }}>{item.title}</Text>
                     </Button>
                 ))}
             </View>
 
             <View style={{ marginTop: 50, width: "100%" }}>
-                <Button style={styles.continueBtn} type="primary">
+                <Button style={styles.continueBtn} type="primary" onPress={() => navigation.navigate("HomeScreen" as never)}>
                     <Text style={styles.continueText}>Continue</Text>
                 </Button>
             </View>
-        </>
+        </Page>
     )
 }
 
@@ -70,7 +73,6 @@ const styles = StyleSheet.create({
         gap: 13,
     },
     genreBtn: {
-        paddingVertical: 16,
         paddingHorizontal: 30,
         backgroundColor: "#F9FAF8",
         borderStyle: "solid",

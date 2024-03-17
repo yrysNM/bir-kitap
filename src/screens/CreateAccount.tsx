@@ -12,9 +12,14 @@ import { IconNames } from "@ant-design/react-native/es/icon"
 import { RegistrationAPI } from "../api/authApi"
 import { IUserInfo } from "../api/authApi"
 import { useNavigation } from "@react-navigation/native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Page } from "../layouts/Page"
+import { setHasLogin } from "../redux/features/mainSlice"
+import { useAppDispatch } from "../hook/useStore"
 
 export const CreateAccount = () => {
     const navigation = useNavigation()
+    const dispatch = useAppDispatch()
     const [genderList] = useState<{ label: string; value: string; icon: IconNames }[]>([
         { label: "Female", value: "female", icon: "woman" },
         { label: "Male", value: "male", icon: "man" },
@@ -36,7 +41,17 @@ export const CreateAccount = () => {
         if (isNotEmpty()) {
             await fetchData({ ...info, birth: new Date(info.birth).getTime() }).then((res) => {
                 if (res.result_code === 0) {
-                    navigation.navigate("LoginScreen" as never)
+                    AsyncStorage.setItem(
+                        "token",
+                        JSON.stringify({
+                            token: res.data.token,
+                            refresh_token: res.data.refreshToken,
+                            tokenExpireToken: res.data.tokenExpireToken,
+                        }),
+                    ).then(() => {
+                        dispatch(setHasLogin(true))
+                        navigation.navigate("GenreScreen" as never)
+                    })
                 }
             })
         } else {
@@ -54,7 +69,7 @@ export const CreateAccount = () => {
     }
 
     return (
-        <>
+        <Page>
             <Header isCustomHeader={true} title={"Create an account"} />
             <View style={{ marginTop: 20, gap: 11 }}>
                 <InputStyle inputTitle={"E-mail"}>
@@ -118,7 +133,7 @@ export const CreateAccount = () => {
                     </View>
                 </View>
             </View>
-        </>
+        </Page>
     )
 }
 

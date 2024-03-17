@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { WebView } from "react-native-webview"
 import { useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
+import { Page } from "../layouts/Page"
 
 export const Home = () => {
     const webViewEl = useRef<WebView>(null)
@@ -45,7 +46,7 @@ export const Home = () => {
     }
 
     return (
-        <View style={{ position: "relative", height: "100%", width: "100%" }}>
+        <Page>
             <TouchableOpacity onPress={() => setShowWebView(true)}>
                 <Text>BOOK CROSSING</Text>
             </TouchableOpacity>
@@ -53,6 +54,6 @@ export const Home = () => {
             <TouchableOpacity onPress={() => navigation.navigate("GenreScreen" as never)}>
                 <Text>Genre</Text>
             </TouchableOpacity>
-        </View>
+        </Page>
     )
 }

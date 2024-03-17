@@ -1,7 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AxiosError } from "axios"
 
-const initialState: { hasLogin: boolean; isLoading: boolean; error: AxiosError | null; userInfo: { [key: string]: unknown } } = {
+interface IState {
+    hasLogin: boolean
+    isLoading: boolean
+    error: AxiosError | null
+    userInfo: { [key: string]: unknown }
+}
+
+const initialState: IState = {
     hasLogin: false,
     isLoading: false,
     error: null,

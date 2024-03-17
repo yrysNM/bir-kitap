@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { setHasLogin, setUserInfo } from "../redux/features/mainSlice"
 import Icon from "@ant-design/react-native/lib/icon"
+import { Page } from "../layouts/Page"
 
 export const Login = () => {
     const navigation = useNavigation()
@@ -41,7 +42,7 @@ export const Login = () => {
     }
 
     return (
-        <>
+        <Page>
             <Header isCustomHeader={true} title={"Welcome back"} />
 
             <View style={{ marginTop: 20, gap: 35 }}>
@@ -76,7 +77,7 @@ export const Login = () => {
                     <Text style={styles.btnText}>Create an account</Text>
                 </Button>
             </View>
-        </>
+        </Page>
     )
 }
 

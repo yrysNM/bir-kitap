@@ -7,8 +7,6 @@ import { Provider as ProviderRedux } from "react-redux"
 import store from "./src/redux/store"
 import { ActivityIndicator, View } from "react-native"
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { Fuse } from "./src/layouts/Fuse"
-import { Page } from "./src/layouts/Page"
 
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
@@ -36,13 +34,9 @@ export default function App() {
     return (
         <ProviderRedux store={store}>
             <Provider locale={enUS}>
-                <Page>
-                    <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
-                        <Fuse>
-                            <MainNavigation />
-                        </Fuse>
-                    </NavigationContainer>
-                </Page>
+                <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
+                    <MainNavigation />
+                </NavigationContainer>
             </Provider>
         </ProviderRedux>
     )

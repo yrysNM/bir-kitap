@@ -1,5 +1,5 @@
 import { ReactNode, useState, useEffect } from "react"
-import { View, Text, ActivityIndicator, StyleSheet, Dimensions } from "react-native"
+import { View, Text, ActivityIndicator, StyleSheet } from "react-native"
 import Modal from "@ant-design/react-native/lib/modal"
 import { useAppSelector } from "../hook/useStore"
 
@@ -12,16 +12,15 @@ export const Fuse = ({ children }: { children: ReactNode }) => {
             setIsErrorModalActive(true)
         }
     }, [error])
-
     return (
         <>
-            <View style={{ height: Dimensions.get("window").height }}>{children}</View>
             {isLoading && (
                 <View style={styles.loading}>
                     <ActivityIndicator size="large" color="#015C84" />
                     <Text>Loading</Text>
                 </View>
             )}
+            {children}
             <Modal animationType="slide" transparent maskClosable visible={isErrorModalActive} onClose={() => setIsErrorModalActive(false)}>
                 <View style={styles.error}>
                     <Text style={styles.errorText}>{error?.message}</Text>
@@ -33,7 +32,11 @@ export const Fuse = ({ children }: { children: ReactNode }) => {
 
 const styles = StyleSheet.create({
     loading: {
+        position: "absolute", 
+        top: "50%", 
+        left: "50%", 
         flex: 1,
+        zIndex: 100,
         justifyContent: "center",
         alignItems: "center",
     },
