@@ -10,12 +10,12 @@ interface UseApiResult<T> {
     fetchData: (body: unknown) => Promise<T>
 }
 
-const useApi = <T>(url: string, method: string): UseApiResult<T> => {
+const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
     const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const [res, setRes] = useState<T | null>(null)
 
-    const fetchData = async (body?: unknown): Promise<T> => {
+    const fetchData = async (body: unknown): Promise<T> => {
         dispatch(setLoading(true))
         return await http(url, {
             data: body,
@@ -28,7 +28,6 @@ const useApi = <T>(url: string, method: string): UseApiResult<T> => {
             })
             .catch((err) => {
                 if (err.response.status === 401) {
-                    console.log("401 error")
                     AsyncStorage.setItem("token", "")
                     dispatch(setHasLogin(false))
                     navigation.navigate("LoginScreen" as never)

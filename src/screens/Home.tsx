@@ -5,7 +5,7 @@ import { WebView } from "react-native-webview"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
-import { setLoading } from "../redux/features/mainSlice"
+import { setHasLogin, setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 
 export const Home = () => {
@@ -38,7 +38,12 @@ export const Home = () => {
                         source={{ uri: "http://192.168.1.3:5173/" }}
                         javaScriptEnabled
                         onMessage={(event) => {
-                            console.log(event)
+                            const messageData = JSON.parse(event.nativeEvent.data);
+                            if(messageData && messageData.key === "401") {                                   
+                                AsyncStorage.setItem("token", "")
+                                dispatch(setHasLogin(false))
+                                navigation.navigate("LoginScreen" as never)
+                            }
                         }}
                         onLoadProgress={({ nativeEvent }) => {
                             if (nativeEvent.progress !== 1) {
