@@ -23,7 +23,9 @@ export const Home = () => {
 
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
-        webViewEl.current?.injectJavaScript(`window.postMessage(${token}, '*')`)
+        webViewEl.current?.injectJavaScript(`
+            localStorage.setItem('token', '${token}');
+        `)
     }
 
     if (showWebView) {
@@ -33,13 +35,22 @@ export const Home = () => {
                     <WebView
                         ref={webViewEl}
                         webviewDebuggingEnabled={true}
+                        ignoreSilentHardwareSwitch={true}
+                        javaScriptEnabled={true}
                         style={{ height: "100%", width: "100%" }}
-                        onLoadStart={injectWebViewData}
                         source={{ uri: "http://192.168.1.3:5173/" }}
-                        javaScriptEnabled
+                        onLoad={injectWebViewData}
+                        onRenderProcessGone={(syntheticEvent) => {
+                            const { nativeEvent } = syntheticEvent
+                            console.warn("WebView Crashed:", nativeEvent.didCrash)
+                            /**
+                             * @TODO add modal window when nativeEvent will crash
+                             */
+                            webViewEl.current?.reload();
+                        }}
                         onMessage={(event) => {
-                            const messageData = JSON.parse(event.nativeEvent.data);
-                            if(messageData && messageData.key === "401") {                                   
+                            const messageData = JSON.parse(event.nativeEvent.data)
+                            if (messageData && messageData.key === "401") {
                                 AsyncStorage.setItem("token", "")
                                 dispatch(setHasLogin(false))
                                 navigation.navigate("LoginScreen" as never)
