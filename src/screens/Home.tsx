@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native"
+import { StatusBar, Text, TouchableOpacity, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView } from "react-native-webview"
@@ -30,7 +30,7 @@ export const Home = () => {
 
     if (showWebView) {
         return (
-            <View style={{ position: "relative", height: "100%", width: "100%" }}>
+            <View style={{ position: "relative", height: "100%", width: "100%", marginTop: StatusBar.currentHeight }}>
                 <Fuse>
                     <WebView
                         ref={webViewEl}
@@ -64,9 +64,9 @@ export const Home = () => {
                             }
                         }}
                     />
-                    <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
+                    {/* <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
                         <Text>Close</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </Fuse>
             </View>
         )
