@@ -8,12 +8,15 @@ import { Page } from "../layouts/Page"
 import { setHasLogin, setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 
+const _webview_base_url = "http://192.168.200.177:5173/"
+
 export const Home = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
     const { userInfo } = useAppSelector((state) => state.mainSlice)
     const [showWebView, setShowWebView] = useState(true)
     const navigation = useNavigation()
+    const [webviewKey, setWebviewKey] = useState<number>(0)
 
     useEffect(() => {
         // AsyncStorage.clear()
@@ -30,24 +33,23 @@ export const Home = () => {
 
     if (showWebView) {
         return (
-            <View style={{ position: "relative", height: "100%", width: "100%", marginTop: StatusBar.currentHeight }}>
+            <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
                 <Fuse>
                     <WebView
                         ref={webViewEl}
+                        key={webviewKey}
                         webviewDebuggingEnabled={true}
                         ignoreSilentHardwareSwitch={true}
                         javaScriptEnabled={true}
                         style={{ height: "100%", width: "100%" }}
-                        source={{ uri: "http://192.168.1.3:5173/" }}
-                        onLoad={injectWebViewData}
+                        source={{ uri: _webview_base_url }}
+                        originWhitelist={["*"]}
                         onRenderProcessGone={(syntheticEvent) => {
                             const { nativeEvent } = syntheticEvent
                             console.warn("WebView Crashed:", nativeEvent.didCrash)
-                            /**
-                             * @TODO add modal window when nativeEvent will crash
-                             */
-                            webViewEl.current?.reload();
+                            webViewEl.current?.reload()
                         }}
+                        onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                         onMessage={(event) => {
                             const messageData = JSON.parse(event.nativeEvent.data)
                             if (messageData && messageData.key === "401") {
@@ -56,17 +58,15 @@ export const Home = () => {
                                 navigation.navigate("LoginScreen" as never)
                             }
                         }}
+                        onLoadStart={injectWebViewData}
                         onLoadProgress={({ nativeEvent }) => {
-                            if (nativeEvent.progress !== 1) {
+                            if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
                                 dispatch(setLoading(true))
-                            } else {
+                            } else if (nativeEvent.url === _webview_base_url) {
                                 dispatch(setLoading(false))
                             }
                         }}
                     />
-                    {/* <TouchableOpacity style={{ position: "absolute", top: 100 }} onPress={() => setShowWebView(false)}>
-                        <Text>Close</Text>
-                    </TouchableOpacity> */}
                 </Fuse>
             </View>
         )
