@@ -21,10 +21,19 @@
                         "usesCleartextTraffic": true
                     }
                 }
+            ],
+            [
+                "expo-image-picker",
+                {
+                    "photosPermission": "custom photos permission",
+                    "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
+                    "microphonePermission": false
+                }
             ]
         ],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "bundleIdentifier": "mobile.birkitap"
         },
         "android": {
             "package": "mobile.birkitap",
