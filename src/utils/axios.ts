@@ -1,14 +1,15 @@
 import axios, { AxiosResponse, AxiosInstance, AxiosError } from "axios"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { API_URL } from "@env";
 interface ApiResponse<T> {
     data: T
 }
 
 const instance: AxiosInstance = axios.create({
-    baseURL: "https://api.birkitap.kz/",
+    baseURL: API_URL,
     timeout: 15000,
     headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
     },
 })
 
@@ -23,6 +24,7 @@ instance.interceptors.request.use(
         return config
     },
     (error: AxiosError) => {
+         console.log(error);
         return Promise.reject(error)
     },
 )

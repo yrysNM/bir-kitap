@@ -4,6 +4,7 @@ import { useAppDispatch } from "./useStore"
 import { setHasLogin, setLoading, setError } from "../redux/features/mainSlice"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import Toast from "@ant-design/react-native/lib/toast"
 
 interface UseApiResult<T> {
     res: T | null
@@ -24,6 +25,9 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
             .then((res) => {
                 setRes(res.data)
                 dispatch(setError(null))
+                if (res.data.result_code < 0) {
+                    Toast.fail(res.data.result_msg)
+                }
                 return res.data
             })
             .catch((err) => {
@@ -34,6 +38,7 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
                 }
                 dispatch(setLoading(false))
                 dispatch(setError(err))
+                Toast.fail(err.message.slice(0, 20))
                 setRes(null)
             })
             .finally(() => {
