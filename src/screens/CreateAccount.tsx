@@ -50,7 +50,7 @@ export const CreateAccount = () => {
                         }),
                     ).then(() => {
                         dispatch(setHasLogin(true))
-                        navigation.navigate("GenreScreen" as never)
+                        navigation.navigate("Genre" as never)
                     })
                 }
             })
@@ -127,7 +127,7 @@ export const CreateAccount = () => {
 
                     <View style={{ alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 3 }}>
                         <Text style={styles.logText}>Already have an account?</Text>
-                        <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigation.navigate("LoginScreen" as never)}>
+                        <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigation.navigate("Login" as never)}>
                             <Text style={styles.logText}>Log in</Text>
                         </TouchableOpacity>
                     </View>

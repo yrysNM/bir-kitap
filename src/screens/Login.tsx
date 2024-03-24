@@ -61,7 +61,7 @@ export const Login = () => {
                     <Text style={styles.btnText}>Login in</Text>
                 </Button>
 
-                <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen" as never)}>
+                <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword" as never)}>
                     <Text style={styles.forGotPasWordText}>Forgot password?</Text>
                 </TouchableOpacity>
 
@@ -73,7 +73,7 @@ export const Login = () => {
                     </View>
                 </View>
 
-                <Button style={{ ...styles.btnWrapper, backgroundColor: "#0C1E34", marginTop: 40 }} onPress={() => navigation.navigate("CreateAccountScreen" as never)}>
+                <Button style={{ ...styles.btnWrapper, backgroundColor: "#0C1E34", marginTop: 40 }} onPress={() => navigation.navigate("CreateAccount" as never)}>
                     <Text style={styles.btnText}>Create an account</Text>
                 </Button>
             </View>
