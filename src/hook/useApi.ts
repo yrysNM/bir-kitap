@@ -34,7 +34,7 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
                 if (err.response.status === 401) {
                     AsyncStorage.setItem("token", "")
                     dispatch(setHasLogin(false))
-                    navigation.navigate("LoginScreen" as never)
+                    navigation.navigate("Login" as never)
                 }
                 dispatch(setLoading(false))
                 dispatch(setError(err))

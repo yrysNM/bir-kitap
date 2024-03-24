@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native"
 import { Page } from "../layouts/Page"
-import { Header } from "../components/Header"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import { IUserInfo } from "../api/authApi"
@@ -33,8 +32,7 @@ const EditProfile = () => {
     }
 
     return (
-        <Page backColor="#005479">
-            <Header isCustomHeader={true} />
+        <Page  >
             <View>
                 <View style={style.editPhoto}>
                     <View style={style.avatar} />

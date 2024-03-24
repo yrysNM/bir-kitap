@@ -1,150 +1,88 @@
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useEffect, useRef, useState } from "react"
-import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
-import { useNavigation } from "@react-navigation/native"
+import { StyleSheet, View, Text } from "react-native"
 import { Page } from "../layouts/Page"
-import { setHasLogin, setLoading } from "../redux/features/mainSlice"
-import { Fuse } from "../layouts/Fuse"
-import * as ImagePicker from "expo-image-picker"
-import http from "../utils/axios"
-import { API_URL } from "@env"
-import Toast from "@ant-design/react-native/lib/toast"
-import { base64toFiile } from "../helpers/base64toFile"
-
-const _webview_base_url = "http://192.168.1.3:5173/"
+import { BookApi, bookInfo } from "../api/bookApi"
+import { useEffect, useState } from "react"
+import { NoData } from "../components/NoData"
+import { CarouselBookList } from "../components/CarouselBookList"
 
 export const Home = () => {
-    const webViewEl = useRef<WebView>(null)
-    const dispatch = useAppDispatch()
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
-    const [showWebView] = useState(true)
-    const navigation = useNavigation()
-    const [webviewKey, setWebviewKey] = useState<number>(0)
+    const { fetchData: fetchBookData } = BookApi("list")
+    // const { fetchData: fetchReViewData } = BookApi("review")
+    const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
 
     useEffect(() => {
-        // AsyncStorage.clear()
-        console.log("___________USERINFO__________")
-        console.log(userInfo)
+        Promise.all([
+
+            fetchBookData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setBookDataList(res.data)
+                }
+            }), 
+            // fetchReViewData({}).then(res => {
+            //     if(res.result_code === 0) {
+            //         set
+            //     }
+            // })
+        ])
     }, [])
 
-    async function injectWebViewData() {
-        const token = await AsyncStorage.getItem("token")
-        webViewEl.current?.injectJavaScript(`
-            localStorage.setItem('token', '${token}');
-            window.data = {};
-            function setData(data) {
-                window.data = data
-            }
-        `)
-    }
+    // const _renderReviewItem = () => {
 
-    const handleFileUpload = async () => {
-        const response = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            selectionLimit: 1,
-            base64: true,
-        })
-
-        if (!response.canceled && response.assets) {
-            const uriList = response.assets[0].uri.split("/")
-            const file = base64toFiile(`data:image/*;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
-            const isLt5M: boolean = file.size / 1024 / 1024 < 5
-            if (!isLt5M) {
-                console.log("File size small than 5mb")
-                Toast.fail("File size small than 5mb")
-            }
-
-            const param = new FormData()
-            param.append("file", {
-                uri: uriList.join("/"),
-                type: "image/jpeg",
-                name: uriList.pop(),
-            } as never)
-
-            dispatch(setLoading(true))
-            http({
-                url: "/bookcrossing/announcement/upload",
-                method: "POST",
-                headers: { "Content-Type": "multipart/form-data", accept: "application/json" },
-                data: param,
-            })
-                .then((res) => {
-                    if (res.data.result_code === 0) {
-                        dispatch(setLoading(false))
-                        const urlImage = `${API_URL}/public/get_resource?name=${res.data.data.path}`
-                        const info = {
-                            type: "file",
-                            url: urlImage,
-                        }
-                        webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
-                    } else {
-                        dispatch(setLoading(false))
-                        console.log(res.data)
-                    }
-                })
-                .catch((err) => {
-                    console.log(JSON.stringify(err))
-                    dispatch(setLoading(false))
-                })
-        }
-    }
-
-    const handleMessageFromWebview = (e: WebViewMessageEvent) => {
-        const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "401") {
-            AsyncStorage.setItem("token", "")
-            dispatch(setHasLogin(false))
-            navigation.navigate("LoginScreen" as never)
-        } else if (messageData.key === "uploadImg") {
-            handleFileUpload()
-        }
-    }
-
-    if (showWebView) {
-        return (
-            <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
-                <Fuse>
-                    <WebView
-                        ref={webViewEl}
-                        key={webviewKey}
-                        webviewDebuggingEnabled={true}
-                        ignoreSilentHardwareSwitch={true}
-                        javaScriptEnabled={true}
-                        style={{ height: "100%", width: "100%" }}
-                        source={{ uri: _webview_base_url }}
-                        originWhitelist={["*"]}
-                        onRenderProcessGone={(syntheticEvent) => {
-                            const { nativeEvent } = syntheticEvent
-                            console.warn("WebView Crashed:", nativeEvent.didCrash)
-                            webViewEl.current?.reload()
-                        }}
-                        onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                        onMessage={handleMessageFromWebview}
-                        onLoadStart={injectWebViewData}
-                        onLoadProgress={({ nativeEvent }) => {
-                            if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(true))
-                            } else if (nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(false))
-                            }
-                        }}
-                    />
-                </Fuse>
-            </View>
-        )
-    }
+    // }
 
     return (
         <Page>
-            <TouchableOpacity onPress={() => handleFileUpload()}>
-                <Text>BOOK CROSSING</Text>
-            </TouchableOpacity>
+            <Text style={styles.headText}>Home</Text>
+            <View style={styles.listWrapper}>
+                <View style={styles.listHeaderBlock}>
+                    <Text style={styles.listHeadTitle}>News</Text>
+                    <Text style={styles.moreInfoText}>See All</Text>
+                </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate("GenreScreen" as never)}>
-                <Text>Genre</Text>
-            </TouchableOpacity>
+                <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>
+            </View>
+
+            <View style={styles.listWrapper}>
+                <View style={styles.listHeaderBlock}>
+                    <Text style={styles.listHeadTitle}>Reviews</Text>
+                </View>
+
+                {/* <View>{dataList.length ? <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={itemWidth()} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <NoData />}</View> */}
+            </View>
         </Page>
     )
 }
+
+const styles = StyleSheet.create({
+    headText: {
+        textAlign: "center",
+        fontSize: 20,
+        fontWeight: "600",
+        lineHeight: 20,
+        opacity: 0.5,
+        color: "#000000",
+    },
+    listWrapper: {
+        width: "100%",
+        gap: 25,
+        flexDirection: "column",
+    },
+    listHeaderBlock: {
+        marginTop: 25,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 10,
+        alignItems: "center",
+    },
+    listHeadTitle: {
+        fontSize: 21,
+        fontWeight: "700",
+        lineHeight: 21,
+    },
+    moreInfoText: {
+        fontSize: 20,
+        fontWeight: "500",
+        lineHeight: 20,
+        color: "#808080",
+    },
+})
