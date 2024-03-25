@@ -45,7 +45,11 @@
         "web": {
             "favicon": "./assets/favicon.png"
         },
-        "scheme": "book-crossing"
-        
+        "scheme": "book-crossing",
+        "extra": {
+            "eas": {
+                "projectId": "7efb6519-6b5b-450d-8381-88ace2a66719"
+            }
+        }
     }
 }
