@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useState, useEffect } from "react"
 import { useAppDispatch } from "../hook/useStore"
 import { setIsServiceScreen } from "../redux/features/mainSlice"
+import { CreatePostAndBook } from "../screens/CreatePostAndBook"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
@@ -72,6 +73,20 @@ export const TabNavigator = () => {
                     tabBarIcon: ({ focused }) => (
                         <View>
                             <Icon name="search" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="CreatePost"
+                component={CreatePostAndBook}
+                options={{
+                    tabBarItemStyle: {
+                        height: 0,
+                    },
+                    tabBarIcon: ({ focused }) => (
+                        <View>
+                            <Icon name="plus" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
                         </View>
                     ),
                 }}

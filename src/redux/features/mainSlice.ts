@@ -5,7 +5,7 @@ interface IState {
     hasLogin: boolean
     isLoading: boolean
     error: AxiosError | null
-    isServiceScreen:  boolean, 
+    isServiceScreen: boolean
     userInfo: { [key: string]: unknown }
 }
 
@@ -31,12 +31,11 @@ export const mainSlice = createSlice({
             state.hasLogin = action.payload
         },
         setIsServiceScreen(state, action: PayloadAction<boolean>) {
-            state.isServiceScreen = action.payload; 
+            state.isServiceScreen = action.payload
         },
         setError(state, action: PayloadAction<AxiosError | null>) {
             state.error = action.payload
         },
-
     },
 })
 

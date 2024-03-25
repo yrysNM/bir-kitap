@@ -29,7 +29,7 @@ export const Home = () => {
     }, [])
 
     const _renderReviewItem = ({ item }: { item: bookInfo }) => {
-        return (
+        return ( 
             <View style={styles.reviewWrapper}>
                 <Image style={styles.bookReviewImg} source={{ uri: "https://static.vecteezy.com/system/resources/previews/022/192/851/original/girl-looking-at-the-mount-fuji-during-the-night-art-of-anime-woman-stargazing-beautiful-vector.jpg" }} />
 
