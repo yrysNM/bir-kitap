@@ -8,7 +8,7 @@ import { Page } from "../layouts/Page"
 
 export const Genre = () => {
     const navigation = useNavigation()
-    const { fetchData } = GenreAPI()
+    const { fetchData } = GenreAPI("list")
     const [dataList, setDataList] = useState<{ id: string; title: string }[]>()
     const [info, setInfo] = useState<{ genres: string[] }>({ genres: [] })
 

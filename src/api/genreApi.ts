@@ -1,19 +1,19 @@
-import useApi from "../hook/useApi";
+import useApi from "../hook/useApi"
 
-type genre = {
-    id:    string;
-    title: string;
+export type genreInfo = {
+    id: string
+    title: string
 }
 
 export interface IGenre extends IResponse {
-    data: genre[]
+    data: genreInfo[]
 }
 
-export function GenreAPI() {
-    const {res, fetchData} = useApi<IGenre>('/genre/list', "POST");
+export function GenreAPI(url: string, method: string = "POst") {
+    const { res, fetchData } = useApi<IGenre>(`/genre/${url}`, method)
 
     return {
-        res, 
+        res,
         fetchData,
     }
 }

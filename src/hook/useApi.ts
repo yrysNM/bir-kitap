@@ -5,10 +5,11 @@ import { setHasLogin, setLoading, setError } from "../redux/features/mainSlice"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from "@ant-design/react-native/lib/toast"
+import { AxiosHeaders } from "axios"
 
 interface UseApiResult<T> {
     res: T | null
-    fetchData: (body: unknown) => Promise<T>
+    fetchData: (body: unknown, headers?: AxiosHeaders   ) => Promise<T>
 }
 
 const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
@@ -16,9 +17,10 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
     const navigation = useNavigation()
     const [res, setRes] = useState<T | null>(null)
 
-    const fetchData = async (body: unknown): Promise<T> => {
+    const fetchData = async (body: unknown, headers?: AxiosHeaders): Promise<T> => {
         dispatch(setLoading(true))
         return await http(url, {
+            headers,
             data: body,
             method,
         })

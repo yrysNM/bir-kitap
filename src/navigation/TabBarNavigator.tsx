@@ -3,18 +3,51 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
 import Icon from "@ant-design/react-native/lib/icon"
 import { Search } from "../screens/Search"
+import { Services } from "../screens/Services"
+import { useNavigation } from "@react-navigation/native"
+import { useState, useEffect } from "react"
+import { useAppDispatch } from "../hook/useStore"
+import { setIsServiceScreen } from "../redux/features/mainSlice"
+import { CreatePostAndBook } from "../screens/CreatePostAndBook"
 
 const Tab = createBottomTabNavigator()
-
 export const TabNavigator = () => {
+    const dispatch = useAppDispatch()
+    const navigation = useNavigation()
+    const [currentRouteName, setCurrentRouteName] = useState("")
+
+    useEffect(() => {
+        const navigationListener = navigation.addListener("state", (e) => {
+            const parentIndex = e.data.state.index
+            const parentRoute = e.data.state.routes[parentIndex]
+            const tabbarIndex = parentRoute.state?.index
+            if (typeof tabbarIndex !== "undefined" && parentRoute.state?.routes) {
+                const currentTabRouteName = parentRoute.state.routes[tabbarIndex].name
+                setCurrentRouteName(currentTabRouteName)
+                dispatch(setIsServiceScreen(currentTabRouteName === "Services"))
+            }
+        })
+        return navigationListener
+    }, [navigation])
+
+    const iconColor = (isFocused: boolean) => {
+        if (isFocused) {
+            return currentRouteName === "Services" ? "#005479" : "#fff"
+        } else {
+            return currentRouteName === "Services" ? "rgba(0, 0, 0, 0.5)" : "rgba(248, 248, 248, 0.5)"
+        }
+    }
+
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            screenOptions={{
-                headerShown: false,
-                tabBarShowLabel: false,
-                tabBarStyle: styles.tabbar,
-                tabBarHideOnKeyboard: true,
+            screenOptions={({ route }) => {
+                return {
+                    headerShown: false,
+                    tabBarShowLabel: false,
+                    tabBarStyle: { ...styles.tabbar, backgroundColor: route.name === "Services" ? "#fff" : "#005479" },
+                    tabBarHideOnKeyboard: true,
+                }
             }}>
             <Tab.Screen
                 name="Home"
@@ -25,7 +58,7 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="home" style={styles.tabIcon} size="lg" color={focused ? "#fff" : "rgba(248, 248, 248, 0.5)"} />
+                            <Icon name="home" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -39,7 +72,35 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="search" style={styles.tabIcon} size="lg" color={focused ? "#fff" : "rgba(248, 248, 248, 0.5)"} />
+                            <Icon name="search" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="CreatePost"
+                component={CreatePostAndBook}
+                options={{
+                    tabBarItemStyle: {
+                        height: 0,
+                    },
+                    tabBarIcon: ({ focused }) => (
+                        <View>
+                            <Icon name="plus" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Services"
+                component={Services}
+                options={{
+                    tabBarItemStyle: {
+                        height: 0,
+                    },
+                    tabBarIcon: ({ focused }) => (
+                        <View>
+                            <Icon name="appstore" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -54,7 +115,6 @@ const styles = StyleSheet.create({
         height: 74,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        backgroundColor: "#005479",
         gap: 40,
     },
     tabIcon: {

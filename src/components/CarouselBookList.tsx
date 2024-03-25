@@ -1,6 +1,7 @@
 import { View, Dimensions, Image, Text, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
 import { bookInfo } from "../api/bookApi"
+import { API_URL } from "@env"
 
 export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
     const itemWidth = () => {
@@ -12,10 +13,11 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
     }
 
     const _renderItem = ({ item }: { item: bookInfo }) => {
+        const imageUrl = `${API_URL}/public/get_resource?name=${item.imageLink}`
         return (
             <View style={styles.card}>
-                <Image style={styles.bookImg} source={{ uri: item.imageLink }} />
-                <Text style={styles.text}>{item.title}</Text>
+                <Image style={styles.bookImg} source={{ uri: imageUrl }} />
+                <Text style={styles.text}>{item.title.length > 15 ? `${item.title.slice(0, 10)}...` : item.title}</Text>
             </View>
         )
     }
@@ -40,6 +42,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 14,
         fontWeight: "600",
-        lineHeight: 14,
+        lineHeight: 18,
     },
 })
