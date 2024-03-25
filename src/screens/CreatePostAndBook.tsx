@@ -16,7 +16,6 @@ import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
-import { AxiosHeaders } from "axios"
 
 interface bookData extends bookInfo {
     genres: string[]
@@ -87,7 +86,7 @@ export const CreatePostAndBook = () => {
             } as never)
 
             if (isCreateBook) {
-                fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as unknown as AxiosHeaders).then((res) => {
+                fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
                     if (res.result_code === 0) {
                         const info: { path: string } = JSON.parse(JSON.stringify(res.data))
                         const urlImage = `${API_URL}/public/get_resource?name=${info.path}`

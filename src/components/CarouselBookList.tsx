@@ -31,13 +31,16 @@ const styles = StyleSheet.create({
         gap: 6,
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 20,
+        marginRight: 20,
     },
     bookImg: {
         width: "100%",
         height: 136,
         borderRadius: 9,
         objectFit: "cover",
+        borderWidth: 0.1, 
+        // borderStyle: "solid", 
+        borderColor: "#000",
     },
     text: {
         fontSize: 14,

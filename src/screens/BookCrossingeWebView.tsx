@@ -8,16 +8,17 @@ import { Page } from "../layouts/Page"
 import { setHasLogin, setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
-import http from "../utils/axios"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
+import useApi from "../hook/useApi"
 
 const _webview_base_url = "http://192.168.1.3:5173/"
 
-export const WebviewTest = () => {
-    const webViewEl = useRef<WebView>(null)
+export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
+    const { fetchData } = useApi<IResponse>("/bookcrossing/announcement/upload")
+    const webViewEl = useRef<WebView>(null)
     const { userInfo } = useAppSelector((state) => state.mainSlice)
     const [showWebView] = useState(true)
     const navigation = useNavigation()
@@ -63,31 +64,17 @@ export const WebviewTest = () => {
                 name: uriList.pop(),
             } as never)
 
-            dispatch(setLoading(true))
-            http({
-                url: "/bookcrossing/announcement/upload",
-                method: "POST",
-                headers: { "Content-Type": "multipart/form-data", accept: "application/json" },
-                data: param,
-            })
-                .then((res) => {
-                    if (res.data.result_code === 0) {
-                        dispatch(setLoading(false))
-                        const urlImage = `${API_URL}/public/get_resource?name=${res.data.data.path}`
-                        const info = {
-                            type: "file",
-                            url: urlImage,
-                        }
-                        webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
-                    } else {
-                        dispatch(setLoading(false))
-                        console.log(res.data)
+            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never).then((res) => {
+                if (res.result_code === 0) {
+                    const { data } = JSON.parse(JSON.stringify(res))
+                    const urlImage = `${API_URL}public/get_resource?name=${data.path}`
+                    const info = {
+                        type: "file",
+                        url: urlImage,
                     }
-                })
-                .catch((err) => {
-                    console.log(JSON.stringify(err))
-                    dispatch(setLoading(false))
-                })
+                    webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
+                }
+            })
         }
     }
 
@@ -123,6 +110,8 @@ export const WebviewTest = () => {
                         onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                         onMessage={handleMessageFromWebview}
                         onLoadStart={injectWebViewData}
+                        onLoad={injectWebViewData}
+                        onLoadEnd={injectWebViewData}
                         onLoadProgress={({ nativeEvent }) => {
                             if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
                                 dispatch(setLoading(true))

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Login } from "../screens/Login"
 import { CreateAccount } from "../screens/CreateAccount"
-import { WebviewTest } from "../screens/WebviewTest"
+import { BookCrossingWebView } from "../screens/BookCrossingeWebView"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
 import EditProfile from "../screens/EditProfile"
@@ -17,7 +17,7 @@ export type RootStackParamList = {
     WelcomeScreen: undefined
     Login: undefined
     CreateAccount: undefined
-    WebviewTest: undefined
+    BookCrossingWebView: undefined
     ForgotPassword: undefined
     EditProfile: undefined
     ChangePassword: undefined
@@ -57,7 +57,7 @@ export const MainNavigation = () => {
             {hasLogin ? (
                 <>
                     <Stack.Screen name="Root" component={TabNavigator} />
-                    <Stack.Screen name="WebviewTest" component={WebviewTest} />
+                    <Stack.Screen name="BookCrossingWebView" component={BookCrossingWebView} />
                     <Stack.Screen name="Genre" component={Genre} />
                     <Stack.Screen name="EditProfile" component={EditProfile} />
                     <Stack.Screen name="ChangePassword" component={ChangePassword} />
