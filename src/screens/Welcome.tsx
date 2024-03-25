@@ -7,7 +7,7 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 
-type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "LoginScreen">>
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "Login">>
 
 export const Welcome = () => {
     const navigation = useNavigation<NavigateType>()
@@ -17,7 +17,7 @@ export const Welcome = () => {
             <Text style={styles.titleWelcome}>Feel the rhytm</Text>
             <Text style={styles.descrWelcome}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</Text>
 
-            <Button style={styles.welcomeBtn} onPress={() => navigation.navigate("CreateAccountScreen")}>
+            <Button style={styles.welcomeBtn} onPress={() => navigation.navigate("CreateAccount")}>
                 <Text style={styles.btnText}>Get started!</Text>
             </Button>
         </View>

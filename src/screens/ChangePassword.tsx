@@ -1,6 +1,5 @@
 import { Alert, StyleSheet, Text } from "react-native"
 import { Page } from "../layouts/Page"
-import { Header } from "../components/Header"
 import Button from "@ant-design/react-native/lib/button"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
@@ -41,8 +40,7 @@ const ChangePassword = () => {
     }
 
     return (
-        <Page backColor="#FFF">
-            <Header isCustomHeader={true} />
+        <Page>
             <InputStyle inputTitle={"Current Password"}>
                 <InputItem type={!isVisiblePassword ? "password" : "text"} style={style.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
                 <Icon onPress={() => setIsVisiblePassword((prevState) => ({ ...prevState, currentPassword: !prevState.currentPassword }))} name={isVisiblePassword.currentPassword ? "eye" : "eye-invisible"} style={style.iconEye} />

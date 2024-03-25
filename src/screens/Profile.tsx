@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import { Page } from "../layouts/Page"
-import { Header } from "../components/Header"
 import { useNavigation } from "@react-navigation/native"
 
 interface INavArr {
@@ -13,12 +12,12 @@ const navArr: INavArr[] = [
     {
         id: 1,
         title: "Edit Profile",
-        slug: "EditProfileScreen",
+        slug: "EditProfile",
     },
     {
         id: 2,
         title: "Change Password",
-        slug: "ChangePasswordScreen",
+        slug: "ChangePassword",
     },
     {
         id: 3,
@@ -37,11 +36,10 @@ const navArr: INavArr[] = [
     },
 ]
 
-const NewHome = () => {
+export const Profile = () => {
     const navigation = useNavigation()
     return (
-        <Page backColor="#005479">
-            <Header isCustomHeader={true} />
+        <Page  >
             <View>
                 <View style={style.avatar} />
                 <View style={style.homeContent}>
@@ -103,4 +101,3 @@ const style = StyleSheet.create({
     },
 })
 
-export default NewHome
