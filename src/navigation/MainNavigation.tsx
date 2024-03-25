@@ -27,9 +27,9 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export const MainNavigation = () => {
+    const { isServiceScreen } = useAppSelector((state) => state.mainSlice)
     const { hasLogin } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
-    const { bgColor } = useAppSelector((state) => state.mainSlice)
 
     useEffect(() => {
         AsyncStorage.getItem("token")
@@ -46,7 +46,14 @@ export const MainNavigation = () => {
     }, [])
 
     return (
-        <Stack.Navigator initialRouteName="Root" screenOptions={{ headerShown: false, contentStyle: { backgroundColor: bgColor } }}>
+        <Stack.Navigator
+            initialRouteName="Root"
+            screenOptions={({ route }) => {
+                return {
+                    headerShown: false,
+                    contentStyle: { backgroundColor: isServiceScreen && route.name === "Root" ? "#005479" : "#fff" },
+                }
+            }}>
             {hasLogin ? (
                 <>
                     <Stack.Screen name="Root" component={TabNavigator} />

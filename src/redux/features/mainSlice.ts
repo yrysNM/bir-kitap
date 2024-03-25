@@ -5,15 +5,15 @@ interface IState {
     hasLogin: boolean
     isLoading: boolean
     error: AxiosError | null
-    bgColor: string
+    isServiceScreen:  boolean, 
     userInfo: { [key: string]: unknown }
 }
 
 const initialState: IState = {
     hasLogin: false,
     isLoading: false,
+    isServiceScreen: false,
     error: null,
-    bgColor: "#fff",
     userInfo: {},
 }
 
@@ -30,15 +30,16 @@ export const mainSlice = createSlice({
         setHasLogin(state, action: PayloadAction<boolean>) {
             state.hasLogin = action.payload
         },
+        setIsServiceScreen(state, action: PayloadAction<boolean>) {
+            state.isServiceScreen = action.payload; 
+        },
         setError(state, action: PayloadAction<AxiosError | null>) {
             state.error = action.payload
         },
-        setBgColor(state, action: PayloadAction<string>) {
-            state.bgColor = action.payload
-        },
+
     },
 })
 
-export const { setUserInfo, setLoading, setHasLogin, setError, setBgColor } = mainSlice.actions
+export const { setUserInfo, setLoading, setHasLogin, setError, setIsServiceScreen } = mainSlice.actions
 
 export default mainSlice.reducer
