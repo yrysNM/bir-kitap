@@ -5,12 +5,12 @@ import { BookCrossingWebView } from "../screens/BookCrossingeWebView"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
 import EditProfile from "../screens/EditProfile"
-import ChangePassword from "../screens/ChangePassword"
 import { Genre } from "../screens/Genre"
 import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setHasLogin } from "../redux/features/mainSlice"
 import { TabNavigator } from "./TabBarNavigator"
+import { BookDetail } from "../screens/BookDetail"
 
 export type RootStackParamList = {
     Root: undefined
@@ -22,6 +22,7 @@ export type RootStackParamList = {
     EditProfile: undefined
     ChangePassword: undefined
     Genre: undefined
+    BookDetail: { bookId: string }
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -60,7 +61,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="BookCrossingWebView" component={BookCrossingWebView} />
                     <Stack.Screen name="Genre" component={Genre} />
                     <Stack.Screen name="EditProfile" component={EditProfile} />
-                    <Stack.Screen name="ChangePassword" component={ChangePassword} />
+                    <Stack.Screen name="BookDetail" component={BookDetail} />
                 </>
             ) : (
                 <>

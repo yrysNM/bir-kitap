@@ -13,7 +13,7 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import useApi from "../hook/useApi"
 
-const _webview_base_url = "http://192.168.1.3:5173/"
+const _webview_base_url = "http://192.168.0.105:5173/"
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()

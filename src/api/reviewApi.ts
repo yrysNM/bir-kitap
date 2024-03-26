@@ -1,6 +1,6 @@
 import useApi from "../hook/useApi"
 
-export type bookInfo = {
+export type bookReviewInfo = {
     id?: string
     title: string
     author: string
@@ -9,7 +9,7 @@ export type bookInfo = {
 }
 
 interface IBook extends IResponse {
-    data: bookInfo[]
+    data: bookReviewInfo[]
 }
 
 export function ReviewApi(url: string, method: string = "POST") {

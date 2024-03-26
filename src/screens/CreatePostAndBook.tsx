@@ -17,12 +17,6 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
 
-interface bookData extends bookInfo {
-    genres: string[]
-    pages: number
-    description: string
-}
-
 const _bookInfo = {
     title: "",
     year: 0,
@@ -41,7 +35,7 @@ export const CreatePostAndBook = () => {
     const [tabs] = useState<{ title: string }[]>([{ title: "Create book" }, { title: "Create post" }])
     const [genreList, setGenreList] = useState<genreInfo[]>([])
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
-    const [bookInfo, setBookInfo] = useState<bookData>(_bookInfo)
+    const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
     const [year, setYear] = useState<string>("")
     const [pages, setPages] = useState<string>("")
 
