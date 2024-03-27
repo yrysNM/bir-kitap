@@ -4,7 +4,6 @@ import { TouchableOpacity, View, StyleSheet } from "react-native"
 
 export const StarRate = ({ rateNumber = 0, onChangeRate }: { rateNumber: number; onChangeRate?: (rateNumber: number) => void }) => {
     const [starRating, setStarRating] = useState<number>(rateNumber)
-    console.log(rateNumber, starRating)
     const onClickStar = (rate: number) => {
         setStarRating(rate)
         if (onChangeRate) {
@@ -43,6 +42,5 @@ const styles = StyleSheet.create({
     },
     starSelected: {
         color: "#ffb300",
-        fill: "#ffb300",
     },
 })

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { Page } from "../layouts/Page"
 import { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -62,22 +62,38 @@ export const BookDetail = () => {
 
                 <View style={styles.statisticWrapper}>
                     <View style={styles.statisticBlock}>
-                        <Text>{bookInfo?.customInfo.finish}</Text>
-                        <Text>Прочитали</Text>
+                        <Text style={styles.statisticText}>{bookInfo?.customInfo.finish}</Text>
+                        <Text style={styles.statisticTitle}>Прочитали</Text>
                     </View>
                     <View style={styles.statisticBlock}>
-                        <Text>{bookInfo?.customInfo.selected}</Text>
-                        <Text>Планируют</Text>
+                        <Text style={styles.statisticText}>{bookInfo?.customInfo.selected}</Text>
+                        <Text style={styles.statisticTitle}>Планируют</Text>
                     </View>
                     <View style={{ ...styles.statisticBlock, borderWidth: 0 }}>
-                        <Text>{bookInfo?.customInfo.review}</Text>
-                        <Text>Рецензий</Text>
+                        <Text style={styles.statisticText}>{bookInfo?.customInfo.review}</Text>
+                        <Text style={styles.statisticTitle}>Рецензий</Text>
                     </View>
                 </View>
 
                 <View style={{ marginTop: 35 }}>
-                    <Text style={styles.descrText}>Description </Text>
+                    <Text style={styles.descrText}>Description</Text>
                     <Text style={styles.bookDescr}>{bookInfo?.book.description}</Text>
+                </View>
+                <View style={{ marginTop: 30 }}>
+                    <Text style={styles.descrText}>Reviews</Text>
+                    <View style={{ marginLeft: 11 }}>
+                        <View>
+                            <View style={styles.reviewProfileBlock}>
+                                <Image source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} width={32} height={32} style={{ borderRadius: 500 }} />
+                                <View>
+                                    <Text>Ayala Nayashova</Text>
+                                    <StarRate rateNumber={5} />
+                                    <Text>5.0</Text>
+                                </View>
+                            </View>
+                            <Text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium cumque id amet maxime non, aliquid a quis praesentium harum quam. Id asperiores consequuntur cupiditate natus alias minus, eveniet numquam distinctio.</Text>
+                        </View>
+                    </View>
                 </View>
             </View>
         </Page>
@@ -98,9 +114,13 @@ const styles = StyleSheet.create({
         width: 200,
         height: 250,
         borderRadius: 18,
-        objectFit: "contain",
+        objectFit: "cover",
+        borderWidth: 0.1,
+        borderColor: "#000",
+        marginBottom: 17,
     },
     bookTitle: {
+        marginTop: 10,
         fontSize: 23,
         fontWeight: "600",
         lineHeight: 23,
@@ -119,6 +139,8 @@ const styles = StyleSheet.create({
         color: "#000000",
     },
     bookDescr: {
+        marginTop: 11,
+        marginLeft: 10,
         fontSize: 9,
         fontWeight: "500",
         lineHeight: 15,
@@ -150,5 +172,28 @@ const styles = StyleSheet.create({
         borderTopColor: "transparent",
         borderLeftColor: "transparent",
         borderStyle: "solid",
+    },
+    statisticText: {
+        fontSize: 20,
+        fontWeight: "600",
+        lineHeight: 20,
+        color: "#000000",
+    },
+    statisticTitle: {
+        fontSize: 10,
+        fontWeight: "500",
+        lineHeight: 10.565958023071289,
+        color: "#000000",
+    },
+    reviewsWRapper: {
+        marginLeft: 11,
+        flexDirection: "row",
+        gap: 23,
+    },
+    reviewProfileBlock: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
     },
 })
