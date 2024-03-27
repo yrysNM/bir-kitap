@@ -34,19 +34,24 @@ interface IBookInfo {
 }
 
 const _reviewTemp = {
-    title: "",
+    title: "еуые",
     message: "",
     rating: 0,
 }
 
 export const BookDetail = () => {
     const navigate = useNavigation()
+    const { fetchData: fetchCreateReviewData } = BookApi("review/create")
     const { bookId } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
     const { fetchData: fetchGetBookData } = BookApi(`get`)
     const [bookInfo, setBookInfo] = useState<IBookInfo | null>(null)
     const [reviewInfo, setReviewInfo] = useState<{ title: string; message: string; rating: number }>(_reviewTemp)
 
     useEffect(() => {
+        loadBookData()
+    }, [])
+
+    const loadBookData = () => {
         if (bookId) {
             fetchGetBookData({
                 id: bookId,
@@ -57,7 +62,19 @@ export const BookDetail = () => {
                 }
             })
         }
-    }, [])
+    }
+
+    const onSubmitReview = () => {
+        fetchCreateReviewData({
+            bookId: bookInfo?.book.id,
+            ...reviewInfo
+        }).then((res) => {
+            if (res.result_code === 0) {
+                setReviewInfo(_reviewTemp)
+                loadBookData()
+            }
+        })
+    }
 
     return (
         <Page>
@@ -101,7 +118,7 @@ export const BookDetail = () => {
                     <View>
                         <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
                     </View>
-                    <Button type="primary" style={styles.btnReview}>
+                    <Button type="primary" style={styles.btnReview} onPress={() => onSubmitReview()}>
                         Submit review
                     </Button>
                 </View>
@@ -126,12 +143,38 @@ export const BookDetail = () => {
                 ) : (
                     <NoData />
                 )}
+
+                <View style={styles.listWrapper}>
+                    <View style={styles.listHeaderBlock}>
+                        <Text style={styles.listHeadTitle}>Best Sellers</Text>
+                    </View>
+
+                    {/* TODO  <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View> */}
+                </View>
             </View>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    listWrapper: {
+        width: "100%",
+        gap: 25,
+        flexDirection: "column",
+        marginBottom: 20,
+    },
+    listHeaderBlock: {
+        marginTop: 25,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 10,
+        alignItems: "center",
+    },
+    listHeadTitle: {
+        fontSize: 21,
+        fontWeight: "700",
+        lineHeight: 21,
+    },
     iconBack: {
         marginTop: 25,
         fontSize: 30,

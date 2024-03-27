@@ -11,8 +11,8 @@ type propsInfo = {
 export const StarRate = ({ rateNumber = 0, onChangeRate, size = 13 }: propsInfo) => {
     const [starRating, setStarRating] = useState<number>(rateNumber)
     const onClickStar = (rate: number) => {
-        setStarRating(rate)
         if (onChangeRate) {
+            setStarRating(rate)
             onChangeRate(rate)
         }
     }

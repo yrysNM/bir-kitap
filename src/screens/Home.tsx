@@ -6,7 +6,7 @@ import { NoData } from "../components/NoData"
 import { CarouselBookList } from "../components/CarouselBookList"
 import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
 import Carousel from "react-native-snap-carousel"
-import Icon from "@ant-design/react-native/lib/icon"
+import { StarRate } from "../components/StarRate"
 
 export const Home = () => {
     const { fetchData: fetchBookData } = BookApi("list")
@@ -28,7 +28,7 @@ export const Home = () => {
         })
     }, [])
 
-    const _renderReviewItem = ({ item }: { item: bookInfo }) => {
+    const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
         return (
             <View style={styles.reviewWrapper}>
                 <Image style={styles.bookReviewImg} source={{ uri: "https://static.vecteezy.com/system/resources/previews/022/192/851/original/girl-looking-at-the-mount-fuji-during-the-night-art-of-anime-woman-stargazing-beautiful-vector.jpg" }} />
@@ -37,20 +37,12 @@ export const Home = () => {
                     <View style={styles.reviewUserInfo}>
                         <Image style={styles.reviewUserProfileImg} source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} />
                         <View>
-                            <Text style={styles.reviewUserName}>Ayala Nayashova</Text>
+                            <Text style={styles.reviewUserName}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: "row", gap: 1 }}>
-                        <Icon name="star" style={{ fontSize: 9 }} />
-                        <Icon name="star" style={{ fontSize: 9 }} />
-                        <Icon name="star" style={{ fontSize: 9 }} />
-                        <Icon name="star" style={{ fontSize: 9 }} />
-                        <Icon name="star" style={{ fontSize: 9 }} />
-                    </View>
-                    <Text style={styles.reviewBookMessage}>
-                        Скажу сразу. Таких книг крайне мало. Раньше подобных авторов называли популяризаторами науки. Это не просто очередная поделка на тему модных веяний утраченных запретных знаний Древнего Китая...<Text>еще</Text>
-                    </Text>
+                    <StarRate rateNumber={item.rating} />
+                    <Text style={styles.reviewBookMessage}>{item.message}</Text>
                 </View>
             </View>
         )
@@ -61,7 +53,7 @@ export const Home = () => {
             <Text style={styles.headText}>Home</Text>
             <View style={styles.listWrapper}>
                 <View style={styles.listHeaderBlock}>
-                    <Text style={styles.listHeadTitle}>News</Text>
+                    <Text style={styles.listHeadTitle}>New books</Text>
                     <Text style={styles.moreInfoText}>See All</Text>
                 </View>
 

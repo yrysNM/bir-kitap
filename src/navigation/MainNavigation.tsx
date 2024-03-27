@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setHasLogin } from "../redux/features/mainSlice"
 import { TabNavigator } from "./TabBarNavigator"
 import { BookDetail } from "../screens/BookDetail"
+import { BookGenres } from "../screens/BookGenres"
 
 export type RootStackParamList = {
     Root: undefined
@@ -23,6 +24,7 @@ export type RootStackParamList = {
     ChangePassword: undefined
     Genre: undefined
     BookDetail: { bookId: string }
+    BookGenres: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -62,6 +64,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="Genre" component={Genre} />
                     <Stack.Screen name="EditProfile" component={EditProfile} />
                     <Stack.Screen name="BookDetail" component={BookDetail} />
+                    <Stack.Screen name="BookGenres" component={BookGenres} />
                 </>
             ) : (
                 <>
