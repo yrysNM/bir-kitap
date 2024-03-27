@@ -6,6 +6,9 @@ export type bookInfo = {
     author: string
     imageLink: string
     year: number
+    genres: string[]
+    pages?: number
+    description?: string
 }
 
 interface IBook extends IResponse {

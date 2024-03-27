@@ -10,19 +10,11 @@ import Button from "@ant-design/react-native/lib/button"
 import { GenreAPI, genreInfo } from "../api/genreApi"
 import Modal from "@ant-design/react-native/lib/modal"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
-import InputItemStyle from "@ant-design/react-native/lib/input-item/style"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
-import { AxiosHeaders } from "axios"
-
-interface bookData extends bookInfo {
-    genres: string[]
-    pages: number
-    description: string
-}
 
 const _bookInfo = {
     title: "",
@@ -42,7 +34,7 @@ export const CreatePostAndBook = () => {
     const [tabs] = useState<{ title: string }[]>([{ title: "Create book" }, { title: "Create post" }])
     const [genreList, setGenreList] = useState<genreInfo[]>([])
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
-    const [bookInfo, setBookInfo] = useState<bookData>(_bookInfo)
+    const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
     const [year, setYear] = useState<string>("")
     const [pages, setPages] = useState<string>("")
 
@@ -87,7 +79,7 @@ export const CreatePostAndBook = () => {
             } as never)
 
             if (isCreateBook) {
-                fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as unknown as AxiosHeaders).then((res) => {
+                fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
                     if (res.result_code === 0) {
                         const info: { path: string } = JSON.parse(JSON.stringify(res.data))
                         const urlImage = `${API_URL}/public/get_resource?name=${info.path}`
@@ -209,10 +201,9 @@ const styles = StyleSheet.create({
         color: "#000000",
     },
     input: {
-        ...InputItemStyle,
         height: 42,
         width: "100%",
-        borderWidth: 0.2,
+        borderWidth: 0.5,
         borderColor: "#000",
         borderStyle: "solid",
         borderRadius: 10,
@@ -289,7 +280,7 @@ const styles = StyleSheet.create({
     textAreaInput: {
         height: 120,
         width: Dimensions.get("window").width - 32,
-        borderWidth: 0.2,
+        borderWidth: 0.5,
         borderColor: "#000",
         borderStyle: "solid",
         borderRadius: 14,

@@ -4,7 +4,7 @@ import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
 import { NoData } from "../components/NoData"
 import { CarouselBookList } from "../components/CarouselBookList"
-import { ReviewApi } from "../api/reviewApi"
+import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
 import Carousel from "react-native-snap-carousel"
 import Icon from "@ant-design/react-native/lib/icon"
 
@@ -12,7 +12,7 @@ export const Home = () => {
     const { fetchData: fetchBookData } = BookApi("list")
     const { fetchData: fetchReViewData } = ReviewApi("list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
-    const [reviewDataList, setReviewDataList] = useState<bookInfo[]>([])
+    const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
 
     useEffect(() => {
         fetchBookData({}).then((res) => {
@@ -29,7 +29,7 @@ export const Home = () => {
     }, [])
 
     const _renderReviewItem = ({ item }: { item: bookInfo }) => {
-        return ( 
+        return (
             <View style={styles.reviewWrapper}>
                 <Image style={styles.bookReviewImg} source={{ uri: "https://static.vecteezy.com/system/resources/previews/022/192/851/original/girl-looking-at-the-mount-fuji-during-the-night-art-of-anime-woman-stargazing-beautiful-vector.jpg" }} />
 
@@ -42,11 +42,11 @@ export const Home = () => {
                         </View>
                     </View>
                     <View style={{ flexDirection: "row", gap: 1 }}>
-                        <Icon name="star" style={{fontSize: 9}}/>
-                        <Icon name="star" style={{fontSize: 9}}/>
-                        <Icon name="star" style={{fontSize: 9}}/>
-                        <Icon name="star" style={{fontSize: 9}}/>
-                        <Icon name="star" style={{fontSize: 9}}/>
+                        <Icon name="star" style={{ fontSize: 9 }} />
+                        <Icon name="star" style={{ fontSize: 9 }} />
+                        <Icon name="star" style={{ fontSize: 9 }} />
+                        <Icon name="star" style={{ fontSize: 9 }} />
+                        <Icon name="star" style={{ fontSize: 9 }} />
                     </View>
                     <Text style={styles.reviewBookMessage}>
                         Скажу сразу. Таких книг крайне мало. Раньше подобных авторов называли популяризаторами науки. Это не просто очередная поделка на тему модных веяний утраченных запретных знаний Древнего Китая...<Text>еще</Text>
