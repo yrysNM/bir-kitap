@@ -10,7 +10,6 @@ import Button from "@ant-design/react-native/lib/button"
 import { GenreAPI, genreInfo } from "../api/genreApi"
 import Modal from "@ant-design/react-native/lib/modal"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
-import InputItemStyle from "@ant-design/react-native/lib/input-item/style"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
@@ -202,10 +201,9 @@ const styles = StyleSheet.create({
         color: "#000000",
     },
     input: {
-        ...InputItemStyle,
         height: 42,
         width: "100%",
-        borderWidth: 0.2,
+        borderWidth: 0.5,
         borderColor: "#000",
         borderStyle: "solid",
         borderRadius: 10,
@@ -282,7 +280,7 @@ const styles = StyleSheet.create({
     textAreaInput: {
         height: 120,
         width: Dimensions.get("window").width - 32,
-        borderWidth: 0.2,
+        borderWidth: 0.5,
         borderColor: "#000",
         borderStyle: "solid",
         borderRadius: 14,
