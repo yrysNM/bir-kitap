@@ -6,6 +6,8 @@
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
+        "jsEngine": "hermes",
+
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
@@ -33,7 +35,8 @@
         ],
         "ios": {
             "supportsTablet": true,
-            "bundleIdentifier": "mobile.birkitap"
+            "bundleIdentifier": "mobile.birkitap",
+            "jsEngine": "jsc"
         },
         "android": {
             "package": "mobile.birkitap",

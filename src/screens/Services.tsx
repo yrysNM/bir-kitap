@@ -75,6 +75,13 @@ export const Services = () => {
                         </View>
                         <Text style={styles.categoryText}>Book crossing</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate('BookTracker' as never)}>
+                        <View style={styles.categoryBlock}>
+                            <Icon name="read" style={{ fontSize: 54, color: "#808080" }} />
+                        </View>
+                        <Text style={styles.categoryText}>Book Tracker</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Page>

@@ -11,6 +11,7 @@ import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setHasLogin } from "../redux/features/mainSlice"
 import { TabNavigator } from "./TabBarNavigator"
+import { BookTracker } from "../screens/BookTracker"
 
 export type RootStackParamList = {
     Root: undefined
@@ -22,6 +23,7 @@ export type RootStackParamList = {
     EditProfile: undefined
     ChangePassword: undefined
     Genre: undefined
+    BookTracker: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -58,6 +60,7 @@ export const MainNavigation = () => {
                 <>
                     <Stack.Screen name="Root" component={TabNavigator} />
                     <Stack.Screen name="WebviewTest" component={WebviewTest} />
+                    <Stack.Screen name="BookTracker" component={BookTracker} />
                     <Stack.Screen name="Genre" component={Genre} />
                     <Stack.Screen name="EditProfile" component={EditProfile} />
                     <Stack.Screen name="ChangePassword" component={ChangePassword} />
