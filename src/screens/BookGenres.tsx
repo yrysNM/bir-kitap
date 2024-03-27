@@ -1,15 +1,18 @@
-import { StyleSheet, View, Text } from "react-native"
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native"
 import { Page } from "../layouts/Page"
 import { CarouselBookList } from "../components/CarouselBookList"
 import { useEffect, useState } from "react"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { NoData } from "../components/NoData"
+import Icon from "@ant-design/react-native/lib/icon"
+import { useNavigation } from "@react-navigation/native"
 
 type bookGenreInfo = {
     [key: string]: bookInfo[]
 }
 
 export const BookGenres = () => {
+    const navigation = useNavigation()
     const { fetchData: fetchBookGenreData } = BookApi("list/genre")
     const [bookGenreInfo, setBookGenreInfo] = useState<bookGenreInfo>({})
 
@@ -24,11 +27,14 @@ export const BookGenres = () => {
 
     return (
         <Page>
-            <View>
-                <Text>Genres</Text>
+            <View style={styles.headerBlock}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icon name="left" style={{ fontSize: 35, color: "#000" }} />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Genres</Text>
             </View>
 
-            <View>
+            <View style={{ marginBottom: 20 }}>
                 {Object.keys(bookGenreInfo).map((item, i) => (
                     <View style={styles.listWrapper} key={i}>
                         <View style={styles.listHeaderBlock}>
@@ -44,6 +50,19 @@ export const BookGenres = () => {
 }
 
 const styles = StyleSheet.create({
+    headerBlock: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
+        marginTop: 35,
+        marginBottom: 50,
+    },
+    headerTitle: {
+        fontSize: 32,
+        fontWeight: "600",
+        lineHeight: 40,
+        color: "#000000",
+    },
     headText: {
         textAlign: "center",
         fontSize: 20,
