@@ -29,7 +29,7 @@ export const BookGenres = () => {
         <Page>
             <View style={styles.headerBlock}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="left" style={{ fontSize: 35, color: "#000" }} />
+                    <Icon name="left" style={{ fontSize: 35, color: "#000", marginLeft: -10 }} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Genres</Text>
             </View>

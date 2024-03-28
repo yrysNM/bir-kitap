@@ -7,7 +7,6 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
 import Icon from "@ant-design/react-native/lib/icon"
-import { NoData } from "../components/NoData"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
 
@@ -67,7 +66,7 @@ export const BookDetail = () => {
     const onSubmitReview = () => {
         fetchCreateReviewData({
             bookId: bookInfo?.book.id,
-            ...reviewInfo
+            ...reviewInfo,
         }).then((res) => {
             if (res.result_code === 0) {
                 setReviewInfo(_reviewTemp)
@@ -122,27 +121,21 @@ export const BookDetail = () => {
                         Submit review
                     </Button>
                 </View>
-                {bookInfo?.reviews.length ? (
-                    <View style={{ marginLeft: 19 }}>
-                        {bookInfo?.reviews.map((review) => (
-                            <View key={review.id}>
-                                <View style={styles.reviewProfileBlock}>
-                                    <Image source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} width={32} height={32} style={{ borderRadius: 500 }} />
-                                    <View>
-                                        <Text style={styles.reviewUserName}>{review.userName}</Text>
-                                        <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-                                            <StarRate rateNumber={review.rating} />
-                                            <Text style={styles.reviewNumberRate}>{review.rating.toFixed(1)}</Text>
-                                        </View>
-                                    </View>
+                {bookInfo?.reviews.map((review) => (
+                    <View key={review.id}>
+                        <View style={styles.reviewProfileBlock}>
+                            <Image source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} width={32} height={32} style={{ borderRadius: 500 }} />
+                            <View>
+                                <Text style={styles.reviewUserName}>{review.userName}</Text>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
+                                    <StarRate rateNumber={review.rating} />
+                                    <Text style={styles.reviewNumberRate}>{review.rating.toFixed(1)}</Text>
                                 </View>
-                                <Text style={styles.reviewMessage}>{review.message}</Text>
                             </View>
-                        ))}
+                        </View>
+                        <Text style={styles.reviewMessage}>{review.message}</Text>
                     </View>
-                ) : (
-                    <NoData />
-                )}
+                ))}
 
                 <View style={styles.listWrapper}>
                     <View style={styles.listHeaderBlock}>
@@ -270,18 +263,20 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
+        marginTop: 23,
     },
     reviewUserName: {
-        fontSize: 9,
+        fontSize: 12,
         fontWeight: "600",
         fontStyle: "normal",
-        lineHeight: 9,
+        lineHeight: 15,
         color: "#000000",
     },
     reviewMessage: {
-        fontSize: 8,
+        fontSize: 10,
         fontWeight: "600",
-        lineHeight: 10,
+        lineHeight: 15,
+        marginTop: 5,
     },
     reviewNumberRate: {
         fontSize: 9,
@@ -318,6 +313,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         borderWidth: 0,
         marginTop: 13,
-        marginBottom: 42,
+        marginBottom: 12,
     },
 })

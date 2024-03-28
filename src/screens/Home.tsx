@@ -7,6 +7,12 @@ import { CarouselBookList } from "../components/CarouselBookList"
 import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
 import Carousel from "react-native-snap-carousel"
 import { StarRate } from "../components/StarRate"
+import { CloudImage } from "../components/CloudImage"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
+interface IReviewItem extends bookReviewInfo {
+    book: bookInfo
+}
 
 export const Home = () => {
     const { fetchData: fetchBookData } = BookApi("list")
@@ -15,6 +21,7 @@ export const Home = () => {
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
 
     useEffect(() => {
+        AsyncStorage.clear()
         fetchBookData({}).then((res) => {
             if (res.result_code === 0) {
                 setBookDataList(res.data)
@@ -28,15 +35,14 @@ export const Home = () => {
         })
     }, [])
 
-    const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
+    const _renderReviewItem = ({ item }: { item: IReviewItem }) => {
         return (
             <View style={styles.reviewWrapper}>
-                <Image style={styles.bookReviewImg} source={{ uri: "https://static.vecteezy.com/system/resources/previews/022/192/851/original/girl-looking-at-the-mount-fuji-during-the-night-art-of-anime-woman-stargazing-beautiful-vector.jpg" }} />
-
+                <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
                         <Image style={styles.reviewUserProfileImg} source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} />
-                        <View>
+                        <View style={{ flexShrink: 1 }}>
                             <Text style={styles.reviewUserName}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>
                         </View>
@@ -66,7 +72,7 @@ export const Home = () => {
                 </View>
 
                 <View>
-                    {reviewDataList.length ? <Carousel data={reviewDataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={254} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <NoData />}
+                    {reviewDataList.length ? <Carousel data={reviewDataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <NoData />}
                 </View>
             </View>
         </Page>
@@ -107,8 +113,10 @@ const styles = StyleSheet.create({
     },
 
     reviewWrapper: {
+        marginRight: 17,
         backgroundColor: "#f9faf8",
         width: 254,
+        flex: 1,
         height: 171,
         borderRadius: 15,
         shadowColor: "rgba(0, 0, 0, 0.25)",

@@ -11,13 +11,6 @@ type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackPar
 
 export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
     const navigation = useNavigation<NavigateType>()
-    const itemWidth = () => {
-        if (dataList.length <= 4) {
-            return Dimensions.get("window").width / (dataList.length - 0.5)
-        }
-
-        return Dimensions.get("window").width / 3.5
-    }
 
     const _renderItem = ({ item }: { item: bookInfo }) => {
         const imageUrl = `${API_URL}/public/get_resource?name=${item.imageLink}`
@@ -29,17 +22,16 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
         )
     }
 
-    return <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={itemWidth()} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
+    return <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={104} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
 }
 
 const styles = StyleSheet.create({
     card: {
-        flex: 1,
         gap: 6,
         justifyContent: "center",
         alignItems: "center",
         marginRight: 20,
-        // width: 84,
+        width: 84,
     },
     bookImg: {
         width: "100%",

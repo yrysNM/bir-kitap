@@ -1,5 +1,5 @@
 import Icon from "@ant-design/react-native/lib/icon"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TouchableOpacity, View, StyleSheet } from "react-native"
 
 type propsInfo = {
@@ -16,6 +16,10 @@ export const StarRate = ({ rateNumber = 0, onChangeRate, size = 13 }: propsInfo)
             onChangeRate(rate)
         }
     }
+
+    useEffect(() => {
+        setStarRating(rateNumber)
+    }, [rateNumber])
 
     return (
         <View style={styles.stars}>
