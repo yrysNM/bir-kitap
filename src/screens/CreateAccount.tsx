@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Page } from "../layouts/Page"
 import { setHasLogin } from "../redux/features/mainSlice"
 import { useAppDispatch } from "../hook/useStore"
+import MaskInput from "react-native-mask-input"
 
 export const CreateAccount = () => {
     const navigation = useNavigation()
@@ -79,7 +80,15 @@ export const CreateAccount = () => {
                     <InputItem type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Number phone"}>
-                    <InputItem type="phone" style={styles.input} placeholder="+7" value={info.phone} onChange={(value) => setInfo((info) => ({ ...info, phone: value }))} />
+                    <Text style={{ position: "absolute", top: 46, left: 10 }}>+7</Text>
+                    <MaskInput
+                        value={info.phone}
+                        onChangeText={(value) => setInfo({ ...info, phone: value })}
+                        placeholder="(777) 777-77-77"
+                        keyboardType="numeric"
+                        mask={["(", /\d/, /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]}
+                        style={{ ...styles.input, marginLeft: 0, paddingLeft: 30 }}
+                    />
                 </InputStyle>
                 <InputStyle inputTitle={"Password"}>
                     <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />

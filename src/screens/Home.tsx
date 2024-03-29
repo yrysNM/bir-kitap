@@ -8,7 +8,6 @@ import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
 import Carousel from "react-native-snap-carousel"
 import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
 interface IReviewItem extends bookReviewInfo {
     book: bookInfo
@@ -21,7 +20,6 @@ export const Home = () => {
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
 
     useEffect(() => {
-        AsyncStorage.clear()
         fetchBookData({}).then((res) => {
             if (res.result_code === 0) {
                 setBookDataList(res.data)
