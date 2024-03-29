@@ -18,7 +18,6 @@ export type categoryInfo = {
     url: string
     visible: number
     sort: number
-    linkName?: string
 }
 
 interface IBook extends IResponse {

@@ -54,8 +54,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
-        marginTop: 35,
-        marginBottom: 50,
+        marginVertical: 10,
     },
     headerTitle: {
         fontSize: 32,
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
     },
     listWrapper: {
         width: "100%",
-        gap: 25,
+        gap: 10,
         flexDirection: "column",
     },
     listHeaderBlock: {
