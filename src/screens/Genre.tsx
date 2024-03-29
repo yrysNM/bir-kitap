@@ -5,15 +5,17 @@ import { View, Text, StyleSheet } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
 import { useNavigation } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
+import { UserAPI } from "../api/userApi"
 
 export const Genre = () => {
     const navigation = useNavigation()
-    const { fetchData } = GenreAPI("list")
-    const [dataList, setDataList] = useState<{ id: string; title: string }[]>()
+    const { fetchData: fetchGenreData } = GenreAPI("list")
+    const { fetchData: fetchUserAddGenreData } = UserAPI("genre/add")
+    const [dataList, setDataList] = useState<{ id: string; title: string }[]>([])
     const [info, setInfo] = useState<{ genres: string[] }>({ genres: [] })
 
     useEffect(() => {
-        fetchData({}).then((res) => {
+        fetchGenreData({}).then((res) => {
             if (res?.result_code === 0) {
                 setDataList(res.data)
             }
@@ -34,10 +36,13 @@ export const Genre = () => {
     }
 
     const onContinue = () => {
-        /**
-         * @TODO add genre for user
-         */
-        navigation.navigate("Home" as never)
+        fetchUserAddGenreData({
+            genres: info.genres.map((genreId) => dataList.find((genre) => genre.id === genreId)),
+        }).then((res) => {
+            if (res.result_code === 0) {
+                navigation.navigate("Home" as never)
+            }
+        })
     }
 
     return (

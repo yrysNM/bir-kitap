@@ -35,7 +35,7 @@ const ChangePassword = () => {
         if (info.confirmpassword === "" || info.password === "" || info.newpassword === "") {
             Alert.alert("Ошибка", "Все обязательно полей")
         } else {
-            navigate.navigate("NewHomeScreen" as never)
+            navigate.navigate("Home" as never)
         }
     }
 

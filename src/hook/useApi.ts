@@ -1,11 +1,10 @@
 import http from "../utils/axios"
 import { useState } from "react"
 import { useAppDispatch } from "./useStore"
-import { setHasLogin, setLoading, setError } from "../redux/features/mainSlice"
-import { useNavigation } from "@react-navigation/native"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { logOut as logOutHelper } from "../helpers/logOut"
 import Toast from "@ant-design/react-native/lib/toast"
 import { AxiosHeaders } from "axios"
+import { setLoading, setError } from "../redux/features/mainSlice"
 
 interface UseApiResult<T> {
     res: T | null
@@ -14,14 +13,8 @@ interface UseApiResult<T> {
 
 const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
     const dispatch = useAppDispatch()
-    const navigation = useNavigation()
     const [res, setRes] = useState<T | null>(null)
-
-    const logOut = () => {
-        AsyncStorage.setItem("token", "")
-        dispatch(setHasLogin(false))
-        navigation.navigate("Login" as never)
-    }
+    const logOut = logOutHelper()
 
     const fetchData = async (body: unknown, headers?: AxiosHeaders): Promise<T> => {
         dispatch(setLoading(true))
