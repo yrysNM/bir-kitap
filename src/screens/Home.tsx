@@ -10,6 +10,7 @@ import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
 import { useNavigation } from "@react-navigation/native"
 import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
+import { useAppSelector } from "../hook/useStore"
 
 interface IReviewItem extends bookReviewInfo {
     book: bookInfo
@@ -21,6 +22,7 @@ export const Home = () => {
     const { fetchData: fetchReViewData } = ReviewApi("list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
+    const { isRefresh } = useAppSelector((state) => state.mainSlice)
 
     useEffect(() => {
         fetchBookData({}).then((res) => {
@@ -34,7 +36,7 @@ export const Home = () => {
                 setReviewDataList(res.data)
             }
         })
-    }, [])
+    }, [isRefresh])
 
     const _renderReviewItem = ({ item }: { item: IReviewItem }) => {
         return (

@@ -6,6 +6,7 @@ interface IState {
     isLoading: boolean
     error: AxiosError | null
     isServiceScreen: boolean
+    isRefresh: boolean
     userInfo: { [key: string]: unknown }
 }
 
@@ -14,6 +15,7 @@ const initialState: IState = {
     isLoading: false,
     isServiceScreen: false,
     error: null,
+    isRefresh: false,
     userInfo: {},
 }
 
@@ -36,9 +38,12 @@ export const mainSlice = createSlice({
         setError(state, action: PayloadAction<AxiosError | null>) {
             state.error = action.payload
         },
+        setRefresh(state, action: PayloadAction<boolean>) {
+            state.isRefresh = action.payload
+        },
     },
 })
 
-export const { setUserInfo, setLoading, setHasLogin, setError, setIsServiceScreen } = mainSlice.actions
+export const { setUserInfo, setLoading, setHasLogin, setError, setRefresh, setIsServiceScreen } = mainSlice.actions
 
 export default mainSlice.reducer
