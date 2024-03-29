@@ -9,6 +9,7 @@ import { CloudImage } from "../components/CloudImage"
 import Icon from "@ant-design/react-native/lib/icon"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
+import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 
 type bookReviewInfo = {
     id?: string
@@ -110,7 +111,7 @@ export const BookDetail = () => {
                 <Text style={styles.descrText}>Reviews</Text>
 
                 <View style={{ marginTop: 17 }}>
-                    <Text style={styles.rateText}>Rating 5/{reviewInfo.rating}</Text>
+                    <Text style={styles.rateText}>Rating {reviewInfo.rating}/5</Text>
                     <View style={{ marginTop: 10 }}>
                         <StarRate size={25} rateNumber={reviewInfo.rating} onChangeRate={(e) => setReviewInfo({ ...reviewInfo, rating: e })} />
                     </View>
@@ -124,7 +125,7 @@ export const BookDetail = () => {
                 {bookInfo?.reviews.map((review) => (
                     <View key={review.id}>
                         <View style={styles.reviewProfileBlock}>
-                            <Image source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} width={32} height={32} style={{ borderRadius: 500 }} />
+                            <Image source={UserCustomProfileImg} style={{ borderRadius: 500, width: 32, height: 32 }} />
                             <View>
                                 <Text style={styles.reviewUserName}>{review.userName}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
@@ -137,13 +138,13 @@ export const BookDetail = () => {
                     </View>
                 ))}
 
-                <View style={styles.listWrapper}>
+                {/* TODO  <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View> */}
+                {/* <View style={styles.listWrapper}>
                     <View style={styles.listHeaderBlock}>
                         <Text style={styles.listHeadTitle}>Best Sellers</Text>
                     </View>
 
-                    {/* TODO  <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View> */}
-                </View>
+                </View> */}
             </View>
         </Page>
     )
@@ -277,6 +278,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         lineHeight: 15,
         marginTop: 5,
+        marginLeft: 5,
     },
     reviewNumberRate: {
         fontSize: 9,

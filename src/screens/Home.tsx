@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Dimensions, Image } from "react-native"
+import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity } from "react-native"
 import { Page } from "../layouts/Page"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
@@ -8,12 +8,15 @@ import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
 import Carousel from "react-native-snap-carousel"
 import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
+import { useNavigation } from "@react-navigation/native"
+import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 
 interface IReviewItem extends bookReviewInfo {
     book: bookInfo
 }
 
 export const Home = () => {
+    const navigation = useNavigation()
     const { fetchData: fetchBookData } = BookApi("list")
     const { fetchData: fetchReViewData } = ReviewApi("list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
@@ -39,7 +42,7 @@ export const Home = () => {
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
-                        <Image style={styles.reviewUserProfileImg} source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} />
+                        <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} />
                         <View style={{ flexShrink: 1 }}>
                             <Text style={styles.reviewUserName}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>
@@ -58,7 +61,9 @@ export const Home = () => {
             <View style={styles.listWrapper}>
                 <View style={styles.listHeaderBlock}>
                     <Text style={styles.listHeadTitle}>New books</Text>
-                    <Text style={styles.moreInfoText}>See All</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("NotReady" as never)}>
+                        <Text style={styles.moreInfoText}>See All</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>

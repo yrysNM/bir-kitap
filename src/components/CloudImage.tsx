@@ -16,7 +16,11 @@ export const CloudImage = ({ url, styleImg }: propsInfo) => {
     useEffect(() => {
         if (url && url.length) {
             setIsError(false)
-            setUrlImg(`${API_URL}public/get_resource?name=${url}`)
+            if (url.indexOf("http") === -1) {
+                setUrlImg(`${API_URL}public/get_resource?name=${url}`)
+            } else {
+                setUrlImg(url)
+            }
         } else {
             setIsError(true)
         }

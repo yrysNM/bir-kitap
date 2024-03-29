@@ -12,6 +12,7 @@ import { setHasLogin } from "../redux/features/mainSlice"
 import { TabNavigator } from "./TabBarNavigator"
 import { BookDetail } from "../screens/BookDetail"
 import { BookGenres } from "../screens/BookGenres"
+import { NotReady } from "../screens/NotReady"
 
 export type RootStackParamList = {
     Root: undefined
@@ -25,6 +26,7 @@ export type RootStackParamList = {
     Genre: undefined
     BookDetail: { bookId: string }
     BookGenres: undefined
+    NotReady: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -65,6 +67,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="EditProfile" component={EditProfile} />
                     <Stack.Screen name="BookDetail" component={BookDetail} />
                     <Stack.Screen name="BookGenres" component={BookGenres} />
+                    <Stack.Screen name="NotReady" component={NotReady} />
                 </>
             ) : (
                 <>

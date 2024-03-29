@@ -12,7 +12,7 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import useApi from "../hook/useApi"
 
-const _webview_base_url = "http://192.168.0.109:5173/"
+const _webview_base_url = "http://192.168.0.102:5173/"
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
@@ -33,10 +33,10 @@ export const BookCrossingWebView = () => {
         webViewEl.current?.injectJavaScript(`
             setTimeout(() => {
                 localStorage.setItem('token', '${token}');
-                window.data = {};
-                function setData(data) {
-                    window.data = data
-                }
+                // window.data = {};
+                // function setData(data) {
+                //     window.data = data
+                // }
             }, 100);
         `)
     }
@@ -72,7 +72,7 @@ export const BookCrossingWebView = () => {
                         type: "file",
                         url: urlImage,
                     }
-                    webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
+                    webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                 }
             })
         }

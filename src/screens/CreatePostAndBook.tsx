@@ -15,6 +15,7 @@ import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
+import { NotReady } from "./NotReady"
 
 const _bookInfo = {
     title: "",
@@ -105,6 +106,9 @@ export const CreatePostAndBook = () => {
             if (res.result_code === 0) {
                 Toast.success("Successfuly created book")
                 setBookInfo(_bookInfo)
+                setImage("")
+                setYear("")
+                setPages("")
                 navigation.navigate("Home" as never)
             }
         })
@@ -175,7 +179,7 @@ export const CreatePostAndBook = () => {
                     </View>
                     {/* Create Post */}
                     <View>
-                        <Text>Create Post</Text>
+                        <NotReady />
                     </View>
                 </Tabs>
             </View>

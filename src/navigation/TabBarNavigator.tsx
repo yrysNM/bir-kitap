@@ -2,13 +2,14 @@ import { StyleSheet, View } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
 import Icon from "@ant-design/react-native/lib/icon"
-import { Search } from "../screens/Search"
+// import { Search } from "../screens/Search"
 import { Services } from "../screens/Services"
 import { useNavigation } from "@react-navigation/native"
 import { useState, useEffect } from "react"
 import { useAppDispatch } from "../hook/useStore"
 import { setIsServiceScreen } from "../redux/features/mainSlice"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
+import { NotReady } from "../screens/NotReady"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
@@ -65,7 +66,7 @@ export const TabNavigator = () => {
             />
             <Tab.Screen
                 name="Search"
-                component={Search}
+                component={NotReady}
                 options={{
                     tabBarItemStyle: {
                         height: 0,
@@ -101,6 +102,20 @@ export const TabNavigator = () => {
                     tabBarIcon: ({ focused }) => (
                         <View>
                             <Icon name="appstore" style={styles.tabIcon} color={iconColor(focused)} />
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={NotReady}
+                options={{
+                    tabBarItemStyle: {
+                        height: 0,
+                    },
+                    tabBarIcon: ({ focused }) => (
+                        <View>
+                            <Icon name="user" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
