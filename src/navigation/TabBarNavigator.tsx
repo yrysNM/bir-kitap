@@ -58,7 +58,7 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="home" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="home" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -72,7 +72,7 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="search" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="search" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -86,7 +86,7 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="plus" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="plus" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -100,7 +100,7 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="appstore" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="appstore" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -112,13 +112,17 @@ export const TabNavigator = () => {
 const styles = StyleSheet.create({
     tabbar: {
         paddingVertical: 20,
-        height: 74,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        height: 64,
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
         gap: 40,
+        borderBottomColor: "#000",
+        borderBottomWidth: 0.5,
+        borderStyle: "solid",
     },
     tabIcon: {
-        width: 35,
-        height: 35,
+        fontSize: 30,
+        width: 30,
+        height: 30,
     },
 })

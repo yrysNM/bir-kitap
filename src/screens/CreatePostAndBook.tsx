@@ -35,6 +35,7 @@ export const CreatePostAndBook = () => {
     const [genreList, setGenreList] = useState<genreInfo[]>([])
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
     const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
+    const [image, setImage] = useState<string>("")
     const [year, setYear] = useState<string>("")
     const [pages, setPages] = useState<string>("")
 
@@ -83,7 +84,8 @@ export const CreatePostAndBook = () => {
                     if (res.result_code === 0) {
                         const info: { path: string } = JSON.parse(JSON.stringify(res.data))
                         const urlImage = `${API_URL}/public/get_resource?name=${info.path}`
-                        setBookInfo({ ...bookInfo, imageLink: urlImage })
+                        setImage(urlImage)
+                        setBookInfo({ ...bookInfo, imageLink: info.path })
                     }
                 })
             } else {
@@ -126,9 +128,9 @@ export const CreatePostAndBook = () => {
 
                             <View>
                                 <View style={styles.uploadWrapper}>
-                                    {bookInfo.imageLink.length ? (
+                                    {image.length ? (
                                         <>
-                                            <Image style={styles.bookImage} source={{ uri: bookInfo.imageLink }} />
+                                            <Image style={styles.bookImage} source={{ uri: image }} />
                                             <TouchableOpacity style={styles.iconCloseImg} onPress={() => handleRemoveImg(true)}>
                                                 <Icon name="close" />
                                             </TouchableOpacity>

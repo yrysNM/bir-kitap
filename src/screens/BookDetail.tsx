@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
 import { Page } from "../layouts/Page"
 import { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -7,8 +7,10 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
 import Icon from "@ant-design/react-native/lib/icon"
+import TextareaItem from "@ant-design/react-native/lib/textarea-item"
+import Button from "@ant-design/react-native/lib/button"
 
-type reviewInfo = {
+type bookReviewInfo = {
     id?: string
     userId: string
     userName: string
@@ -27,16 +29,28 @@ interface IBookInfo {
         selected: number
         rating: number
     }
-    reviews: reviewInfo[]
+    reviews: bookReviewInfo[]
+}
+
+const _reviewTemp = {
+    title: "еуые",
+    message: "",
+    rating: 0,
 }
 
 export const BookDetail = () => {
     const navigate = useNavigation()
+    const { fetchData: fetchCreateReviewData } = BookApi("review/create")
     const { bookId } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
     const { fetchData: fetchGetBookData } = BookApi(`get`)
     const [bookInfo, setBookInfo] = useState<IBookInfo | null>(null)
+    const [reviewInfo, setReviewInfo] = useState<{ title: string; message: string; rating: number }>(_reviewTemp)
 
     useEffect(() => {
+        loadBookData()
+    }, [])
+
+    const loadBookData = () => {
         if (bookId) {
             fetchGetBookData({
                 id: bookId,
@@ -47,7 +61,19 @@ export const BookDetail = () => {
                 }
             })
         }
-    }, [])
+    }
+
+    const onSubmitReview = () => {
+        fetchCreateReviewData({
+            bookId: bookInfo?.book.id,
+            ...reviewInfo,
+        }).then((res) => {
+            if (res.result_code === 0) {
+                setReviewInfo(_reviewTemp)
+                loadBookData()
+            }
+        })
+    }
 
     return (
         <Page>
@@ -56,7 +82,7 @@ export const BookDetail = () => {
             </TouchableOpacity>
             <View style={styles.bookWrapper}>
                 <CloudImage styleImg={styles.bookImg} url={bookInfo?.book.imageLink} />
-                <StarRate rateNumber={bookInfo?.customInfo.rating || 0} />
+                <StarRate rateNumber={bookInfo?.customInfo.rating || 0} size={25} />
                 <Text style={styles.bookTitle}>{bookInfo?.book.title}</Text>
                 <Text style={styles.bookAuthor}>{bookInfo?.book.author}</Text>
 
@@ -74,26 +100,49 @@ export const BookDetail = () => {
                         <Text style={styles.statisticTitle}>Рецензий</Text>
                     </View>
                 </View>
+            </View>
 
-                <View style={{ marginTop: 35 }}>
-                    <Text style={styles.descrText}>Description</Text>
-                    <Text style={styles.bookDescr}>{bookInfo?.book.description}</Text>
+            <View style={{ marginTop: 35 }}>
+                <Text style={styles.descrText}>Description</Text>
+                <Text style={styles.bookDescr}>{bookInfo?.book.description}</Text>
+            </View>
+            <View style={{ marginTop: 30 }}>
+                <Text style={styles.descrText}>Reviews</Text>
+
+                <View style={{ marginTop: 17 }}>
+                    <Text style={styles.rateText}>Rating 5/{reviewInfo.rating}</Text>
+                    <View style={{ marginTop: 10 }}>
+                        <StarRate size={25} rateNumber={reviewInfo.rating} onChangeRate={(e) => setReviewInfo({ ...reviewInfo, rating: e })} />
+                    </View>
+                    <View>
+                        <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
+                    </View>
+                    <Button type="primary" style={styles.btnReview} onPress={() => onSubmitReview()}>
+                        Submit review
+                    </Button>
                 </View>
-                <View style={{ marginTop: 30 }}>
-                    <Text style={styles.descrText}>Reviews</Text>
-                    <View style={{ marginLeft: 11 }}>
-                        <View>
-                            <View style={styles.reviewProfileBlock}>
-                                <Image source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} width={32} height={32} style={{ borderRadius: 500 }} />
-                                <View>
-                                    <Text>Ayala Nayashova</Text>
-                                    <StarRate rateNumber={5} />
-                                    <Text>5.0</Text>
+                {bookInfo?.reviews.map((review) => (
+                    <View key={review.id}>
+                        <View style={styles.reviewProfileBlock}>
+                            <Image source={{ uri: "https://wallpapers.com/images/hd/cute-anime-profile-pictures-k6h3uqxn6ei77kgl.jpg" }} width={32} height={32} style={{ borderRadius: 500 }} />
+                            <View>
+                                <Text style={styles.reviewUserName}>{review.userName}</Text>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
+                                    <StarRate rateNumber={review.rating} />
+                                    <Text style={styles.reviewNumberRate}>{review.rating.toFixed(1)}</Text>
                                 </View>
                             </View>
-                            <Text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium cumque id amet maxime non, aliquid a quis praesentium harum quam. Id asperiores consequuntur cupiditate natus alias minus, eveniet numquam distinctio.</Text>
                         </View>
+                        <Text style={styles.reviewMessage}>{review.message}</Text>
                     </View>
+                ))}
+
+                <View style={styles.listWrapper}>
+                    <View style={styles.listHeaderBlock}>
+                        <Text style={styles.listHeadTitle}>Best Sellers</Text>
+                    </View>
+
+                    {/* TODO  <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View> */}
                 </View>
             </View>
         </Page>
@@ -101,6 +150,24 @@ export const BookDetail = () => {
 }
 
 const styles = StyleSheet.create({
+    listWrapper: {
+        width: "100%",
+        gap: 25,
+        flexDirection: "column",
+        marginBottom: 20,
+    },
+    listHeaderBlock: {
+        marginTop: 25,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        gap: 10,
+        alignItems: "center",
+    },
+    listHeadTitle: {
+        fontSize: 21,
+        fontWeight: "700",
+        lineHeight: 21,
+    },
     iconBack: {
         marginTop: 25,
         fontSize: 30,
@@ -137,6 +204,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         lineHeight: 20,
         color: "#000000",
+        textAlign: "left",
     },
     bookDescr: {
         marginTop: 11,
@@ -195,5 +263,56 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
+        marginTop: 23,
+    },
+    reviewUserName: {
+        fontSize: 12,
+        fontWeight: "600",
+        fontStyle: "normal",
+        lineHeight: 15,
+        color: "#000000",
+    },
+    reviewMessage: {
+        fontSize: 10,
+        fontWeight: "600",
+        lineHeight: 15,
+        marginTop: 5,
+    },
+    reviewNumberRate: {
+        fontSize: 9,
+        fontWeight: "600",
+        lineHeight: 9,
+        color: "#7A7878",
+    },
+    rateText: {
+        fontSize: 14,
+        fontWeight: "600",
+        lineHeight: 18,
+        color: "#7A7878",
+    },
+    textAreaInput: {
+        marginTop: 22,
+        height: 120,
+        width: Dimensions.get("window").width - 32,
+        borderWidth: 0.5,
+        borderColor: "#000",
+        borderStyle: "solid",
+        borderRadius: 14,
+        paddingLeft: 14,
+        paddingTop: 25,
+    },
+    btnReview: {
+        borderRadius: 14,
+        backgroundColor: "#005479",
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 0,
+            height: 3.8518519401550293,
+        },
+        shadowRadius: 3.8518519401550293,
+        shadowOpacity: 1,
+        borderWidth: 0,
+        marginTop: 13,
+        marginBottom: 12,
     },
 })
