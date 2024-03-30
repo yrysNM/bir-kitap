@@ -33,9 +33,9 @@
             ]
         ],
         "ios": {
-            "jsEngine": "jsc",
             "supportsTablet": true,
-            "bundleIdentifier": "mobile.birkitap"
+            "bundleIdentifier": "mobile.birkitap",
+            "jsEngine": "jsc"
         },
         "android": {
             "package": "mobile.birkitap",
