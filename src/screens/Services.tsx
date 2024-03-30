@@ -62,7 +62,7 @@ export const Services = () => {
             <View style={{ marginTop: 58 }}>
                 <Text style={styles.contentTitle}>Services</Text>
 
-                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" }}>
+                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: 'wrap' }}>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("NotReady" as never)}>
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
@@ -80,6 +80,13 @@ export const Services = () => {
                             <Image source={BookTestImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
                         </View>
                         <Text style={styles.categoryText}>Book Test</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate('BookTracker' as never)}>
+                        <View style={styles.categoryBlock}>
+                            <Icon name="read" style={{ fontSize: 54, color: "#808080" }} />
+                        </View>
+                        <Text style={styles.categoryText}>Book Tracker</Text>
                     </TouchableOpacity>
                 </View>
             </View>

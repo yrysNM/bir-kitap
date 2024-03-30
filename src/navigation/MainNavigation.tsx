@@ -14,6 +14,7 @@ import { BookDetail } from "../screens/BookDetail"
 import { BookGenres } from "../screens/BookGenres"
 import { NotReady } from "../screens/NotReady"
 import { BookMore } from "../screens/BookMore"
+import { BookTracker } from "../screens/BookTracker"
 
 export type RootStackParamList = {
     Root: undefined
@@ -29,6 +30,7 @@ export type RootStackParamList = {
     BookGenres: undefined
     NotReady: undefined
     BookMore: undefined
+    BookTracker: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -67,6 +69,7 @@ export const MainNavigation = () => {
                 <>
                     <Stack.Screen name="Root" component={TabNavigator} />
                     <Stack.Screen name="BookCrossingWebView" component={BookCrossingWebView} />
+                    <Stack.Screen name="BookTracker" component={BookTracker} />
                     <Stack.Screen name="Genre" component={Genre} />
                     <Stack.Screen name="EditProfile" component={EditProfile} />
                     <Stack.Screen name="BookDetail" component={BookDetail} />
