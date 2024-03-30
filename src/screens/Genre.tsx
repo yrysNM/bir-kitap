@@ -33,6 +33,13 @@ export const Genre = () => {
         return info.genres.includes(genreId)
     }
 
+    const onContinue = () => {
+        /**
+         * @TODO add genre for user
+         */
+        navigation.navigate("Home" as never)
+    }
+
     return (
         <Page>
             <Header isCustomHeader={false} title="What genre do you prefer?" />
@@ -50,7 +57,7 @@ export const Genre = () => {
             </View>
 
             <View style={{ marginTop: 50, width: "100%" }}>
-                <Button style={styles.continueBtn} type="primary" onPress={() => navigation.navigate("HomeScreen" as never)}>
+                <Button style={styles.continueBtn} type="primary" onPress={onContinue}>
                     <Text style={styles.continueText}>Continue</Text>
                 </Button>
             </View>

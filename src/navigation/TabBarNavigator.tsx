@@ -2,13 +2,14 @@ import { StyleSheet, View } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
 import Icon from "@ant-design/react-native/lib/icon"
-import { Search } from "../screens/Search"
+// import { Search } from "../screens/Search"
 import { Services } from "../screens/Services"
 import { useNavigation } from "@react-navigation/native"
 import { useState, useEffect } from "react"
 import { useAppDispatch } from "../hook/useStore"
 import { setIsServiceScreen } from "../redux/features/mainSlice"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
+import { NotReady } from "../screens/NotReady"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
@@ -58,21 +59,21 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="home" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="home" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
             />
             <Tab.Screen
                 name="Search"
-                component={Search}
+                component={NotReady}
                 options={{
                     tabBarItemStyle: {
                         height: 0,
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="search" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="search" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -86,7 +87,7 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="plus" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="plus" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -100,7 +101,21 @@ export const TabNavigator = () => {
                     },
                     tabBarIcon: ({ focused }) => (
                         <View>
-                            <Icon name="appstore" style={styles.tabIcon} size="lg" color={iconColor(focused)} />
+                            <Icon name="appstore" style={styles.tabIcon} color={iconColor(focused)} />
+                        </View>
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={NotReady}
+                options={{
+                    tabBarItemStyle: {
+                        height: 0,
+                    },
+                    tabBarIcon: ({ focused }) => (
+                        <View>
+                            <Icon name="user" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
                     ),
                 }}
@@ -112,13 +127,17 @@ export const TabNavigator = () => {
 const styles = StyleSheet.create({
     tabbar: {
         paddingVertical: 20,
-        height: 74,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        height: 64,
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
         gap: 40,
+        borderBottomColor: "#000",
+        borderBottomWidth: 0.5,
+        borderStyle: "solid",
     },
     tabIcon: {
-        width: 35,
-        height: 35,
+        fontSize: 30,
+        width: 30,
+        height: 30,
     },
 })

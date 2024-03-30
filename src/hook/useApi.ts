@@ -9,13 +9,19 @@ import { AxiosHeaders } from "axios"
 
 interface UseApiResult<T> {
     res: T | null
-    fetchData: (body: unknown, headers?: AxiosHeaders   ) => Promise<T>
+    fetchData: (body: unknown, headers?: AxiosHeaders) => Promise<T>
 }
 
 const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
     const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const [res, setRes] = useState<T | null>(null)
+
+    const logOut = () => {
+        AsyncStorage.setItem("token", "")
+        dispatch(setHasLogin(false))
+        navigation.navigate("Login" as never)
+    }
 
     const fetchData = async (body: unknown, headers?: AxiosHeaders): Promise<T> => {
         dispatch(setLoading(true))
@@ -33,15 +39,17 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
                 return res.data
             })
             .catch((err) => {
-                if (err.response.status === 401) {
-                    AsyncStorage.setItem("token", "")
-                    dispatch(setHasLogin(false))
-                    navigation.navigate("Login" as never)
+                if (err.response?.status === 401) {
+                    logOut()
                 }
                 dispatch(setLoading(false))
                 dispatch(setError(err))
-                Toast.fail(err.message.slice(0, 20))
+                Toast.fail(err.response.data?.result_msg.slice(0, 20))
                 setRes(null)
+                return {
+                    result_code: -1,
+                    result_msg: err.message,
+                }
             })
             .finally(() => {
                 dispatch(setLoading(false))

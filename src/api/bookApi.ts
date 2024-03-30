@@ -11,6 +11,15 @@ export type bookInfo = {
     description?: string
 }
 
+export type categoryInfo = {
+    id: string
+    title: string
+    icon: string
+    url: string
+    visible: number
+    sort: number
+}
+
 interface IBook extends IResponse {
     data: bookInfo[]
 }

@@ -13,7 +13,7 @@ import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 
-const _webview_base_url = "http://192.168.0.13:4000/"
+const _webview_base_url = "http://172.20.10.2:4000/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
@@ -32,11 +32,13 @@ export const BookTracker = () => {
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
         webViewEl.current?.injectJavaScript(`
-            localStorage.setItem('token', '${token}');
-            window.data = {};
-            function setData(data) {
-                window.data = data
-            }
+        setTimeout(() => {
+                localStorage.setItem('token', '${token}');
+                // window.data = {};
+                // function setData(data) {
+                //     window.data = data
+                // }
+            }, 100)
         `)
     }
 

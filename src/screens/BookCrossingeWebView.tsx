@@ -1,10 +1,9 @@
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { StatusBar, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
-import { Page } from "../layouts/Page"
 import { setHasLogin, setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
@@ -13,14 +12,13 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import useApi from "../hook/useApi"
 
-const _webview_base_url = "http://192.168.0.105:5173/"
+const _webview_base_url = "http://192.168.0.102:5173/"
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
     const { fetchData } = useApi<IResponse>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
     const { userInfo } = useAppSelector((state) => state.mainSlice)
-    const [showWebView] = useState(true)
     const navigation = useNavigation()
     const [webviewKey, setWebviewKey] = useState<number>(0)
 
@@ -33,11 +31,13 @@ export const BookCrossingWebView = () => {
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
         webViewEl.current?.injectJavaScript(`
-            localStorage.setItem('token', '${token}');
-            window.data = {};
-            function setData(data) {
-                window.data = data
-            }
+            setTimeout(() => {
+                localStorage.setItem('token', '${token}');
+                // window.data = {};
+                // function setData(data) {
+                //     window.data = data
+                // }
+            }, 100);
         `)
     }
 
@@ -72,7 +72,7 @@ export const BookCrossingWebView = () => {
                         type: "file",
                         url: urlImage,
                     }
-                    webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
+                    webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                 }
             })
         }
@@ -89,51 +89,37 @@ export const BookCrossingWebView = () => {
         }
     }
 
-    if (showWebView) {
-        return (
-            <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
-                <Fuse>
-                    <WebView
-                        ref={webViewEl}
-                        key={webviewKey}
-                        webviewDebuggingEnabled={true}
-                        ignoreSilentHardwareSwitch={true}
-                        javaScriptEnabled={true}
-                        style={{ height: "100%", width: "100%" }}
-                        source={{ uri: _webview_base_url }}
-                        originWhitelist={["*"]}
-                        onRenderProcessGone={(syntheticEvent) => {
-                            const { nativeEvent } = syntheticEvent
-                            console.warn("WebView Crashed:", nativeEvent.didCrash)
-                            webViewEl.current?.reload()
-                        }}
-                        onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                        onMessage={handleMessageFromWebview}
-                        onLoadStart={injectWebViewData}
-                        onLoad={injectWebViewData}
-                        onLoadEnd={injectWebViewData}
-                        onLoadProgress={({ nativeEvent }) => {
-                            if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(true))
-                            } else if (nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(false))
-                            }
-                        }}
-                    />
-                </Fuse>
-            </View>
-        )
-    }
-
     return (
-        <Page>
-            <TouchableOpacity onPress={() => handleFileUpload()}>
-                <Text>BOOK CROSSING</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate("Genre" as never)}>
-                <Text>Genre</Text>
-            </TouchableOpacity>
-        </Page>
+        <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
+            <Fuse>
+                <WebView
+                    ref={webViewEl}
+                    key={webviewKey}
+                    webviewDebuggingEnabled={true}
+                    ignoreSilentHardwareSwitch={true}
+                    javaScriptEnabled={true}
+                    style={{ height: "100%", width: "100%" }}
+                    source={{ uri: _webview_base_url }}
+                    originWhitelist={["*"]}
+                    onRenderProcessGone={(syntheticEvent) => {
+                        const { nativeEvent } = syntheticEvent
+                        console.warn("WebView Crashed:", nativeEvent.didCrash)
+                        webViewEl.current?.reload()
+                    }}
+                    onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
+                    onMessage={handleMessageFromWebview}
+                    onLoadStart={injectWebViewData}
+                    onLoad={injectWebViewData}
+                    onLoadEnd={injectWebViewData}
+                    onLoadProgress={({ nativeEvent }) => {
+                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                            dispatch(setLoading(true))
+                        } else if (nativeEvent.url === _webview_base_url) {
+                            dispatch(setLoading(false))
+                        }
+                    }}
+                />
+            </Fuse>
+        </View>
     )
 }
