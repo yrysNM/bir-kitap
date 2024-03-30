@@ -12,13 +12,13 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import useApi from "../hook/useApi"
 
-const _webview_base_url = "http://192.168.0.102:5173/"
+const _webview_base_url = "http://192.168.156.177:5173/"
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
     const { fetchData } = useApi<IResponse>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
+    const { userInfo } = useAppSelector((state) => state.mainSlice) 
     const navigation = useNavigation()
     const [webviewKey, setWebviewKey] = useState<number>(0)
 
@@ -109,7 +109,7 @@ export const BookCrossingWebView = () => {
                     onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                     onMessage={handleMessageFromWebview}
                     onLoadStart={injectWebViewData}
-                    onLoad={injectWebViewData}
+                    // onLoad={injectWebViewData}
                     onLoadEnd={injectWebViewData}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
