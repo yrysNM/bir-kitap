@@ -6,6 +6,7 @@ import { Services } from "../screens/Services"
 import { useNavigation } from "@react-navigation/native"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
 import { NotReady } from "../screens/NotReady"
+import { Search } from "../screens/Search"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
@@ -46,7 +47,7 @@ export const TabNavigator = () => {
             />
             <Tab.Screen
                 name="Search"
-                component={NotReady}
+                component={Search}
                 options={{
                     tabBarItemStyle: {
                         height: 0,

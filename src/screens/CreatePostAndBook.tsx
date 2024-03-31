@@ -140,13 +140,10 @@ export const CreatePostAndBook = () => {
                                             </TouchableOpacity>
                                         </>
                                     ) : (
-                                        <>
+                                        <TouchableOpacity onPress={() => handleFileUpload(true)}>
                                             <Icon name="upload" style={styles.uploadIcon} size="lg" />
                                             <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
-                                            <Button type="primary" onPress={() => handleFileUpload(true)} style={styles.uploadBtn}>
-                                                <Text style={styles.uploadBtnText}>Click here to upload</Text>
-                                            </Button>
-                                        </>
+                                        </TouchableOpacity>
                                     )}
                                 </View>
                             </View>
@@ -231,6 +228,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     uploadIcon: {
+        fontSize: 57,
+        textAlign: "center",
         color: "#000",
     },
     uploadText: {
@@ -238,27 +237,6 @@ const styles = StyleSheet.create({
         fontSize: 9,
         fontWeight: "500",
         lineHeight: 9,
-    },
-    uploadBtn: {
-        marginTop: 10,
-        width: 122,
-        height: 31,
-        borderWidth: 0,
-        borderRadius: 13,
-        backgroundColor: "#005479",
-        shadowColor: "rgba(0, 0, 0, 0.25)",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowRadius: 2,
-        shadowOpacity: 1,
-    },
-    uploadBtnText: {
-        fontSize: 10,
-        fontWeight: "500",
-        lineHeight: 10,
-        color: "#F9FAF8",
     },
     inputWrapper: {
         marginTop: 11,

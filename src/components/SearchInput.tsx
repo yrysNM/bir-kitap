@@ -1,25 +1,28 @@
 import Icon from "@ant-design/react-native/lib/icon"
 import { useState } from "react"
-import { TextInput, View, StyleSheet } from "react-native"
+import { TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native"
+import FilterImg from "../../assets/images/filter.png"
 
 type propsInfo = {
     placeholder: string
-    onChangeSearch: (e: string) => void
+    onEnterSearch: (e: string) => void
+    isHaveFilter?: boolean
 }
 
-export const SearchInput = ({ onChangeSearch, placeholder }: propsInfo) => {
+export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }: propsInfo) => {
     const [search, setSearch] = useState<string>("")
-
-    const onhandleSearch = (e: string) => {
-        onChangeSearch(e)
-        setSearch(e)
-    }
 
     return (
         <View style={styles.searchWrapper}>
-            <Icon name="search" style={styles.iconSearch} />
-            <TextInput style={styles.inputSearch} value={search} placeholder={placeholder} onChange={(e) => onhandleSearch(e.currentTarget.toString())} />
-            <Icon name="filter" style={styles.filterWrapper} />
+            <TouchableOpacity onPress={() => onEnterSearch(search)}>
+                <Icon name="search" style={styles.iconSearch} />
+            </TouchableOpacity>
+            <TextInput style={styles.inputSearch} value={search} placeholder={placeholder} onChangeText={setSearch} onSubmitEditing={() => onEnterSearch(search)} />
+            {isHaveFilter && (
+                <View style={styles.filterWrapper}>
+                    <Image source={FilterImg} style={styles.filterImg} />
+                </View>
+            )}
         </View>
     )
 }
@@ -47,10 +50,14 @@ const styles = StyleSheet.create({
         borderRadius: 13,
         padding: 10,
         position: "absolute",
-        right: 11, 
+        right: 11,
         backgroundColor: "#000000",
         justifyContent: "center",
         alignItems: "center",
-        color: "#ffff",
+    },
+    filterImg: {
+        width: 15,
+        height: 15,
+        objectFit: "contain",
     },
 })
