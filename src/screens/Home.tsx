@@ -18,13 +18,19 @@ export const Home = () => {
 
     useEffect(() => {
         if (!isRefresh) {
-            fetchBookData({}).then((res) => {
+            fetchBookData({
+                start: 0, 
+                length: 10
+            }).then((res) => {
                 if (res.result_code === 0) {
                     setBookDataList(res.data)
                 }
             })
 
-            fetchReViewData({}).then((res) => {
+            fetchReViewData({
+                start: 0, 
+                length: 5
+            }).then((res) => {
                 if (res.result_code === 0) {
                     setReviewDataList(res.data)
                 }
