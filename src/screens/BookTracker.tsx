@@ -8,16 +8,17 @@ import { Page } from "../layouts/Page"
 import { setHasLogin, setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
-import http from "../utils/axios"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
+import { BookApi } from "../api/bookApi"
 
-const _webview_base_url = "http://172.20.10.2:4000/"
+const _webview_base_url = "http://192.168.0.13:3000/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
+    const { fetchData } = BookApi("upload")
     const { userInfo } = useAppSelector((state) => state.mainSlice)
     const [showWebView] = useState(true)
     const navigation = useNavigation()
@@ -34,10 +35,6 @@ export const BookTracker = () => {
         webViewEl.current?.injectJavaScript(`
         setTimeout(() => {
                 localStorage.setItem('token', '${token}');
-                // window.data = {};
-                // function setData(data) {
-                //     window.data = data
-                // }
             }, 100)
         `)
     }
@@ -66,21 +63,17 @@ export const BookTracker = () => {
             } as never)
 
             dispatch(setLoading(true))
-            http({
-                url: "/bookcrossing/announcement/upload",
-                method: "POST",
-                headers: { "Content-Type": "multipart/form-data", accept: "application/json" },
-                data: param,
-            })
+            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never)
                 .then((res) => {
-                    if (res.data.result_code === 0) {
+                    if (res.result_code === 0) {
                         dispatch(setLoading(false))
-                        const urlImage = `${API_URL}/public/get_resource?name=${res.data.data.path}`
+                        const infoImg = JSON.parse(JSON.stringify(res.data))
+                        const urlImage = `${API_URL}/public/get_resource?name=${infoImg.path}`
                         const info = {
                             type: "file",
                             url: urlImage,
                         }
-                        webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
+                        webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                     } else {
                         dispatch(setLoading(false))
                         console.log(res.data)
