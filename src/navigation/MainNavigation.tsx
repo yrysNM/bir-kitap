@@ -13,6 +13,7 @@ import { TabNavigator } from "./TabBarNavigator"
 import { BookDetail } from "../screens/BookDetail"
 import { BookGenres } from "../screens/BookGenres"
 import { NotReady } from "../screens/NotReady"
+import { BookMore } from "../screens/BookMore"
 import { BookTracker } from "../screens/BookTracker"
 
 export type RootStackParamList = {
@@ -28,13 +29,13 @@ export type RootStackParamList = {
     BookDetail: { bookId: string }
     BookGenres: undefined
     NotReady: undefined
+    BookMore: undefined
     BookTracker: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 export const MainNavigation = () => {
-    const { isServiceScreen } = useAppSelector((state) => state.mainSlice)
     const { hasLogin } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
 
@@ -55,10 +56,13 @@ export const MainNavigation = () => {
     return (
         <Stack.Navigator
             initialRouteName="Root"
-            screenOptions={({ route }) => {
+            screenOptions={({ navigation }) => {
+                const navigationTabbarIndex = navigation.getState().routes[0].state?.index
+                const navigationTabbarRoutesName = navigation.getState().routes[0].state?.routeNames
+                const currentRouteName: string = navigationTabbarRoutesName && typeof navigationTabbarIndex !== "undefined" ? navigationTabbarRoutesName[navigationTabbarIndex] : ""
                 return {
                     headerShown: false,
-                    contentStyle: { backgroundColor: isServiceScreen && route.name === "Root" ? "#005479" : "#fff" },
+                    contentStyle: { backgroundColor: currentRouteName === "Services" ? "#005479" : "#fff" },
                 }
             }}>
             {hasLogin ? (
@@ -71,6 +75,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="BookDetail" component={BookDetail} />
                     <Stack.Screen name="BookGenres" component={BookGenres} />
                     <Stack.Screen name="NotReady" component={NotReady} />
+                    <Stack.Screen name="BookMore" component={BookMore} />
                 </>
             ) : (
                 <>

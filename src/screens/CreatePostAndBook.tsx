@@ -15,7 +15,9 @@ import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
-import { NotReady } from "./NotReady"
+import { PostAPI, postInfo } from "../api/postApi"
+import Carousel from "@ant-design/react-native/lib/carousel"
+import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
 
 const _bookInfo = {
     title: "",
@@ -27,16 +29,24 @@ const _bookInfo = {
     description: "",
 }
 
+const _postInfo = {
+    title: "",
+    attachments: [],
+    content: "",
+}
+
 export const CreatePostAndBook = () => {
     const navigation = useNavigation()
     const { fetchData: fetchGenreData } = GenreAPI("list")
     const { fetchData: fetchCreateBookData } = BookApi("create")
+    const { fetchData: fetchCreatePostData } = PostAPI("create")
     const { fetchData: fetchUploadBookImgData } = BookApi("upload")
     const [tabs] = useState<{ title: string }[]>([{ title: "Create book" }, { title: "Create post" }])
     const [genreList, setGenreList] = useState<genreInfo[]>([])
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
     const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
-    const [image, setImage] = useState<string>("")
+    const [postInfo, setPostInfo] = useState<postInfo>(_postInfo)
+    const [images, setImages] = useState<string[]>([])
     const [year, setYear] = useState<string>("")
     const [pages, setPages] = useState<string>("")
 
@@ -47,15 +57,6 @@ export const CreatePostAndBook = () => {
             }
         })
     }, [])
-
-    const toggleGenre = (genreTitle: string) => {
-        const isSelected = bookInfo.genres.includes(genreTitle)
-        if (isSelected) {
-            setBookInfo((bookInfo) => ({ ...bookInfo, genres: bookInfo.genres.filter((genre) => genre !== genreTitle) }))
-        } else {
-            setBookInfo((bookInfo) => ({ ...bookInfo, genres: [...bookInfo.genres, genreTitle] }))
-        }
-    }
 
     const handleFileUpload = async (isCreateBook: boolean) => {
         const response = await ImagePicker.launchImageLibraryAsync({
@@ -85,7 +86,8 @@ export const CreatePostAndBook = () => {
                     if (res.result_code === 0) {
                         const info: { path: string } = JSON.parse(JSON.stringify(res.data))
                         const urlImage = `${API_URL}/public/get_resource?name=${info.path}`
-                        setImage(urlImage)
+                        setImages([...images, urlImage])
+                        setPostInfo({ ...postInfo, attachments: [...postInfo.attachments, info.path] })
                         setBookInfo({ ...bookInfo, imageLink: info.path })
                     }
                 })
@@ -95,10 +97,14 @@ export const CreatePostAndBook = () => {
         }
     }
 
-    const handleRemoveImg = (isCreateBook: boolean) => {
+    const handleRemoveImg = (isCreateBook: boolean, indexImage: number) => {
         if (isCreateBook) {
             setBookInfo({ ...bookInfo, imageLink: "" })
+        } else {
+            setPostInfo({ ...postInfo, attachments: postInfo.attachments.filter((_, index) => index !== indexImage) })
         }
+
+        setImages(images.filter((_, index) => index !== indexImage))
     }
 
     const onCreateBook = () => {
@@ -106,7 +112,7 @@ export const CreatePostAndBook = () => {
             if (res.result_code === 0) {
                 Toast.success("Successfuly created book")
                 setBookInfo(_bookInfo)
-                setImage("")
+                setImages([])
                 setYear("")
                 setPages("")
                 navigation.navigate("Home" as never)
@@ -114,42 +120,96 @@ export const CreatePostAndBook = () => {
         })
     }
 
+    const onCreatePost = () => {
+        fetchCreatePostData(postInfo).then((res) => {
+            if (res.result_code === 0) {
+                Toast.success("Successfuly created post")
+                setPostInfo(_postInfo)
+                setImages([])
+                // navigation.navigate("Home" as never)
+            }
+        })
+    }
+
+    const toggleGenreBookInfo = (genreTitle: string) => {
+        const isSelectGenre = bookInfo.genres.includes(genreTitle)
+        if (isSelectGenre) {
+            setBookInfo((bookInfo) => ({ ...bookInfo, genres: bookInfo.genres.filter((genre) => genre !== genreTitle) }))
+        } else {
+            setBookInfo((bookInfo) => ({ ...bookInfo, genres: [...bookInfo.genres, genreTitle] }))
+        }
+    }
+
+    const onChangeTab = () => {
+        setBookInfo(_bookInfo)
+        setPostInfo(_postInfo)
+        setImages([])
+        setYear("")
+        setPages("")
+    }
+
+    const textWrapper = (text: string) => {
+        if (text.length > 50) {
+            return text.slice(0, 50) + "..."
+        } else {
+            return text
+        }
+    }
+
+    const tabHeader = (tabProps: TabBarPropsType) => {
+        const { goToTab, onTabClick } = tabProps
+
+        return (
+            <View style={styles.tabWrapper}>
+                {tabProps.tabs.map((tab, i) => (
+                    <TouchableOpacity
+                        key={i}
+                        onPress={() => {
+                            onTabClick && onTabClick(tabs[i], i)
+                            goToTab && goToTab(i)
+                            onChangeTab()
+                        }}>
+                        <Text style={{ ...styles.tabText, color: tabProps.activeTab === i ? "#FFED4A" : "#fff" }}>{tab.title}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        )
+    }
+
     return (
         <Page>
             <Text style={styles.headText}>Create book & Create post</Text>
 
             <View style={{ flex: 1, height: "auto", marginBottom: 5 }}>
-                <Tabs tabs={tabs} tabBarUnderlineStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+                <Tabs tabs={tabs} swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)}>
                     {/* Create book */}
                     <View>
                         <View style={{ marginTop: 30 }}>
                             <InputStyle inputTitle="Title">
                                 <InputItem last type="text" style={{ ...styles.input }} value={bookInfo.title} onChange={(value) => setBookInfo({ ...bookInfo, title: value })}></InputItem>
                             </InputStyle>
-                            <InputStyle inputTitle="Author">
-                                <InputItem last type="text" style={styles.input} value={bookInfo.author} onChange={(value) => setBookInfo({ ...bookInfo, author: value })}></InputItem>
-                            </InputStyle>
 
-                            <View>
+                            <View style={{ marginVertical: 20 }}>
                                 <View style={styles.uploadWrapper}>
-                                    {image.length ? (
+                                    {images[0] && images[0].length ? (
                                         <>
-                                            <Image style={styles.bookImage} source={{ uri: image }} />
-                                            <TouchableOpacity style={styles.iconCloseImg} onPress={() => handleRemoveImg(true)}>
+                                            <Image style={styles.bookImage} source={{ uri: images[0] }} />
+                                            <TouchableOpacity style={styles.iconCloseImg} onPress={() => handleRemoveImg(true, 0)}>
                                                 <Icon name="close" />
                                             </TouchableOpacity>
                                         </>
                                     ) : (
-                                        <>
+                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", height: "100%" }} onPress={() => handleFileUpload(true)}>
                                             <Icon name="upload" style={styles.uploadIcon} size="lg" />
                                             <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
-                                            <Button type="primary" onPress={() => handleFileUpload(true)} style={styles.uploadBtn}>
-                                                <Text style={styles.uploadBtnText}>Click here to upload</Text>
-                                            </Button>
-                                        </>
+                                        </TouchableOpacity>
                                     )}
                                 </View>
                             </View>
+
+                            <InputStyle inputTitle="Author">
+                                <InputItem last type="text" style={styles.input} value={bookInfo.author} onChange={(value) => setBookInfo({ ...bookInfo, author: value })}></InputItem>
+                            </InputStyle>
 
                             <View style={styles.inputWrapper}>
                                 <View style={{ flex: 1 }}>
@@ -165,7 +225,7 @@ export const CreatePostAndBook = () => {
                             </View>
                             <InputStyle inputTitle="Genre">
                                 <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
-                                    <Text>{bookInfo.genres.join(", ").length > 50 ? bookInfo.genres.join(", ").slice(0, 50) + "..." : bookInfo.genres.join(", ")}</Text>
+                                    <Text>{textWrapper(bookInfo.genres.join(", "))}</Text>
                                 </TouchableOpacity>
                             </InputStyle>
                             <InputStyle inputTitle="Description">
@@ -179,14 +239,47 @@ export const CreatePostAndBook = () => {
                     </View>
                     {/* Create Post */}
                     <View>
-                        <NotReady />
+                        <View style={{ marginTop: 30 }}>
+                            <InputStyle inputTitle="Title">
+                                <InputItem last type="text" style={{ ...styles.input }} value={postInfo.title} onChange={(value) => setPostInfo({ ...postInfo, title: value })}></InputItem>
+                            </InputStyle>
+
+                            <View style={{ marginVertical: 20 }}>
+                                <View style={styles.uploadWrapper}>
+                                    <Carousel  horizontal style={{ width: "100%", height: 169 }}>
+                                        <View>
+                                            <TouchableOpacity onPress={() => handleFileUpload(true)} style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
+                                                <Icon name="upload" style={styles.uploadIcon} size="lg" />
+                                                <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        {images.map((image, i) => (
+                                            <View key={i}>
+                                                <Image style={styles.bookImage} source={{ uri: image }} />
+                                                <TouchableOpacity style={styles.iconCloseImg} onPress={() => handleRemoveImg(true, i)}>
+                                                    <Icon name="close" />
+                                                </TouchableOpacity>
+                                            </View>
+                                        ))}
+                                    </Carousel>
+                                </View>
+                            </View>
+
+                            <InputStyle inputTitle="Description">
+                                <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
+                            </InputStyle>
+
+                            <Button type="primary" style={styles.createBtn} onPress={() => onCreatePost()}>
+                                Create a post
+                            </Button>
+                        </View>
                     </View>
                 </Tabs>
             </View>
             <Modal animationType="slide" transparent maskClosable visible={showModalGenre} onClose={() => setShowModalGenre(false)}>
                 <View style={{ gap: 20 }}>
                     {genreList.map((genre) => (
-                        <TouchableOpacity key={genre.id} onPress={() => toggleGenre(genre.title)} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+                        <TouchableOpacity key={genre.id} onPress={() => toggleGenreBookInfo(genre.title)} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
                             <Text>{genre.title}</Text>
                             <View>{bookInfo.genres.includes(genre.title) ? <Icon name="check" /> : null}</View>
                         </TouchableOpacity>
@@ -198,6 +291,23 @@ export const CreatePostAndBook = () => {
 }
 
 const styles = StyleSheet.create({
+    tabWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around",
+        width: "100%",
+        height: 47,
+        borderRadius: 12,
+        backgroundColor: "#005479",
+        marginTop: 5,
+    },
+    tabText: {
+        textAlign: "center",
+        fontSize: 15,
+        fontWeight: "600",
+        lineHeight: 18,
+        color: "#FFFFFF",
+    },
     headText: {
         textAlign: "center",
         fontSize: 20,
@@ -227,10 +337,10 @@ const styles = StyleSheet.create({
         borderStyle: "dotted",
         borderWidth: 1,
         borderColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
     },
     uploadIcon: {
+        fontSize: 57,
+        textAlign: "center",
         color: "#000",
     },
     uploadText: {
@@ -238,27 +348,6 @@ const styles = StyleSheet.create({
         fontSize: 9,
         fontWeight: "500",
         lineHeight: 9,
-    },
-    uploadBtn: {
-        marginTop: 10,
-        width: 122,
-        height: 31,
-        borderWidth: 0,
-        borderRadius: 13,
-        backgroundColor: "#005479",
-        shadowColor: "rgba(0, 0, 0, 0.25)",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowRadius: 2,
-        shadowOpacity: 1,
-    },
-    uploadBtnText: {
-        fontSize: 10,
-        fontWeight: "500",
-        lineHeight: 10,
-        color: "#F9FAF8",
     },
     inputWrapper: {
         marginTop: 11,

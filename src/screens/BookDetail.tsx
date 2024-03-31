@@ -34,7 +34,7 @@ interface IBookInfo {
 }
 
 const _reviewTemp = {
-    title: "еуые",
+    title: "test",
     message: "",
     rating: 0,
 }

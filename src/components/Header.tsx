@@ -9,7 +9,7 @@ export const Header = ({ isCustomHeader, title, isGoBack = false }: { isCustomHe
         <View style={isCustomHeader ? styles.headerCustom : styles.headerCommon}>
             {isGoBack && (
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon style={styles.icon} name="arrow-left" />
+                    <Icon style={styles.icon} name="left" />
                 </TouchableOpacity>
             )}
             <Text style={isCustomHeader ? styles.title : styles.titleCommon}>{title}</Text>
@@ -33,14 +33,13 @@ const styles = StyleSheet.create({
         fontSize: 34,
     },
     titleCommon: {
-        marginLeft: 45,
         fontWeight: "600",
         fontSize: 20,
     },
     headerCommon: {
         marginTop: 20,
         flexDirection: "row",
-        gap: 30,
+        gap: 15,
         alignItems: "center",
     },
 })

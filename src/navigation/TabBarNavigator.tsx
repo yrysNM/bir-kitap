@@ -2,35 +2,18 @@ import { StyleSheet, View } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
 import Icon from "@ant-design/react-native/lib/icon"
-// import { Search } from "../screens/Search"
 import { Services } from "../screens/Services"
 import { useNavigation } from "@react-navigation/native"
-import { useState, useEffect } from "react"
-import { useAppDispatch } from "../hook/useStore"
-import { setIsServiceScreen } from "../redux/features/mainSlice"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
 import { NotReady } from "../screens/NotReady"
+import { Search } from "../screens/Search"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
-    const dispatch = useAppDispatch()
     const navigation = useNavigation()
-    const [currentRouteName, setCurrentRouteName] = useState("")
-
-    useEffect(() => {
-        const navigationListener = navigation.addListener("state", (e) => {
-            const parentIndex = e.data.state.index
-            const parentRoute = e.data.state.routes[parentIndex]
-            const tabbarIndex = parentRoute.state?.index
-            if (typeof tabbarIndex !== "undefined" && parentRoute.state?.routes) {
-                const currentTabRouteName = parentRoute.state.routes[tabbarIndex].name
-                setCurrentRouteName(currentTabRouteName)
-                dispatch(setIsServiceScreen(currentTabRouteName === "Services"))
-            }
-        })
-        return navigationListener
-    }, [navigation])
-
+    const navigationTabbarIndex = navigation.getState().routes[0].state?.index
+    const navigationTabbarRoutesName = navigation.getState().routes[0].state?.routeNames
+    const currentRouteName: string = navigationTabbarRoutesName && typeof navigationTabbarIndex !== "undefined" ? navigationTabbarRoutesName[navigationTabbarIndex] : ""
     const iconColor = (isFocused: boolean) => {
         if (isFocused) {
             return currentRouteName === "Services" ? "#005479" : "#fff"
@@ -42,13 +25,11 @@ export const TabNavigator = () => {
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            screenOptions={({ route }) => {
-                return {
-                    headerShown: false,
-                    tabBarShowLabel: false,
-                    tabBarStyle: { ...styles.tabbar, backgroundColor: route.name === "Services" ? "#fff" : "#005479" },
-                    tabBarHideOnKeyboard: true,
-                }
+            screenOptions={{
+                headerShown: false,
+                tabBarShowLabel: false,
+                tabBarStyle: { ...styles.tabbar, backgroundColor: currentRouteName === "Services" ? "#fff" : "#005479" },
+                tabBarHideOnKeyboard: true,
             }}>
             <Tab.Screen
                 name="Home"
@@ -66,7 +47,7 @@ export const TabNavigator = () => {
             />
             <Tab.Screen
                 name="Search"
-                component={NotReady}
+                component={Search}
                 options={{
                     tabBarItemStyle: {
                         height: 0,
