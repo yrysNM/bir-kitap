@@ -75,7 +75,7 @@ export const BookTracker = () => {
                 .then((res) => {
                     if (res.data.result_code === 0) {
                         dispatch(setLoading(false))
-                        const urlImage = `${API_URL}/public/get_resource?name=${res.data.data.path}`
+                        const urlImage = `${API_URL}public/get_resource?name=${res.data.data.path}`
                         const info = {
                             type: "file",
                             url: urlImage,

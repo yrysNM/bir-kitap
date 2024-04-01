@@ -39,9 +39,9 @@ export const Search = () => {
         }
 
         fetchBookData({
-            keyword: search,
+            title: search,
             filter: {
-                categories: selectCategories,
+                genres: selectCategories,
             },
         }).then((res) => {
             if (res.result_code === 0) {

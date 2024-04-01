@@ -26,7 +26,7 @@ export const BookCard = ({ bookInfo }: propsInfo) => {
     }
 
     return (
-        <TouchableOpacity style={styles.bookCard} onPress={() => navigation.navigate("BookDetail", { bookId: bookInfo.id || "" })}>
+        <TouchableOpacity style={styles.bookCard} onPress={() => navigation.navigate("BookDetail", { id: bookInfo.id || "" })}>
             <CloudImage url={bookInfo.imageLink} styleImg={styles.bookImg} />
 
             <View style={styles.bookInfo}>
@@ -36,7 +36,7 @@ export const BookCard = ({ bookInfo }: propsInfo) => {
                 </View>
 
                 <View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
-                    <StarRate rateNumber={bookInfo.rating || 0} size={8} />
+                    <StarRate rateNumber={bookInfo.rating || 0} size={12} />
                     <Text style={styles.bookGenre}>{bookInfo?.rating || 0}</Text>
                 </View>
             </View>
@@ -52,17 +52,15 @@ const styles = StyleSheet.create({
         width: 153,
         // height: 265,
         borderRadius: 9,
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#f9faf8",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 0,
             height: 0,
         },
         shadowRadius: 6,
+        elevation: 6,
         shadowOpacity: 1,
-        borderWidth: 0.2,
-        borderColor: "#000",
-        borderStyle: "solid",
         flexDirection: "column",
         gap: 7,
     },

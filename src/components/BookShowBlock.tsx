@@ -1,6 +1,10 @@
 import { View, TouchableOpacity, StyleSheet, Text } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
 
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList>>
 type propsInfo = {
     bookType: string
     children: React.ReactNode
@@ -8,13 +12,16 @@ type propsInfo = {
 }
 
 export const BookShowBlock = ({ bookType, children, navigationUrl }: propsInfo) => {
-    const navigation = useNavigation()
+    const navigation = useNavigation<NavigateType>()
 
     const checkNavigationUrl = () => {
         if (!navigationUrl) return
-        const isHaveQuery = navigationUrl.split("/").length > 1
+        const navigationList = navigationUrl.split("/")
+        const isHaveQuery = navigationList.length > 1
         if (!isHaveQuery) {
             navigation.navigate(navigationUrl as never)
+        } else {
+            navigation.navigate(navigationList[0] as navigationDetail, { id: navigationList[1] })
         }
     }
 

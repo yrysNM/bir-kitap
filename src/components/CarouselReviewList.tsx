@@ -5,7 +5,6 @@ import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
 import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 
-
 export const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
     return (
         <View style={styles.reviewWrapper}>
@@ -33,23 +32,24 @@ const styles = StyleSheet.create({
     reviewWrapper: {
         marginRight: 17,
         backgroundColor: "#f9faf8",
-        width: 254,
+        // width: 254,
         flex: 1,
-        height: 171,
+        // height: 171,
         borderRadius: 15,
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 0,
             height: 4,
         },
+        elevation: 7,
         shadowRadius: 4,
         shadowOpacity: 1,
         marginBottom: 10,
-        paddingVertical: 25,
+        paddingVertical: 10,
         paddingHorizontal: 19,
         flexDirection: "row",
         gap: 14,
-        alignItems: "center",
+        alignItems: "flex-start",
     },
 
     bookReviewImg: {

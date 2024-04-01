@@ -19,8 +19,8 @@ export const Home = () => {
     useEffect(() => {
         if (!isRefresh) {
             fetchBookData({
-                start: 0, 
-                length: 10
+                start: 0,
+                length: 10,
             }).then((res) => {
                 if (res.result_code === 0) {
                     setBookDataList(res.data)
@@ -28,8 +28,8 @@ export const Home = () => {
             })
 
             fetchReViewData({
-                start: 0, 
-                length: 5
+                start: 0,
+                length: 5,
             }).then((res) => {
                 if (res.result_code === 0) {
                     setReviewDataList(res.data)
@@ -41,7 +41,7 @@ export const Home = () => {
     return (
         <Page>
             <Text style={styles.headText}>Home</Text>
-            <BookShowBlock bookType="Recomend" navigationUrl="BookMore">
+            <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
                 <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>
             </BookShowBlock>
 

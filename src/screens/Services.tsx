@@ -2,18 +2,23 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { Page } from "../layouts/Page"
 
 import Icon from "@ant-design/react-native/lib/icon"
-import { useNavigation } from "@react-navigation/native"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BookApi, categoryInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
 import { CloudImage } from "../components/CloudImage"
 import BookTrackerImg from "../../assets/images/category/book-tracker.png"
 import BookTestImg from "../../assets/images/category/book-test.png"
 import { useAppSelector } from "../hook/useStore"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList>>
 
 export const Services = () => {
     const { fetchData: fetchCategoryData } = BookApi("category/list")
     const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
-    const navigation = useNavigation()
+    const navigation = useNavigation<NavigateType>()
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
 
     useEffect(() => {
@@ -29,8 +34,14 @@ export const Services = () => {
     }, [isRefresh])
 
     const onLink = (linkName?: string) => {
-        if (linkName !== "url") {
-            navigation.navigate(linkName as never)
+        if (linkName && linkName !== "url") {
+            const navigationList = linkName.split("/")
+            const isHaveQuery = navigationList.length > 1
+            if (!isHaveQuery) {
+                navigation.navigate(linkName as never)
+            } else {
+                navigation.navigate(navigationList[0] as navigationDetail, { id: navigationList[1] })
+            }
         } else {
             navigation.navigate("NotReady" as never)
         }
@@ -38,7 +49,6 @@ export const Services = () => {
 
     return (
         <Page>
-            {/* <SearchInput placeholder="Search books" onChangeSearch={(e) => setSearchValue(e)} /> */}
             <Text style={styles.headText}>Categories & Services</Text>
             <View style={styles.serviceCotegory}>
                 <Text style={styles.contentTitle}>Categories </Text>
@@ -66,7 +76,7 @@ export const Services = () => {
             <View style={{ marginTop: 58 }}>
                 <Text style={styles.contentTitle}>Services</Text>
 
-                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
+                <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTracker" as never)}>
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />

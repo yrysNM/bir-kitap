@@ -10,7 +10,7 @@ export interface IGenre extends IResponse {
 }
 
 export function GenreAPI(url: string, method: string = "POst") {
-    const { res, fetchData } = useApi<IGenre>(`/genre/${url}`, method)
+    const { res, fetchData } = useApi<IGenre>(`genre/${url}`, method)
 
     return {
         res,
