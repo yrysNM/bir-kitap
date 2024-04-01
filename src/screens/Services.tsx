@@ -8,21 +8,25 @@ import { useEffect, useState } from "react"
 import { CloudImage } from "../components/CloudImage"
 import BookTrackerImg from "../../assets/images/category/book-tracker.png"
 import BookTestImg from "../../assets/images/category/book-test.png"
+import { useAppSelector } from "../hook/useStore"
 
 export const Services = () => {
     const { fetchData: fetchCategoryData } = BookApi("category/list")
     const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
     const navigation = useNavigation()
+    const { isRefresh } = useAppSelector((state) => state.mainSlice)
 
     useEffect(() => {
-        fetchCategoryData({}).then((res) => {
-            if (res.result_code === 0) {
-                const categoryInfo: categoryInfo[] = JSON.parse(JSON.stringify(res.data))
+        if (!isRefresh) {
+            fetchCategoryData({}).then((res) => {
+                if (res.result_code === 0) {
+                    const categoryInfo: categoryInfo[] = JSON.parse(JSON.stringify(res.data))
 
-                setCategoryList(categoryInfo)
-            }
-        })
-    }, [])
+                    setCategoryList(categoryInfo)
+                }
+            })
+        }
+    }, [isRefresh])
 
     const onLink = (linkName?: string) => {
         if (linkName !== "url") {
@@ -62,7 +66,7 @@ export const Services = () => {
             <View style={{ marginTop: 58 }}>
                 <Text style={styles.contentTitle}>Services</Text>
 
-                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: 'wrap' }}>
+                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTracker" as never)}>
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
@@ -81,7 +85,6 @@ export const Services = () => {
                         </View>
                         <Text style={styles.categoryText}>Book Test</Text>
                     </TouchableOpacity>
-
                 </View>
             </View>
         </Page>

@@ -15,6 +15,7 @@ import { BookGenres } from "../screens/BookGenres"
 import { NotReady } from "../screens/NotReady"
 import { BookMore } from "../screens/BookMore"
 import { BookTracker } from "../screens/BookTracker"
+import { Reviews } from "../screens/Reviews"
 
 export type RootStackParamList = {
     Root: undefined
@@ -29,8 +30,9 @@ export type RootStackParamList = {
     BookDetail: { bookId: string }
     BookGenres: undefined
     NotReady: undefined
-    BookMore: undefined
+    BookMore: {bookType: string},
     BookTracker: undefined
+    Reviews: undefined,
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -76,6 +78,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="BookGenres" component={BookGenres} />
                     <Stack.Screen name="NotReady" component={NotReady} />
                     <Stack.Screen name="BookMore" component={BookMore} />
+                    <Stack.Screen name="Reviews" component={Reviews} />
                 </>
             ) : (
                 <>

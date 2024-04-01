@@ -41,11 +41,11 @@ export const Home = () => {
     return (
         <Page>
             <Text style={styles.headText}>Home</Text>
-            <BookShowBlock bookType="Recomend">
+            <BookShowBlock bookType="Recomend" navigationUrl="BookMore">
                 <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>
             </BookShowBlock>
 
-            <BookShowBlock bookType="Reviews">
+            <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
                 <View>{reviewDataList.length ? <CarouselREviewList dataList={reviewDataList} /> : <NoData />}</View>
             </BookShowBlock>
         </Page>
