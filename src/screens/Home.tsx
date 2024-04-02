@@ -5,16 +5,20 @@ import { useEffect, useState } from "react"
 import { NoData } from "../components/NoData"
 import { CarouselBookList } from "../components/CarouselBookList"
 import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
-import { useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { CarouselREviewList } from "../components/CarouselReviewList"
+import { UserAPI } from "../api/userApi"
+import { setUserInfo } from "../redux/features/mainSlice"
 
 export const Home = () => {
     const { fetchData: fetchBookData } = BookApi("list")
     const { fetchData: fetchReViewData } = ReviewApi("list")
+    const { fetchData: fetchUserData } = UserAPI("info")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         if (!isRefresh) {
@@ -33,6 +37,12 @@ export const Home = () => {
             }).then((res) => {
                 if (res.result_code === 0) {
                     setReviewDataList(res.data)
+                }
+            })
+
+            fetchUserData({}).then((res) => {
+                if (res.result_code === 0) {
+                    dispatch(setUserInfo(res.data))
                 }
             })
         }

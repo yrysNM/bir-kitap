@@ -1,103 +1,129 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
+import { Image, View, Text, StyleSheet } from "react-native"
+import UserProfileImg from "../../assets/images/custom-user-profile.jpg"
+import { useAppSelector } from "../hook/useStore"
+import { useState } from "react"
+import { IUserInfo } from "../api/authApi"
+import { UserAPI } from "../api/userApi"
+import { bookReviewInfo } from "../api/reviewApi"
 import { Page } from "../layouts/Page"
-import { useNavigation } from "@react-navigation/native"
+import Icon from "@ant-design/react-native/lib/icon"
 
-interface INavArr {
-    id: number
-    title: string
-    slug: string
+interface IProfile {
+    readBooksCount: number
+    reviewsCount: number
+    followersCount: number
+    followingCount: number
+    reviews: bookReviewInfo
+    books: {}
 }
 
-const navArr: INavArr[] = [
-    {
-        id: 1,
-        title: "Edit Profile",
-        slug: "EditProfile",
-    },
-    {
-        id: 2,
-        title: "Change Password",
-        slug: "ChangePassword",
-    },
-    {
-        id: 3,
-        title: "Settings",
-        slug: "settings",
-    },
-    {
-        id: 4,
-        title: "Information",
-        slug: "information",
-    },
-    {
-        id: 5,
-        title: "Log out",
-        slug: "logout",
-    },
-]
-
 export const Profile = () => {
-    const navigation = useNavigation()
-    return (
-        <Page  >
-            <View>
-                <View style={style.avatar} />
-                <View style={style.homeContent}>
-                    <Text style={[style.text, style.homeTitle]}>User User</Text>
-                    <Text style={style.text}>Book Lover</Text>
-                </View>
-            </View>
+    const {
+        userInfo: { fullName },
+    } = useAppSelector((state) => state.mainSlice)
+    const { fetchData: fetchUserProfileData } = UserAPI("profile")
+    // const [info, setInfo] = useState<>({})
 
-            <View style={style.homeNav}>
-                {navArr.map((item) => (
-                    <TouchableOpacity key={item.id} onPress={() => navigation.navigate(item.slug as never)}>
-                        <Text style={style.homeNavLinks}>{item.title}</Text>
-                    </TouchableOpacity>
-                ))}
+    return (
+        <Page>
+            <Icon name="setting" style={styles.settingIcon} />
+            <View style={styles.profileInfoWrapper}>
+                <Image source={UserProfileImg} style={styles.userProfileImg} />
+
+                <Text style={styles.fullName}>{fullName}</Text>
+
+                <View style={styles.userStatistic}>
+                    <View>
+                        <Text style={styles.statisticNumber}>88</Text>
+                        <Text style={styles.statisticDescr}>read</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.statisticNumber}>88</Text>
+                        <Text style={styles.statisticDescr}>reviews</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.statisticNumber}>88</Text>
+                        <Text style={styles.statisticDescr}>followers</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.statisticNumber}>10</Text>
+                        <Text style={styles.statisticDescr}>following</Text>
+                    </View>
+                </View>
+
+                <View style={styles.tabBarWrapper}>
+                    <Text>Survey</Text>
+                    <View style={[styles.line]}></View>
+                    <Text>Reviews</Text>
+                    <View style={[styles.line]}></View>
+                    <Text>Posts</Text>
+                </View>
             </View>
         </Page>
     )
 }
 
-const style = StyleSheet.create({
-    avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: "#eee",
-        marginLeft: "50%",
-        transform: [{ translateX: -50 }],
-    },
-
-    text: {
-        color: "white",
-        textAlign: "center",
-    },
-
-    homeContent: {
-        marginTop: 13.03,
-        marginBottom: 26,
-    },
-
-    homeTitle: {
-        fontSize: 30,
-        fontWeight: "600",
-    },
-
-    homeNav: {
-        width: "100%",
+const styles = StyleSheet.create({
+    line: {
+        top: 0,
         height: "100%",
-        backgroundColor: "white",
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
-        paddingBottom: 31,
-        paddingHorizontal: 36,
+        width: 1,
+        backgroundColor: "#fff",
     },
-
-    homeNavLinks: {
+    tabBarWrapper: {
+        width: "100%",
+        borderRadius: 12,
+        backgroundColor: "#FFED4A",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around",
+        height: 47,
+        marginTop: 5,
+    },
+    settingIcon: {
+        position: "absolute",
+        top: 20,
+        right: 20,
+        color: "#000",
+        fontSize: 30,
+    },
+    profileInfoWrapper: {
+        marginTop: 70,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        gap: 20,
+    },
+    userProfileImg: {
+        width: 120,
+        height: 120,
+        objectFit: "contain",
+        borderRadius: 1000,
+    },
+    fullName: {
+        textAlign: "center",
+        fontSize: 24,
+        fontWeight: "600",
+        lineHeight: 27,
+        color: "#000000",
+    },
+    userStatistic: {
+        flexDirection: "row",
+        gap: 30,
+        alignItems: "center",
+    },
+    statisticNumber: {
+        textAlign: "center",
         fontSize: 20,
         fontWeight: "600",
-        marginTop: 30,
+        lineHeight: 20,
+        color: "#000000",
+    },
+    statisticDescr: {
+        textAlign: "center",
+        fontSize: 12,
+        fontWeight: "600",
+        lineHeight: 15,
+        color: "#808080",
     },
 })
-

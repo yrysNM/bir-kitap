@@ -55,14 +55,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     listHeadTitle: {
-        fontSize: 21,
+        fontSize: 16,
         fontWeight: "700",
-        lineHeight: 21,
+        lineHeight: 18,
     },
     moreInfoText: {
-        fontSize: 20,
+        fontSize: 13,
         fontWeight: "500",
-        lineHeight: 20,
+        lineHeight: 16,
         color: "#808080",
     },
 })

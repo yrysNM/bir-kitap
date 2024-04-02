@@ -14,6 +14,7 @@ import { RecommendationAPI } from "../api/recommendationApi"
 import { CarouselBookList } from "../components/CarouselBookList"
 import { NoData } from "../components/NoData"
 import { BookShowBlock } from "../components/BookShowBlock"
+import { useAppSelector } from "../hook/useStore"
 
 type bookReviewInfo = {
     id?: string
@@ -45,6 +46,9 @@ const _reviewTemp = {
 
 export const BookDetail = () => {
     const navigate = useNavigation()
+    const {
+        userInfo: { fullName },
+    } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchCreateReviewData } = BookApi("review/create")
     const { fetchData: fetchRecommendationBookData } = RecommendationAPI("books")
     const { id } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
@@ -145,7 +149,7 @@ export const BookDetail = () => {
                         <View style={styles.reviewProfileBlock}>
                             <Image source={UserCustomProfileImg} style={{ borderRadius: 500, width: 32, height: 32 }} />
                             <View>
-                                <Text style={styles.reviewUserName}>{review.userName}</Text>
+                                <Text style={[styles.reviewUserName, { color: review.userName === fullName ? "#005479" : "#000" }]}>{review.userName}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                                     <StarRate rateNumber={review.rating} />
                                     <Text style={styles.reviewNumberRate}>{review.rating.toFixed(1)}</Text>
@@ -156,7 +160,7 @@ export const BookDetail = () => {
                     </View>
                 ))}
 
-                <BookShowBlock bookType="Recommend" navigationUrl="BookMore/recommendation">
+                <BookShowBlock bookType="Recommendations" navigationUrl="BookMore/recommendation">
                     <View>{dataList.length ? <CarouselBookList dataList={dataList} /> : <NoData />}</View>
                 </BookShowBlock>
             </View>

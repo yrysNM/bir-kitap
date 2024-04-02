@@ -4,27 +4,31 @@ import { bookReviewInfo } from "../api/reviewApi"
 import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
 import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
-
-export const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
-    return (
-        <View style={styles.reviewWrapper}>
-            <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
-            <View style={styles.reviewBookInfo}>
-                <View style={styles.reviewUserInfo}>
-                    <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} />
-                    <View style={{ flexShrink: 1 }}>
-                        <Text style={styles.reviewUserName}>{item.userName}</Text>
-                        <Text style={styles.reviewUserNic}>Book Lover</Text>
-                    </View>
-                </View>
-                <StarRate rateNumber={item.rating} />
-                <Text style={styles.reviewBookMessage}>{item.message}</Text>
-            </View>
-        </View>
-    )
-}
+import { useAppSelector } from "../hook/useStore"
 
 export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
+    const {
+        userInfo: { fullName },
+    } = useAppSelector((state) => state.mainSlice)
+
+    const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
+        return (
+            <View style={styles.reviewWrapper}>
+                <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
+                <View style={styles.reviewBookInfo}>
+                    <View style={styles.reviewUserInfo}>
+                        <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} />
+                        <View style={{ flexShrink: 1 }}>
+                            <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#005479" : "#000" }]}>{item.userName}</Text>
+                            <Text style={styles.reviewUserNic}>Book Lover</Text>
+                        </View>
+                    </View>
+                    <StarRate rateNumber={item.rating} />
+                    <Text style={styles.reviewBookMessage}>{item.message}</Text>
+                </View>
+            </View>
+        )
+    }
     return <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
 }
 
