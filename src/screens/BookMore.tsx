@@ -8,12 +8,10 @@ import { BookCard } from "../components/BookCard"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
 import { NoData } from "../components/NoData"
-import { RecommendationAPI } from "../api/recommendationApi"
 
 export const BookMore = () => {
     const { id } = useRoute<RouteProp<RootStackParamList, "BookMore">>().params
     const { fetchData: fetchBookData } = BookApi("list")
-    const { fetchData: fetchRecommendationData } = RecommendationAPI("books")
     const [dataList, setDataList] = useState<bookInfo[]>([])
 
     useEffect(() => {
@@ -23,12 +21,6 @@ export const BookMore = () => {
     const loadData = () => {
         if (id === "books") {
             fetchBookData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setDataList(res.data)
-                }
-            })
-        } else if (id === "recommendation") {
-            fetchRecommendationData({}).then((res) => {
                 if (res.result_code === 0) {
                     setDataList(res.data)
                 }

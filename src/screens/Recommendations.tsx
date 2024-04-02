@@ -14,6 +14,7 @@ import { bookReviewInfo } from "../api/reviewApi"
 import { postInfo } from "../api/postApi"
 import { IUserInfo } from "../api/authApi"
 import { ReviewCard } from "../components/ReviewCard"
+import { NotReady } from "./NotReady"
 
 export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
@@ -26,6 +27,7 @@ export const Recommendations = () => {
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [postDataList, setPostDataList] = useState<postInfo[]>([])
     const [userDataList, setUserDataList] = useState<IUserInfo[]>([])
+    const [height, setHeight] = useState<number>(100)
 
     const [tabs] = useState<{ title: string }[]>([
         {
@@ -102,11 +104,11 @@ export const Recommendations = () => {
     return (
         <Page>
             <Header isCustomHeader={false} title="Recommendations" isGoBack />
-            <View style={{ flex: 1, height: "auto" }}>
-                <Tabs tabs={tabs}  swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)} initialPage="Books"  animated={false}>
+            <View style={{ marginBottom: 5, flex: 1, height: "auto" }}>
+                <Tabs tabs={tabs} swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)} animated={false}>
                     {/* books */}
                     <View>
-                        <View style={{ marginTop: 30 }}>
+                        <View style={{ marginTop: 30, height: 800 }}>
                             <View style={styles.bookWrapper}>{bookDataList.length ? bookDataList.map((book) => <BookCard key={book.id} bookInfo={book} />) : <NoData />}</View>
                         </View>
                     </View>
@@ -117,9 +119,13 @@ export const Recommendations = () => {
                         </View>
                     </View>
                     {/* posts */}
-                    <View></View>
+                    <View>
+                        <NotReady />
+                    </View>
                     {/* users */}
-                    <View></View>
+                    <View>
+                        <NotReady />
+                    </View>
                 </Tabs>
             </View>
         </Page>
@@ -129,11 +135,15 @@ export const Recommendations = () => {
 const styles = StyleSheet.create({
     bookWrapper: {
         flexWrap: "wrap",
+        width: "100%",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        // flex: 2,
+        // width: "100%",
         gap: 25,
         marginBottom: 30,
+        zIndex: 100,
     },
     reviewWrapper: {
         flexDirection: "column",

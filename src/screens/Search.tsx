@@ -55,7 +55,7 @@ export const Search = () => {
             <Text style={styles.headText}>Search</Text>
             <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search books" />
             <View style={{ marginTop: 18 }}>
-                <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => setSelectCategories(e)} />
+                <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "object" ? setSelectCategories(e) : null)} isMultiple={true} />
             </View>
             {!bookList.length ? (
                 <View style={styles.searchBlock}>
