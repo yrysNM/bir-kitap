@@ -47,13 +47,17 @@ export const CarouselBookTypeFilter = ({ dataList, handleBookType, isMultiple, t
     }
 
     const isSelectBookType = (bookType: string) => {
-        return bookTypeList.includes(bookType)
+        if (bookTypeList.length) {
+            return bookTypeList.includes(bookType)
+        } else {
+            return bookType === type
+        }
     }
 
     const _renderItem = ({ item }: { item: info }) => {
         return (
-            <TouchableOpacity onPress={() => (isMultiple ? onMultipleSelectBookType(item.title) : onSingleSelectBookType(item.title))} style={[styles.bookBlock, isSelectBookType(item.title) || item.title === type ? styles.bookTypeBlockActive : styles.bookTypeBlock]}>
-                <Text style={{ ...styles.bookTypeText, color: isSelectBookType(item.title) || item.title === type ? "#fff" : "#000" }}>{item.title}</Text>
+            <TouchableOpacity onPress={() => (isMultiple ? onMultipleSelectBookType(item.title) : onSingleSelectBookType(item.title))} style={[styles.bookBlock, isSelectBookType(item.title) ? styles.bookTypeBlockActive : styles.bookTypeBlock]}>
+                <Text style={{ ...styles.bookTypeText, color: isSelectBookType(item.title) ? "#fff" : "#000" }}>{item.title}</Text>
             </TouchableOpacity>
         )
     }

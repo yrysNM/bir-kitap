@@ -1,9 +1,6 @@
-import { StyleSheet, TouchableOpacity, Text, Dimensions } from "react-native"
+import { StyleSheet } from "react-native"
 import { Page } from "../layouts/Page"
-import { useEffect, useState } from "react"
-import Tabs from "@ant-design/react-native/lib/tabs"
-import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
-import Carousel from "react-native-snap-carousel"
+import { useCallback, useEffect, useState } from "react"
 import { Header } from "../components/Header"
 import View from "@ant-design/react-native/lib/view"
 import { bookInfo } from "../api/bookApi"
@@ -15,6 +12,7 @@ import { postInfo } from "../api/postApi"
 import { IUserInfo } from "../api/authApi"
 import { ReviewCard } from "../components/ReviewCard"
 import { NotReady } from "./NotReady"
+import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
 
 export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
@@ -27,7 +25,6 @@ export const Recommendations = () => {
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [postDataList, setPostDataList] = useState<postInfo[]>([])
     const [userDataList, setUserDataList] = useState<IUserInfo[]>([])
-    const [height, setHeight] = useState<number>(100)
 
     const [tabs] = useState<{ title: string }[]>([
         {
@@ -45,6 +42,10 @@ export const Recommendations = () => {
     ])
 
     useEffect(() => {
+        onLoadData()
+    }, [recommendationType])
+
+    const onLoadData = useCallback(() => {
         if (recommendationType === "Books") {
             fetchBookData({}).then((res) => {
                 if (res.result_code === 0) {
@@ -72,62 +73,33 @@ export const Recommendations = () => {
         }
     }, [recommendationType])
 
-    const isSelectRecommendationType = (type: string) => {
-        return recommendationType === type
-    }
-
-    const tabHeader = (tabProps: TabBarPropsType) => {
-        const { goToTab, onTabClick } = tabProps
-
-        const _renderRecommendationTypes = ({ item, index }: { item: { title: string }; index: number }) => {
-            return (
-                <TouchableOpacity
-                    onPress={() => {
-                        onTabClick && onTabClick(tabs[index], index)
-                        goToTab && goToTab(index)
-                        // onChangeTab()
-                        setRecommendationType(item.title)
-                    }}
-                    style={[styles.bookBlock, isSelectRecommendationType(item.title) ? styles.bookTypeBlockActive : styles.bookTypeBlock]}>
-                    <Text style={{ ...styles.bookTypeText, color: isSelectRecommendationType(item.title) ? "#fff" : "#000" }}>{item.title}</Text>
-                </TouchableOpacity>
-            )
-        }
-
-        return (
-            <View style={styles.tabHeadBlock}>
-                <Carousel data={tabs} renderItem={_renderRecommendationTypes} sliderWidth={Dimensions.get("window").width} itemWidth={120} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
-            </View>
-        )
-    }
-
     return (
         <Page>
             <Header isCustomHeader={false} title="Recommendations" isGoBack />
-            <View style={{ marginBottom: 5, flex: 1, height: "auto" }}>
-                <Tabs tabs={tabs} swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)} animated={false}>
-                    {/* books */}
-                    <View>
-                        <View style={{ marginTop: 30, height: 800 }}>
-                            <View style={styles.bookWrapper}>{bookDataList.length ? bookDataList.map((book) => <BookCard key={book.id} bookInfo={book} />) : <NoData />}</View>
-                        </View>
-                    </View>
-                    {/* reviews */}
-                    <View>
-                        <View style={{ marginTop: 30 }}>
-                            <View style={styles.reviewWrapper}>{reviewDataList.length ? reviewDataList.map((review) => <ReviewCard key={review.id} reviewInfo={review} />) : <NoData />}</View>
-                        </View>
-                    </View>
-                    {/* posts */}
-                    <View>
-                        <NotReady />
-                    </View>
-                    {/* users */}
-                    <View>
-                        <NotReady />
-                    </View>
-                </Tabs>
+            <View style={{ marginVertical: 18 }}>
+                <CarouselBookTypeFilter
+                    dataList={tabs}
+                    handleBookType={(e) => {
+                        if (typeof e === "string") {
+                            setRecommendationType(e)
+                        }
+                    }}
+                    isMultiple={false}
+                    type={"Books"}
+                />
             </View>
+
+            {recommendationType === "Books" ? (
+                <View style={styles.bookWrapper}>{bookDataList.length ? bookDataList.map((book) => <BookCard key={book.id} bookInfo={book} />) : <NoData />}</View>
+            ) : recommendationType === "Reviews" ? (
+                <View style={styles.reviewWrapper}>{reviewDataList.length ? reviewDataList.map((review) => <ReviewCard key={review.id} reviewInfo={review} />) : <NoData />}</View>
+            ) : recommendationType === "Posts" ? (
+                <NotReady />
+            ) : recommendationType === "Users" ? (
+                <NotReady />
+            ) : null}
+
+            <View style={{ marginBottom: 5, flex: 1, height: "auto" }}></View>
         </Page>
     )
 }
