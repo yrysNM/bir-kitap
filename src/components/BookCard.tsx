@@ -26,7 +26,7 @@ export const BookCard = ({ bookInfo }: propsInfo) => {
     }
 
     return (
-        <TouchableOpacity style={styles.bookCard} onPress={() => navigation.navigate("BookDetail", { id: bookInfo.id || "" })}>
+        <TouchableOpacity style={styles.bookCard} onPressIn={() => navigation.navigate("BookDetail", { id: bookInfo.id || "" })}>
             <CloudImage url={bookInfo.imageLink} styleImg={styles.bookImg} />
 
             <View style={styles.bookInfo}>

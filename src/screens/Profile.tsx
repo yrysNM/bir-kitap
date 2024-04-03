@@ -7,6 +7,12 @@ import { bookReviewInfo } from "../api/reviewApi"
 import { Page } from "../layouts/Page"
 import Icon from "@ant-design/react-native/lib/icon"
 import Modal from "@ant-design/react-native/lib/modal"
+import { logOut as logOutHelper } from "../helpers/logOut"
+import { useNavigation } from "@react-navigation/native"
+import { BookShowBlock } from "../components/BookShowBlock"
+import { bookInfo } from "../api/bookApi"
+import { CarouselBookList } from "../components/CarouselBookList"
+import { NoData } from "../components/NoData"
 
 interface IProfile {
     readBooksCount: number
@@ -14,16 +20,51 @@ interface IProfile {
     followersCount: number
     followingCount: number
     reviews: bookReviewInfo
-    // books: {}
+    books: {
+        [key: string]: bookInfo[]
+    }
 }
 
+const _infoTemp = {
+    books: {
+        selected: [],
+    },
+    readBooksCount: 0,
+    reviewsCount: 0,
+    followersCount: 0,
+    followingCount: 0,
+    reviews: {
+        title: "",
+        userId: "",
+        userName: "",
+        bookId: "",
+        message: "",
+        rating: 0,
+        createtime: 0,
+        updatetime: 0,
+        book: {
+            id: undefined,
+            title: "",
+            author: "",
+            imageLink: "",
+            year: 0,
+            genres: [],
+            pages: undefined,
+            description: undefined,
+            rating: undefined,
+        },
+    },
+}
 export const Profile = () => {
+    const navigation = useNavigation()
     const {
         userInfo: { fullName },
     } = useAppSelector((state) => state.mainSlice)
+    const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
-    const [info, setInfo] = useState<IProfile>()
+    const [info, setInfo] = useState<IProfile>(_infoTemp)
+    const [tab, setTab] = useState<string>("Survey")
 
     useEffect(() => {
         fetchUserProfileData({}).then((res) => {
@@ -32,6 +73,12 @@ export const Profile = () => {
             }
         })
     }, [])
+
+    const onChangeTab = (type: string) => {
+        setTab(type)
+    }
+
+    const bookType = Object.keys(info.books)
 
     return (
         <Page>
@@ -63,44 +110,71 @@ export const Profile = () => {
                 </View>
 
                 <View style={styles.tabBarWrapper}>
-                    <Text>Survey</Text>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")}>
+                        <Text style={{ color: tab === "Survey" ? "#005479" : "#000" }}>Survey</Text>
+                    </TouchableOpacity>
                     <View style={[styles.line]}></View>
-                    <Text>Reviews</Text>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Reviews")}>
+                        <Text style={{ color: tab === "Reviews" ? "#005479" : "#000" }}>Reviews</Text>
+                    </TouchableOpacity>
                     <View style={[styles.line]}></View>
-                    <Text>Posts</Text>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")}>
+                        <Text style={{ color: tab === "Posts" ? "#005479" : "#000" }}>Posts</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.contentWrapper}>
+                    {tab === "Survey"
+                        ? bookType.map((item) => (
+                              <BookShowBlock key={item} bookType={item}>
+                                  <Text>{JSON.stringify(info.books[item])}</Text>
+                                  {/* {info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />} */}
+                              </BookShowBlock>
+                          ))
+                        : null}
                 </View>
             </View>
 
             <Modal popup animationType="slide-up" visible={visibleModal} onClose={() => setVisibleModal(false)} style={styles.modalWrapper} maskClosable>
-                <TouchableOpacity onPress={() => setVisibleModal(false)}>
-                    <Icon name="close" style={styles.closeIcon}/>
+                <TouchableOpacity onPressIn={() => setVisibleModal(false)}>
+                    <Icon name="close" style={styles.closeIcon} />
                 </TouchableOpacity>
                 <View style={styles.modalInfoBlock}>
-                    <View style={styles.modalWrapperBlock}>
+                    <TouchableOpacity
+                        style={styles.modalWrapperBlock}
+                        onPressIn={() => {
+                            setVisibleModal(false)
+                            navigation.navigate("EditProfile" as never)
+                        }}>
                         <Icon name="edit" />
                         <Text style={styles.infoText}>Edit Profile</Text>
-                    </View>
-                    <View style={styles.modalWrapperBlock}>
-                        <Icon name="profile" />
-                        <Text style={styles.infoText}>Switch to author</Text>
+                    </TouchableOpacity>
+                    <View style={[styles.modalWrapperBlock, { justifyContent: "space-between" }]}>
+                        <View style={styles.modalWrapperBlock}>
+                            <Icon name="profile" />
+                            <Text style={styles.infoText}>Switch to author</Text>
+                        </View>
                         <Switch />
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="key" />
-                        <Text style={styles.infoText}>Change Password</Text>
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Change Password (soon)</Text>
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="global" />
-                        <Text style={styles.infoText}>Language</Text>
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Language (soon)</Text>
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="info-circle" />
-                        <Text style={styles.infoText}>Language</Text>
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Language (soon)</Text>
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="usergroup-add" />
-                        <Text style={styles.infoText}>Information</Text>
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Information (soon)</Text>
                     </View>
+                    <TouchableOpacity style={styles.modalWrapperBlock} onPress={() => logOut()}>
+                        <Icon name="logout" style={{ color: "red" }} />
+                        <Text style={[styles.infoText, { color: "red" }]}>Log out</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
         </Page>
@@ -108,6 +182,12 @@ export const Profile = () => {
 }
 
 const styles = StyleSheet.create({
+    contentWrapper: {
+        marginTop: 21,
+        borderTopColor: "#000",
+        borderTopWidth: 1,
+        borderStyle: "solid",
+    },
     closeIcon: {
         position: "absolute",
         top: -42,
@@ -117,6 +197,7 @@ const styles = StyleSheet.create({
     modalWrapperBlock: {
         flexDirection: "row",
         alignItems: "center",
+        height: 25,
         gap: 18,
     },
     infoText: {

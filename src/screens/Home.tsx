@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native"
+import { StyleSheet, View, Text, Image } from "react-native"
 import { Page } from "../layouts/Page"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
@@ -51,6 +51,14 @@ export const Home = () => {
     return (
         <Page>
             <Text style={styles.headText}>Home</Text>
+
+            <View style={styles.newsWrapper}>
+                <View style={styles.newsBlock}>
+                    <Image style={styles.newsImg} source={{ uri: "https://static.vecteezy.com/system/resources/previews/023/856/960/large_2x/summer-seasonal-anime-style-background-landscape-mountain-lake-and-relax-vibes-anime-background-or-wallpaper-generative-ai-free-photo.jpg" }} />
+                    <Text style={styles.newsTitle}>15 января - 18 января</Text>
+                </View>
+            </View>
+
             <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
                 <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>
             </BookShowBlock>
@@ -70,5 +78,27 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         opacity: 0.5,
         color: "#000000",
+    },
+    newsWrapper: {
+        marginTop: 25,
+        marginBottom: 4,
+    },
+    newsBlock: {
+        flexDirection: "column",
+        gap: 7,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    newsImg: {
+        width: 152,
+        height: 101,
+        borderRadius: 8,
+        objectFit: "cover",
+    },
+    newsTitle: {
+        fontSize: 12,
+        fontWeight: "500",
+        lineHeight: 15,
+        color: "#808080",
     },
 })

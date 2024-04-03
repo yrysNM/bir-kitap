@@ -35,6 +35,7 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
 const styles = StyleSheet.create({
     reviewWrapper: {
         marginRight: 17,
+        marginLeft: 10,
         backgroundColor: "#f9faf8",
         // width: 254,
         flex: 1,

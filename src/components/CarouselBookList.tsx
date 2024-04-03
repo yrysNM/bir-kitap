@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginRight: 20,
+        marginLeft: 10,
         width: 84,
     },
     bookImg: {

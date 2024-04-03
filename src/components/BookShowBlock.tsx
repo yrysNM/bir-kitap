@@ -8,7 +8,7 @@ type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackPar
 type propsInfo = {
     bookType: string
     children: React.ReactNode
-    navigationUrl: string
+    navigationUrl?: string
 }
 
 export const BookShowBlock = ({ bookType, children, navigationUrl }: propsInfo) => {
@@ -30,7 +30,7 @@ export const BookShowBlock = ({ bookType, children, navigationUrl }: propsInfo) 
             <View style={styles.listHeaderBlock}>
                 <Text style={styles.listHeadTitle}>{bookType}</Text>
                 {navigationUrl ? (
-                    <TouchableOpacity onPress={() => checkNavigationUrl()}>
+                    <TouchableOpacity onPressIn={() => checkNavigationUrl()}>
                         <Text style={styles.moreInfoText}>See All</Text>
                     </TouchableOpacity>
                 ) : null}
@@ -43,7 +43,7 @@ export const BookShowBlock = ({ bookType, children, navigationUrl }: propsInfo) 
 
 const styles = StyleSheet.create({
     listWrapper: {
-        marginTop: 25,
+        marginTop: 28,
         width: "100%",
         gap: 15,
         flexDirection: "column",

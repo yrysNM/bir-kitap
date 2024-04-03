@@ -32,8 +32,9 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
                 return res.data
             })
             .catch((err) => {
-                if (err.response?.status === 401) {
+                if (err.message === "refresh token faild") {
                     logOut()
+                    return
                 }
                 dispatch(setLoading(false))
                 dispatch(setError(err))

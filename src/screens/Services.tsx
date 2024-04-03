@@ -51,29 +51,6 @@ export const Services = () => {
         <Page>
             <Text style={styles.headText}>Categories & Services</Text>
             <View style={styles.serviceCotegory}>
-                <Text style={styles.contentTitle}>Categories </Text>
-                <View style={{ gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                    {categoryList.slice(0, 3).map((item, i) => (
-                        <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
-                            <View style={styles.categoryBlock}>
-                                <CloudImage url={item.icon} styleImg={{ width: 54, height: 54, objectFit: "scale-down" }} />
-                            </View>
-                            <Text style={styles.categoryText}>{item.title}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                    {categoryList.slice(3, 6).map((item, i) => (
-                        <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
-                            <View style={styles.categoryBlock}>
-                                <CloudImage url={item.icon} styleImg={{ width: 54, height: 54, objectFit: "scale-down" }} />
-                            </View>
-                            <Text style={styles.categoryText}>{item.title}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </View>
-            <View style={{ marginTop: 58 }}>
                 <Text style={styles.contentTitle}>Services</Text>
 
                 <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
@@ -95,6 +72,29 @@ export const Services = () => {
                         </View>
                         <Text style={styles.categoryText}>Book Test</Text>
                     </TouchableOpacity>
+                </View>
+            </View>
+            <View style={{ marginTop: 58 }}>
+                <Text style={styles.contentTitle}>Categories </Text>
+                <View style={{ gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    {categoryList.slice(0, 3).map((item, i) => (
+                        <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
+                            <View style={styles.categoryBlock}>
+                                <CloudImage url={item.icon} styleImg={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                            </View>
+                            <Text style={styles.categoryText}>{item.title}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    {categoryList.slice(3, 6).map((item, i) => (
+                        <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
+                            <View style={styles.categoryBlock}>
+                                <CloudImage url={item.icon} styleImg={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                            </View>
+                            <Text style={styles.categoryText}>{item.title}</Text>
+                        </TouchableOpacity>
+                    ))}
                 </View>
             </View>
         </Page>

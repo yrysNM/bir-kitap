@@ -160,7 +160,7 @@ export const BookDetail = () => {
                     </View>
                 ))}
 
-                <BookShowBlock bookType="Recommendations" navigationUrl="BookMore/recommendation">
+                <BookShowBlock bookType="Recommendations" navigationUrl="Recommendations">
                     <View>{dataList.length ? <CarouselBookList dataList={dataList} /> : <NoData />}</View>
                 </BookShowBlock>
             </View>
