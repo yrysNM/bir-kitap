@@ -10,6 +10,11 @@ import Icon from "@ant-design/react-native/lib/icon"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
 import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
+import { RecommendationAPI } from "../api/recommendationApi"
+import { CarouselBookList } from "../components/CarouselBookList"
+import { NoData } from "../components/NoData"
+import { BookShowBlock } from "../components/BookShowBlock"
+import { useAppSelector } from "../hook/useStore"
 
 type bookReviewInfo = {
     id?: string
@@ -41,20 +46,26 @@ const _reviewTemp = {
 
 export const BookDetail = () => {
     const navigate = useNavigation()
+    const {
+        userInfo: { fullName },
+    } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchCreateReviewData } = BookApi("review/create")
-    const { bookId } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
+    const { fetchData: fetchRecommendationBookData } = RecommendationAPI("books")
+    const { id } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
     const { fetchData: fetchGetBookData } = BookApi(`get`)
     const [bookInfo, setBookInfo] = useState<IBookInfo | null>(null)
+    const [dataList, setDataList] = useState<bookInfo[]>([])
     const [reviewInfo, setReviewInfo] = useState<{ title: string; message: string; rating: number }>(_reviewTemp)
 
     useEffect(() => {
         loadBookData()
+        loadRecommendationBookData()
     }, [])
 
-    const loadBookData = () => {
-        if (bookId) {
-            fetchGetBookData({
-                id: bookId,
+    const loadBookData = async () => {
+        if (id) {
+            await fetchGetBookData({
+                id,
             }).then((res) => {
                 if (res.result_code === 0) {
                     const bookData: IBookInfo = JSON.parse(JSON.stringify(res.data))
@@ -62,6 +73,17 @@ export const BookDetail = () => {
                 }
             })
         }
+    }
+
+    const loadRecommendationBookData = () => {
+        fetchRecommendationBookData({
+            start: 0,
+            length: 5,
+        }).then((res) => {
+            if (res.result_code === 0) {
+                setDataList(res.data)
+            }
+        })
     }
 
     const onSubmitReview = () => {
@@ -127,7 +149,7 @@ export const BookDetail = () => {
                         <View style={styles.reviewProfileBlock}>
                             <Image source={UserCustomProfileImg} style={{ borderRadius: 500, width: 32, height: 32 }} />
                             <View>
-                                <Text style={styles.reviewUserName}>{review.userName}</Text>
+                                <Text style={[styles.reviewUserName, { color: review.userName === fullName ? "#005479" : "#000" }]}>{review.userName}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                                     <StarRate rateNumber={review.rating} />
                                     <Text style={styles.reviewNumberRate}>{review.rating.toFixed(1)}</Text>
@@ -138,13 +160,9 @@ export const BookDetail = () => {
                     </View>
                 ))}
 
-                {/* TODO  <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View> */}
-                {/* <View style={styles.listWrapper}>
-                    <View style={styles.listHeaderBlock}>
-                        <Text style={styles.listHeadTitle}>Best Sellers</Text>
-                    </View>
-
-                </View> */}
+                <BookShowBlock bookType="Recommendations" navigationUrl="Recommendations">
+                    <View>{dataList.length ? <CarouselBookList dataList={dataList} /> : <NoData />}</View>
+                </BookShowBlock>
             </View>
         </Page>
     )
@@ -227,9 +245,10 @@ const styles = StyleSheet.create({
             width: 0,
             height: 4,
         },
+        elevation: 19,
         shadowRadius: 4,
         shadowOpacity: 1,
-        paddingVertical: 5,
+        paddingVertical: 10,
     },
     statisticBlock: {
         paddingHorizontal: 15,

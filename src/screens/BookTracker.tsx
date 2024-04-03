@@ -1,33 +1,28 @@
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { SafeAreaView, StatusBar, Text, TouchableOpacity } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
+import { useAppDispatch } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
-import { setHasLogin, setLoading } from "../redux/features/mainSlice"
-import { Fuse } from "../layouts/Fuse"
+import { setLoading } from "../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import http from "../utils/axios"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
+import { logOut as logOutHelper } from "../helpers/logOut"
 import { base64toFiile } from "../helpers/base64toFile"
+import { Fuse } from "../layouts/Fuse"
 
-const _webview_base_url = "http://172.20.10.2:4000/"
+const _webview_base_url = "http://192.168.0.106:3000/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
+    const logOut = logOutHelper()
     const [showWebView] = useState(true)
     const navigation = useNavigation()
     const [webviewKey, setWebviewKey] = useState<number>(0)
-
-    useEffect(() => {
-        // AsyncStorage.clear()
-        console.log("___________USERINFO__________")
-        console.log(userInfo)
-    }, [])
 
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
@@ -38,7 +33,7 @@ export const BookTracker = () => {
                 // function setData(data) {
                 //     window.data = data
                 // }
-            }, 100)
+            }, 20)
         `)
     }
 
@@ -75,12 +70,12 @@ export const BookTracker = () => {
                 .then((res) => {
                     if (res.data.result_code === 0) {
                         dispatch(setLoading(false))
-                        const urlImage = `${API_URL}/public/get_resource?name=${res.data.data.path}`
+                        const urlImage = `${API_URL}public/get_resource?name=${res.data.data.path}`
                         const info = {
                             type: "file",
                             url: urlImage,
                         }
-                        webViewEl.current?.injectJavaScript(`setData(${JSON.stringify(info)}); window.postMessage(${JSON.stringify(info)}, "*")`)
+                        webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                     } else {
                         dispatch(setLoading(false))
                         console.log(res.data)
@@ -95,10 +90,8 @@ export const BookTracker = () => {
 
     const handleMessageFromWebview = (e: WebViewMessageEvent) => {
         const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "401") {
-            AsyncStorage.setItem("token", "")
-            dispatch(setHasLogin(false))
-            navigation.navigate("Login" as never)
+        if (messageData && messageData.key === "500") {
+            logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
         }
@@ -106,8 +99,8 @@ export const BookTracker = () => {
 
     if (showWebView) {
         return (
-            <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
-                <Fuse>
+            <Fuse>
+                <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
                     <WebView
                         ref={webViewEl}
                         key={webviewKey}
@@ -134,8 +127,8 @@ export const BookTracker = () => {
                             }
                         }}
                     />
-                </Fuse>
-            </View>
+                </SafeAreaView>
+            </Fuse>
         )
     }
 

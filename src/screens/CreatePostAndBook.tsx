@@ -85,7 +85,7 @@ export const CreatePostAndBook = () => {
                 fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
                     if (res.result_code === 0) {
                         const info: { path: string } = JSON.parse(JSON.stringify(res.data))
-                        const urlImage = `${API_URL}/public/get_resource?name=${info.path}`
+                        const urlImage = `${API_URL}public/get_resource?name=${info.path}`
                         setImages([...images, urlImage])
                         setPostInfo({ ...postInfo, attachments: [...postInfo.attachments, info.path] })
                         setBookInfo({ ...bookInfo, imageLink: info.path })
@@ -172,6 +172,7 @@ export const CreatePostAndBook = () => {
                         <Text style={{ ...styles.tabText, color: tabProps.activeTab === i ? "#FFED4A" : "#fff" }}>{tab.title}</Text>
                     </TouchableOpacity>
                 ))}
+                <View style={styles.spliBlock}></View>
             </View>
         )
     }
@@ -246,7 +247,7 @@ export const CreatePostAndBook = () => {
 
                             <View style={{ marginVertical: 20 }}>
                                 <View style={styles.uploadWrapper}>
-                                    <Carousel  horizontal style={{ width: "100%", height: 169 }}>
+                                    <Carousel horizontal style={{ width: "100%", height: 169 }}>
                                         <View>
                                             <TouchableOpacity onPress={() => handleFileUpload(true)} style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
                                                 <Icon name="upload" style={styles.uploadIcon} size="lg" />
@@ -291,6 +292,15 @@ export const CreatePostAndBook = () => {
 }
 
 const styles = StyleSheet.create({
+    spliBlock: {
+        position: "absolute",
+        top: 0,
+        left: "50%",
+        height: 47,
+        width: 1,
+        backgroundColor: "#fff",
+        zIndex: 10,
+    },
     tabWrapper: {
         flexDirection: "row",
         alignItems: "center",

@@ -2,7 +2,7 @@ import { Text, StyleSheet, View } from "react-native"
 import { Page } from "../layouts/Page"
 import Icon from "@ant-design/react-native/lib/icon"
 import { SearchInput } from "../components/SearchInput"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { BookCard } from "../components/BookCard"
 import { BookApi, bookInfo, categoryInfo } from "../api/bookApi"
 import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
@@ -32,30 +32,30 @@ export const Search = () => {
         onSearchBook()
     }, [search, JSON.stringify(selectCategories)])
 
-    const onSearchBook = () => {
+    const onSearchBook = useCallback(() => {
         if (!search.length && !selectCategories.length) {
             setBookList([])
             return
         }
 
         fetchBookData({
-            keyword: search,
+            title: search,
             filter: {
-                categories: selectCategories,
+                genres: selectCategories,
             },
         }).then((res) => {
             if (res.result_code === 0) {
                 setBookList(res.data)
             }
         })
-    }
+    }, [search, JSON.stringify(selectCategories)])
 
     return (
         <Page>
             <Text style={styles.headText}>Search</Text>
             <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search books" />
             <View style={{ marginTop: 18 }}>
-                <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => setSelectCategories(e)} />
+                <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "object" ? setSelectCategories(e) : null)} isMultiple={true} />
             </View>
             {!bookList.length ? (
                 <View style={styles.searchBlock}>

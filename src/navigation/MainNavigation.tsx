@@ -4,7 +4,7 @@ import { CreateAccount } from "../screens/CreateAccount"
 import { BookCrossingWebView } from "../screens/BookCrossingeWebView"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { ForgotPassword } from "../screens/ForgotPassword"
-import EditProfile from "../screens/EditProfile"
+import { EditProfile } from "../screens/EditProfile"
 import { Genre } from "../screens/Genre"
 import { useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -15,6 +15,9 @@ import { BookGenres } from "../screens/BookGenres"
 import { NotReady } from "../screens/NotReady"
 import { BookMore } from "../screens/BookMore"
 import { BookTracker } from "../screens/BookTracker"
+import { Reviews } from "../screens/Reviews"
+import { Recommendations } from "../screens/Recommendations"
+import { Collections } from "../screens/Collections"
 
 export type RootStackParamList = {
     Root: undefined
@@ -26,11 +29,14 @@ export type RootStackParamList = {
     EditProfile: undefined
     ChangePassword: undefined
     Genre: undefined
-    BookDetail: { bookId: string }
+    BookDetail: { id: string }
     BookGenres: undefined
     NotReady: undefined
-    BookMore: undefined
+    BookMore: { id: string }
     BookTracker: undefined
+    Reviews: undefined
+    Recommendations: undefined
+    Collections: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -76,6 +82,9 @@ export const MainNavigation = () => {
                     <Stack.Screen name="BookGenres" component={BookGenres} />
                     <Stack.Screen name="NotReady" component={NotReady} />
                     <Stack.Screen name="BookMore" component={BookMore} />
+                    <Stack.Screen name="Reviews" component={Reviews} />
+                    <Stack.Screen name="Recommendations" component={Recommendations} />
+                    <Stack.Screen name="Collections" component={Collections} />
                 </>
             ) : (
                 <>
