@@ -11,15 +11,16 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { useNavigation } from "@react-navigation/native"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { bookInfo } from "../api/bookApi"
-import { CarouselBookList } from "../components/CarouselBookList"
 import { NoData } from "../components/NoData"
+import { ReviewCard } from "../components/ReviewCard"
+import { NotReady } from "./NotReady"
 
 interface IProfile {
     readBooksCount: number
     reviewsCount: number
     followersCount: number
     followingCount: number
-    reviews: bookReviewInfo
+    reviews: bookReviewInfo[]
     books: {
         [key: string]: bookInfo[]
     }
@@ -33,27 +34,7 @@ const _infoTemp = {
     reviewsCount: 0,
     followersCount: 0,
     followingCount: 0,
-    reviews: {
-        title: "",
-        userId: "",
-        userName: "",
-        bookId: "",
-        message: "",
-        rating: 0,
-        createtime: 0,
-        updatetime: 0,
-        book: {
-            id: undefined,
-            title: "",
-            author: "",
-            imageLink: "",
-            year: 0,
-            genres: [],
-            pages: undefined,
-            description: undefined,
-            rating: undefined,
-        },
-    },
+    reviews: [],
 }
 export const Profile = () => {
     const navigation = useNavigation()
@@ -123,14 +104,20 @@ export const Profile = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.contentWrapper}>
-                    {tab === "Survey"
-                        ? bookType.map((item) => (
-                              <BookShowBlock key={item} bookType={item}>
-                                  <Text>{JSON.stringify(info.books[item])}</Text>
-                                  {/* {info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />} */}
-                              </BookShowBlock>
-                          ))
-                        : null}
+                    {tab === "Survey" ? (
+                        bookType.map((item) => (
+                            <BookShowBlock key={item} bookType={item}>
+                                <Text>{JSON.stringify(info.books[item])}</Text>
+                                {/* {info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />} */}
+                            </BookShowBlock>
+                        ))
+                    ) : tab === "Reviews" ? (
+                        <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
+                    ) : (
+                        <View style={{ flex: 1 }}>
+                            <NotReady />
+                        </View>
+                    )}
                 </View>
             </View>
 
@@ -182,10 +169,17 @@ export const Profile = () => {
 }
 
 const styles = StyleSheet.create({
+    bookWrapper: {
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 25,
+        marginVertical: 30,
+    },
     contentWrapper: {
         marginTop: 21,
         borderTopColor: "#000",
-        borderTopWidth: 1,
+        borderTopWidth: 0.5,
         borderStyle: "solid",
     },
     closeIcon: {

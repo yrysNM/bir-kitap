@@ -47,7 +47,7 @@ instance.interceptors.response.use(
                     onAccessTokenRefreshed(newAccessToken)
                     return instance(originalRequest)
                 } catch (refreshError) {
-                    // console.error("Token refresh failed:", refreshError)
+                    console.error("Token refresh failed:", refreshError)
                     return Promise.reject(refreshError)
                 }
             }
@@ -66,12 +66,21 @@ instance.interceptors.response.use(
 )
 
 async function refreshAccessToken(): Promise<string> {
-    const refreshToken = await AsyncStorage.getItem("token").then((value) => (value ? JSON.parse(value).refreshToken : null))
+    const refreshToken = await AsyncStorage.getItem("token").then((value) => {
+        if (value) {
+            console.log(JSON.parse(value))
+            return JSON.parse(value).refreshToken
+        } else {
+            return null
+        }
+    })
+    console.log(refreshToken)
     return axios
         .post(`${API_URL}auth/refresh/token`, {
             refreshToken,
         })
         .then((res) => {
+            console.log(res)
             if (res.data.result_code === 0 && res.data.data) {
                 AsyncStorage.setItem("token", JSON.stringify(res.data.data))
                 return res.data.data.refreshToken
