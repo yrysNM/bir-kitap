@@ -13,7 +13,6 @@ import { BookShowBlock } from "../components/BookShowBlock"
 import { bookInfo } from "../api/bookApi"
 import { NoData } from "../components/NoData"
 import { ReviewCard } from "../components/ReviewCard"
-import { NotReady } from "./NotReady"
 
 interface IProfile {
     readBooksCount: number
@@ -115,7 +114,7 @@ export const Profile = () => {
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                     ) : (
                         <View style={{ flex: 1 }}>
-                            <NotReady />
+                            <NoData />
                         </View>
                     )}
                 </View>
