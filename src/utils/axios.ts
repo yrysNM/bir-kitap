@@ -69,7 +69,7 @@ async function refreshAccessToken(): Promise<string> {
     const refreshToken = await AsyncStorage.getItem("token").then((value) => {
         if (value) {
             console.log(JSON.parse(value))
-            return JSON.parse(value).refreshToken
+            return JSON.parse(value).refresh_token
         } else {
             return null
         }
@@ -80,10 +80,9 @@ async function refreshAccessToken(): Promise<string> {
             refreshToken,
         })
         .then((res) => {
-            console.log(res)
             if (res.data.result_code === 0 && res.data.data) {
                 AsyncStorage.setItem("token", JSON.stringify(res.data.data))
-                return res.data.data.refreshToken
+                return res.data.data.refresh_token
             } else {
                 // console.error("Somethinh went wrong")
                 throw Error("refresh token faild")
