@@ -10,3 +10,5 @@ interface IResponse {
     result_code: number
     result_msg: string
 }
+
+type navigationDetail = "BookMore" | "BookDetail"

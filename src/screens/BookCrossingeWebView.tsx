@@ -1,32 +1,25 @@
-import { StatusBar, View } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
-import { useNavigation } from "@react-navigation/native"
-import { setHasLogin, setLoading } from "../redux/features/mainSlice"
-import { Fuse } from "../layouts/Fuse"
+import { useAppDispatch } from "../hook/useStore"
+import { setLoading } from "../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import useApi from "../hook/useApi"
+import { logOut as logOutHelper } from "../helpers/logOut"
+import { SafeAreaView, StatusBar } from "react-native"
+import { Fuse } from "../layouts/Fuse"
 
-const _webview_base_url = "http://192.168.156.177:5173/"
+const _webview_base_url = "http://192.168.0.106:5173/"
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
     const { fetchData } = useApi<IResponse>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
-    const { userInfo } = useAppSelector((state) => state.mainSlice) 
-    const navigation = useNavigation()
+    const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
-
-    useEffect(() => {
-        // AsyncStorage.clear()
-        console.log("___________USERINFO__________")
-        console.log(userInfo)
-    }, [])
 
     async function injectWebViewData() {
         const token = await AsyncStorage.getItem("token")
@@ -37,7 +30,7 @@ export const BookCrossingWebView = () => {
                 // function setData(data) {
                 //     window.data = data
                 // }
-            }, 100);
+            }, 20);
         `)
     }
 
@@ -80,18 +73,16 @@ export const BookCrossingWebView = () => {
 
     const handleMessageFromWebview = (e: WebViewMessageEvent) => {
         const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "401") {
-            AsyncStorage.setItem("token", "")
-            dispatch(setHasLogin(false))
-            navigation.navigate("Login" as never)
+        if (messageData && messageData.key === "500") {
+            logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
         }
     }
 
     return (
-        <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
-            <Fuse>
+        <Fuse>
+            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
                 <WebView
                     ref={webViewEl}
                     key={webviewKey}
@@ -119,7 +110,7 @@ export const BookCrossingWebView = () => {
                         }
                     }}
                 />
-            </Fuse>
-        </View>
+            </SafeAreaView>
+        </Fuse>
     )
 }

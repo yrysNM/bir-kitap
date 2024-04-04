@@ -1,103 +1,283 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
+import { Image, View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
+import UserProfileImg from "../../assets/images/custom-user-profile.jpg"
+import { useAppSelector } from "../hook/useStore"
+import { useEffect, useState } from "react"
+import { UserAPI } from "../api/userApi"
+import { bookReviewInfo } from "../api/reviewApi"
 import { Page } from "../layouts/Page"
+import Icon from "@ant-design/react-native/lib/icon"
+import Modal from "@ant-design/react-native/lib/modal"
+import { logOut as logOutHelper } from "../helpers/logOut"
 import { useNavigation } from "@react-navigation/native"
+import { BookShowBlock } from "../components/BookShowBlock"
+import { bookInfo } from "../api/bookApi"
+import { CarouselBookList } from "../components/CarouselBookList"
+import { NoData } from "../components/NoData"
 
-interface INavArr {
-    id: number
-    title: string
-    slug: string
+interface IProfile {
+    readBooksCount: number
+    reviewsCount: number
+    followersCount: number
+    followingCount: number
+    reviews: bookReviewInfo
+    books: {
+        [key: string]: bookInfo[]
+    }
 }
 
-const navArr: INavArr[] = [
-    {
-        id: 1,
-        title: "Edit Profile",
-        slug: "EditProfile",
+const _infoTemp = {
+    books: {
+        selected: [],
     },
-    {
-        id: 2,
-        title: "Change Password",
-        slug: "ChangePassword",
+    readBooksCount: 0,
+    reviewsCount: 0,
+    followersCount: 0,
+    followingCount: 0,
+    reviews: {
+        title: "",
+        userId: "",
+        userName: "",
+        bookId: "",
+        message: "",
+        rating: 0,
+        createtime: 0,
+        updatetime: 0,
+        book: {
+            id: undefined,
+            title: "",
+            author: "",
+            imageLink: "",
+            year: 0,
+            genres: [],
+            pages: undefined,
+            description: undefined,
+            rating: undefined,
+        },
     },
-    {
-        id: 3,
-        title: "Settings",
-        slug: "settings",
-    },
-    {
-        id: 4,
-        title: "Information",
-        slug: "information",
-    },
-    {
-        id: 5,
-        title: "Log out",
-        slug: "logout",
-    },
-]
-
+}
 export const Profile = () => {
     const navigation = useNavigation()
+    const {
+        userInfo: { fullName },
+    } = useAppSelector((state) => state.mainSlice)
+    const logOut = logOutHelper()
+    const { fetchData: fetchUserProfileData } = UserAPI("profile")
+    const [visibleModal, setVisibleModal] = useState<boolean>(false)
+    const [info, setInfo] = useState<IProfile>(_infoTemp)
+    const [tab, setTab] = useState<string>("Survey")
+
+    useEffect(() => {
+        fetchUserProfileData({}).then((res) => {
+            if (res.result_code === 0) {
+                setInfo(JSON.parse(JSON.stringify(res.data)))
+            }
+        })
+    }, [])
+
+    const onChangeTab = (type: string) => {
+        setTab(type)
+    }
+
+    const bookType = Object.keys(info.books)
+
     return (
-        <Page  >
-            <View>
-                <View style={style.avatar} />
-                <View style={style.homeContent}>
-                    <Text style={[style.text, style.homeTitle]}>User User</Text>
-                    <Text style={style.text}>Book Lover</Text>
+        <Page>
+            <TouchableOpacity onPress={() => setVisibleModal(true)}>
+                <Icon name="setting" style={styles.settingIcon} />
+            </TouchableOpacity>
+            <View style={styles.profileInfoWrapper}>
+                <Image source={UserProfileImg} style={styles.userProfileImg} />
+
+                <Text style={styles.fullName}>{fullName}</Text>
+
+                <View style={styles.userStatistic}>
+                    <View>
+                        <Text style={styles.statisticNumber}>{info?.readBooksCount}</Text>
+                        <Text style={styles.statisticDescr}>read</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.statisticNumber}>{info?.reviewsCount}</Text>
+                        <Text style={styles.statisticDescr}>reviews</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.statisticNumber}>{info?.followersCount}</Text>
+                        <Text style={styles.statisticDescr}>followers</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.statisticNumber}>{info?.followingCount}</Text>
+                        <Text style={styles.statisticDescr}>following</Text>
+                    </View>
+                </View>
+
+                <View style={styles.tabBarWrapper}>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")}>
+                        <Text style={{ color: tab === "Survey" ? "#005479" : "#000" }}>Survey</Text>
+                    </TouchableOpacity>
+                    <View style={[styles.line]}></View>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Reviews")}>
+                        <Text style={{ color: tab === "Reviews" ? "#005479" : "#000" }}>Reviews</Text>
+                    </TouchableOpacity>
+                    <View style={[styles.line]}></View>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")}>
+                        <Text style={{ color: tab === "Posts" ? "#005479" : "#000" }}>Posts</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.contentWrapper}>
+                    {tab === "Survey"
+                        ? bookType.map((item) => (
+                              <BookShowBlock key={item} bookType={item}>
+                                  <Text>{JSON.stringify(info.books[item])}</Text>
+                                  {/* {info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />} */}
+                              </BookShowBlock>
+                          ))
+                        : null}
                 </View>
             </View>
 
-            <View style={style.homeNav}>
-                {navArr.map((item) => (
-                    <TouchableOpacity key={item.id} onPress={() => navigation.navigate(item.slug as never)}>
-                        <Text style={style.homeNavLinks}>{item.title}</Text>
+            <Modal popup animationType="slide-up" visible={visibleModal} onClose={() => setVisibleModal(false)} style={styles.modalWrapper} maskClosable>
+                <TouchableOpacity onPressIn={() => setVisibleModal(false)}>
+                    <Icon name="close" style={styles.closeIcon} />
+                </TouchableOpacity>
+                <View style={styles.modalInfoBlock}>
+                    <TouchableOpacity
+                        style={styles.modalWrapperBlock}
+                        onPressIn={() => {
+                            setVisibleModal(false)
+                            navigation.navigate("EditProfile" as never)
+                        }}>
+                        <Icon name="edit" />
+                        <Text style={styles.infoText}>Edit Profile</Text>
                     </TouchableOpacity>
-                ))}
-            </View>
+                    <View style={[styles.modalWrapperBlock, { justifyContent: "space-between" }]}>
+                        <View style={styles.modalWrapperBlock}>
+                            <Icon name="profile" />
+                            <Text style={styles.infoText}>Switch to author</Text>
+                        </View>
+                        <Switch />
+                    </View>
+                    <View style={styles.modalWrapperBlock}>
+                        <Icon name="key" />
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Change Password (soon)</Text>
+                    </View>
+                    <View style={styles.modalWrapperBlock}>
+                        <Icon name="global" />
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Language (soon)</Text>
+                    </View>
+                    <View style={styles.modalWrapperBlock}>
+                        <Icon name="info-circle" />
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Language (soon)</Text>
+                    </View>
+                    <View style={styles.modalWrapperBlock}>
+                        <Icon name="usergroup-add" />
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Information (soon)</Text>
+                    </View>
+                    <TouchableOpacity style={styles.modalWrapperBlock} onPress={() => logOut()}>
+                        <Icon name="logout" style={{ color: "red" }} />
+                        <Text style={[styles.infoText, { color: "red" }]}>Log out</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </Page>
     )
 }
 
-const style = StyleSheet.create({
-    avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: "#eee",
-        marginLeft: "50%",
-        transform: [{ translateX: -50 }],
+const styles = StyleSheet.create({
+    contentWrapper: {
+        marginTop: 21,
+        borderTopColor: "#000",
+        borderTopWidth: 1,
+        borderStyle: "solid",
     },
-
-    text: {
-        color: "white",
-        textAlign: "center",
+    closeIcon: {
+        position: "absolute",
+        top: -42,
+        right: 0,
+        zIndex: 100,
     },
-
-    homeContent: {
-        marginTop: 13.03,
-        marginBottom: 26,
+    modalWrapperBlock: {
+        flexDirection: "row",
+        alignItems: "center",
+        height: 25,
+        gap: 18,
     },
-
-    homeTitle: {
-        fontSize: 30,
-        fontWeight: "600",
-    },
-
-    homeNav: {
-        width: "100%",
-        height: "100%",
-        backgroundColor: "white",
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
-        paddingBottom: 31,
-        paddingHorizontal: 36,
-    },
-
-    homeNavLinks: {
+    infoText: {
         fontSize: 20,
         fontWeight: "600",
-        marginTop: 30,
+        lineHeight: 20,
+        color: "#F9FAF8",
+    },
+    modalInfoBlock: {
+        flexDirection: "column",
+        gap: 34,
+    },
+    modalWrapper: {
+        paddingTop: 62,
+        paddingHorizontal: 32,
+        paddingBottom: 20,
+        backgroundColor: "#005479",
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
+    },
+    line: {
+        top: 0,
+        height: "100%",
+        width: 1,
+        backgroundColor: "#fff",
+    },
+    tabBarWrapper: {
+        width: "100%",
+        borderRadius: 12,
+        backgroundColor: "#FFED4A",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around",
+        height: 47,
+        marginTop: 5,
+    },
+    settingIcon: {
+        position: "absolute",
+        top: 20,
+        right: 0,
+        color: "#000",
+        fontSize: 30,
+    },
+    profileInfoWrapper: {
+        marginTop: 70,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        gap: 20,
+    },
+    userProfileImg: {
+        width: 120,
+        height: 120,
+        objectFit: "contain",
+        borderRadius: 1000,
+    },
+    fullName: {
+        textAlign: "center",
+        fontSize: 24,
+        fontWeight: "600",
+        lineHeight: 27,
+        color: "#000000",
+    },
+    userStatistic: {
+        flexDirection: "row",
+        gap: 30,
+        alignItems: "center",
+    },
+    statisticNumber: {
+        textAlign: "center",
+        fontSize: 20,
+        fontWeight: "600",
+        lineHeight: 20,
+        color: "#000000",
+    },
+    statisticDescr: {
+        textAlign: "center",
+        fontSize: 12,
+        fontWeight: "600",
+        lineHeight: 15,
+        color: "#808080",
     },
 })
-

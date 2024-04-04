@@ -25,7 +25,7 @@ export interface ILogin {
 }
 
 export function RegistrationAPI() {
-    const { res, fetchData } = useApi<IRegistration>("/auth/register")
+    const { res, fetchData } = useApi<IRegistration>("auth/register")
 
     return {
         res,
@@ -34,7 +34,7 @@ export function RegistrationAPI() {
 }
 
 export function LoginAPI() {
-    const { res, fetchData } = useApi<IRegistration>("/auth/login")
+    const { res, fetchData } = useApi<IRegistration>("auth/login")
 
     return {
         res,

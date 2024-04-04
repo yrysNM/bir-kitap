@@ -4,16 +4,17 @@ import Carousel from "react-native-snap-carousel"
 import { useAppSelector } from "../hook/useStore"
 
 type info = {
-    id: string
     title: string
 }
 
 type propsInfo = {
     dataList: info[]
-    handleBookType: (dataList: string[]) => void
+    handleBookType: (dataList: string[] | string) => void
+    isMultiple: boolean
+    type?: string
 }
 
-export const CarouselBookTypeFilter = ({ dataList, handleBookType }: propsInfo) => {
+export const CarouselBookTypeFilter = ({ dataList, handleBookType, isMultiple, type }: propsInfo) => {
     const [bookTypeList, setBookTypeList] = useState<string[]>([])
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
 
@@ -24,7 +25,7 @@ export const CarouselBookTypeFilter = ({ dataList, handleBookType }: propsInfo) 
         }
     }, [isRefresh])
 
-    const onSelectBookType = (bookType: string) => {
+    const onMultipleSelectBookType = (bookType: string) => {
         if (isSelectBookType(bookType)) {
             const handleTypeList = bookTypeList.filter((type) => type !== bookType)
 
@@ -38,13 +39,24 @@ export const CarouselBookTypeFilter = ({ dataList, handleBookType }: propsInfo) 
         }
     }
 
+    const onSingleSelectBookType = (bookType: string) => {
+        if (bookType !== bookTypeList[0]) {
+            setBookTypeList([bookType])
+            handleBookType(bookType)
+        }
+    }
+
     const isSelectBookType = (bookType: string) => {
-        return bookTypeList.includes(bookType)
+        if (bookTypeList.length) {
+            return bookTypeList.includes(bookType)
+        } else {
+            return bookType === type
+        }
     }
 
     const _renderItem = ({ item }: { item: info }) => {
         return (
-            <TouchableOpacity onPress={() => onSelectBookType(item.title)} style={[styles.bookBlock, isSelectBookType(item.title) ? styles.bookTypeBlockActive : styles.bookTypeBlock]}>
+            <TouchableOpacity onPress={() => (isMultiple ? onMultipleSelectBookType(item.title) : onSingleSelectBookType(item.title))} style={[styles.bookBlock, isSelectBookType(item.title) ? styles.bookTypeBlockActive : styles.bookTypeBlock]}>
                 <Text style={{ ...styles.bookTypeText, color: isSelectBookType(item.title) ? "#fff" : "#000" }}>{item.title}</Text>
             </TouchableOpacity>
         )

@@ -5,8 +5,8 @@ import Icon from "@ant-design/react-native/lib/icon"
 import { Services } from "../screens/Services"
 import { useNavigation } from "@react-navigation/native"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
-import { NotReady } from "../screens/NotReady"
 import { Search } from "../screens/Search"
+import { Profile } from "../screens/Profile"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
@@ -21,6 +21,8 @@ export const TabNavigator = () => {
             return currentRouteName === "Services" ? "rgba(0, 0, 0, 0.5)" : "rgba(248, 248, 248, 0.5)"
         }
     }
+
+    alert(JSON.stringify(navigationTabbarRoutesName))
 
     return (
         <Tab.Navigator
@@ -89,7 +91,7 @@ export const TabNavigator = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={NotReady}
+                component={Profile}
                 options={{
                     tabBarItemStyle: {
                         height: 0,

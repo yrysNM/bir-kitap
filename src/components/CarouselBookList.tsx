@@ -15,7 +15,7 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
     const _renderItem = ({ item }: { item: bookInfo }) => {
         const imageUrl = `${API_URL}/public/get_resource?name=${item.imageLink}`
         return (
-            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { bookId: item.id as string })}>
+            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })}>
                 <Image style={styles.bookImg} source={{ uri: imageUrl }} />
                 <Text style={styles.text}>{item.title.length > 15 ? `${item.title.slice(0, 10)}...` : item.title}</Text>
             </TouchableOpacity>
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginRight: 20,
+        marginLeft: 10,
         width: 84,
     },
     bookImg: {
