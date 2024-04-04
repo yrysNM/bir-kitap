@@ -14,7 +14,7 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { base64toFiile } from "../helpers/base64toFile"
 import { Fuse } from "../layouts/Fuse"
 
-const _webview_base_url = "http://192.168.0.106:3000/"
+const _webview_base_url = "http://192.168.0.102:5173/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
