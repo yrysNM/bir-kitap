@@ -46,7 +46,7 @@ export const CreateAccount = () => {
                         "token",
                         JSON.stringify({
                             token: res.data.token,
-                            refresh_token: res.data.refreshToken,
+                            refreshToken: res.data.refreshToken,
                             tokenExpireToken: res.data.tokenExpireToken,
                         }),
                     ).then(() => {

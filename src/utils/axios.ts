@@ -38,6 +38,7 @@ instance.interceptors.response.use(
     async (error: AxiosError) => {
         const { config, response } = error
         const originalRequest = config as AxiosRequestConfig & { _retry?: boolean }
+
         if (response?.status === 401) {
             if (!isRefreshing) {
                 isRefreshing = true
@@ -66,13 +67,20 @@ instance.interceptors.response.use(
 )
 
 async function refreshAccessToken(): Promise<string> {
-    const refreshToken = await AsyncStorage.getItem("token").then((value) => (value ? JSON.parse(value).refreshToken : null))
+    const refreshToken = await AsyncStorage.getItem("token").then((value) => {
+        if (value) {
+            return JSON.parse(value).refreshToken
+        } else {
+            return null
+        }
+    })
+
     return axios
         .post(`${API_URL}auth/refresh/token`, {
             refreshToken,
         })
         .then((res) => {
-            if (res.data.result_code === 0 && res.data.data) {
+            if (res.data?.result_code === 0 && res.data?.data) {
                 AsyncStorage.setItem("token", JSON.stringify(res.data.data))
                 return res.data.data.refreshToken
             } else {

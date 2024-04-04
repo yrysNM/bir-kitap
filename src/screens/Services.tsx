@@ -3,8 +3,6 @@ import { Page } from "../layouts/Page"
 
 import Icon from "@ant-design/react-native/lib/icon"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
-import { BookApi, categoryInfo } from "../api/bookApi"
-import { useEffect, useState } from "react"
 import { CloudImage } from "../components/CloudImage"
 import BookTrackerImg from "../../assets/images/category/book-tracker.png"
 import BookTestImg from "../../assets/images/category/book-test.png"
@@ -16,22 +14,8 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList>>
 
 export const Services = () => {
-    const { fetchData: fetchCategoryData } = BookApi("category/list")
-    const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
+    const { categoryList } = useAppSelector((state) => state.mainSlice)
     const navigation = useNavigation<NavigateType>()
-    const { isRefresh } = useAppSelector((state) => state.mainSlice)
-
-    useEffect(() => {
-        if (!isRefresh) {
-            fetchCategoryData({}).then((res) => {
-                if (res.result_code === 0) {
-                    const categoryInfo: categoryInfo[] = JSON.parse(JSON.stringify(res.data))
-
-                    setCategoryList(categoryInfo)
-                }
-            })
-        }
-    }, [isRefresh])
 
     const onLink = (linkName?: string) => {
         if (linkName && linkName !== "url") {

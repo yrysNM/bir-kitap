@@ -5,6 +5,7 @@ import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 import { bookReviewInfo } from "../api/reviewApi"
 
 export const ReviewCard = ({reviewInfo}: {reviewInfo: bookReviewInfo}) => {
+
     return (
         <View style={styles.reviewWrapper}>
             <CloudImage url={reviewInfo?.book?.imageLink} styleImg={styles.bookReviewImg} />
