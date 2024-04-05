@@ -85,7 +85,6 @@ export const Services = () => {
                             <Text style={styles.categoryText}>{item.title}</Text>
                         </TouchableOpacity>
                     ))}
-                    
                 </View>
                 <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                     {categoryList.slice(3, 6).map((item, i) => (
@@ -97,9 +96,6 @@ export const Services = () => {
                         </TouchableOpacity>
                     ))}
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate("Readers" as never)}>
-                        <Text>asd</Text>
-                    </TouchableOpacity>
             </View>
         </Page>
     )

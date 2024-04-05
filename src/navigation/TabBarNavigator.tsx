@@ -22,8 +22,6 @@ export const TabNavigator = () => {
         }
     }
 
-    alert(JSON.stringify(navigationTabbarRoutesName))
-
     return (
         <Tab.Navigator
             initialRouteName="Home"

@@ -11,7 +11,6 @@ type propsInfo = {
 
 export const CloudImage = ({ url, styleImg }: propsInfo) => {
     const [isError, setIsError] = useState<boolean>(false)
-
     const urlImg = useMemo(() => {
         if (url && url.length) {
             setIsError(false)
