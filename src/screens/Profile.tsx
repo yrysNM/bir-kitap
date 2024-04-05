@@ -113,9 +113,7 @@ export const Profile = () => {
                     ) : tab === "Reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                     ) : (
-                        <View style={{ flex: 1 }}>
-                            <NoData />
-                        </View>
+                        <NoData />
                     )}
                 </View>
             </View>

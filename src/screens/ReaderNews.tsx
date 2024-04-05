@@ -1,6 +1,5 @@
 import { Page } from "../layouts/Page"
 import { Image, StyleSheet, Text, View } from "react-native"
-import ReaderImage from "../../assets/readers.png"
 import ReaderNotif from "../../assets/readaerNotif.png"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../navigation/MainNavigation"
@@ -18,18 +17,12 @@ const ReaderNews = () => {
         const news = async () => {
             await fetchData({
                 id: id,
+            }).then((res) => {
+                if (res.result_code === 0) {
+                    const newsData: newsInfo = JSON.parse(JSON.stringify(res.data))
+                    setReaderData(newsData)
+                }
             })
-                .then((res) => {
-                    if (res.result_code === 0) {
-                        const newsData: newsInfo = JSON.parse(JSON.stringify(res.data))
-                        setReaderData(newsData)
-                    }
-                })
-                .catch((err: any) => {
-                    if (err) {
-                        alert(JSON.stringify(err))
-                    }
-                })
         }
 
         if (id) {

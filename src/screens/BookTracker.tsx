@@ -1,4 +1,4 @@
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { SafeAreaView, StatusBar, Text, TouchableOpacity } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
@@ -12,31 +12,43 @@ import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
+// import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.1.5:5173/"
+const _webview_base_url = "http://192.168.0.115:3000/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
-    const { fetchData } = BookApi("upload")
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
+    // const logOut = logOutHelper()
+    const { isLoading } = useAppSelector((state) => state.mainSlice)
     const [showWebView] = useState(true)
     const navigation = useNavigation()
+    const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(0)
+    const [token, setToken] = useState<string>("")
 
     useEffect(() => {
-        // AsyncStorage.clear()
-        console.log("___________USERINFO__________")
-        console.log(userInfo)
-    }, [])
+        AsyncStorage.getItem("token").then((value) => {
+            if (value) {
+                setToken(value)
+            } else {
+                setToken("")
+            }
+        })
+    })
 
-    async function injectWebViewData() {
-        const token = await AsyncStorage.getItem("token")
-        webViewEl.current?.injectJavaScript(`
-        setTimeout(() => {
+    function injectWebViewData() {
+        const janascript = `
+            // setTimeout(() => {
                 localStorage.setItem('token', '${token}');
-            }, 100)
-        `)
+                // window.data = {};
+                // function setData(data) {
+                //     window.data = data
+                // }
+            // }, 20);
+        `
+        // webViewEl.current?.injectJavaScript(janascript)
+        return janascript
     }
 
     const handleFileUpload = async () => {
@@ -95,40 +107,46 @@ export const BookTracker = () => {
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
         }
+
+        return {}
     }
 
     if (showWebView) {
         return (
-            <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
-                <Fuse>
-                    <WebView
-                        ref={webViewEl}
-                        key={webviewKey}
-                        webviewDebuggingEnabled={true}
-                        ignoreSilentHardwareSwitch={true}
-                        javaScriptEnabled={true}
-                        style={{ height: "100%", width: "100%" }}
-                        source={{ uri: _webview_base_url }}
-                        originWhitelist={["*"]}
-                        onRenderProcessGone={(syntheticEvent) => {
-                            const { nativeEvent } = syntheticEvent
-                            console.warn("WebView Crashed:", nativeEvent.didCrash)
-                            webViewEl.current?.reload()
-                        }}
-                        onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                        onMessage={handleMessageFromWebview}
-                        onLoadStart={injectWebViewData}
-                        onLoadEnd={injectWebViewData}
-                        onLoadProgress={({ nativeEvent }) => {
-                            if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(true))
-                            } else if (nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(false))
-                            }
-                        }}
-                    />
-                </Fuse>
-            </View>
+            <Fuse>
+                {!isLoading && (
+                    <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
+                        <WebView
+                            ref={webViewEl}
+                            key={webviewKey}
+                            webviewDebuggingEnabled={true}
+                            ignoreSilentHardwareSwitch={true}
+                            javaScriptEnabled={true}
+                            style={{ height: "100%", width: "100%" }}
+                            source={{ uri: _webview_base_url }}
+                            originWhitelist={["*"]}
+                            onRenderProcessGone={(syntheticEvent) => {
+                                const { nativeEvent } = syntheticEvent
+                                console.warn("WebView Crashed:", nativeEvent.didCrash)
+                                webViewEl.current?.reload()
+                            }}
+                            onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
+                            onMessage={handleMessageFromWebview}
+                            // onLoadStart={injectWebViewData}
+                            injectedJavaScript={injectWebViewData()}
+                            // injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
+                            // onLoadEnd={injectWebViewData}
+                            onLoadProgress={({ nativeEvent }) => {
+                                if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                                    setLoading(true)
+                                } else if (nativeEvent.url === _webview_base_url) {
+                                    setLoading(false)
+                                }
+                            }}
+                        />
+                    </SafeAreaView>
+                )}
+            </Fuse>
         )
     }
 

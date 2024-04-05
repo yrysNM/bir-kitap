@@ -12,7 +12,7 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 
-const _webview_base_url = "http://192.168.0.106:5173/"
+const _webview_base_url = "http://192.168.0.115:5173/"
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()

@@ -1,12 +1,12 @@
 import useApi from "../hook/useApi"
 
 export type newsInfo = {
-    id: string
-    title: string
     content: string
-    imageLink: string
-    verticalImage: string | null
     createtime: number
+    id: string
+    imageLink: string
+    title: string
+    verticalImageLink: null | string
 }
 
 interface INews extends IResponse {
@@ -14,8 +14,6 @@ interface INews extends IResponse {
 }
 
 export function NewsApi(url: string, method: string = "POST") {
-
-
     const { res, fetchData } = useApi<INews>(`news/${url}`, method)
 
     return {
