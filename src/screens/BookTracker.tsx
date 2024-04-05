@@ -13,7 +13,7 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 
-const _webview_base_url = "http://192.168.0.13:3000/"
+const _webview_base_url = "http://192.168.0.102:5173/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)

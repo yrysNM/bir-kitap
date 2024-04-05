@@ -4,29 +4,17 @@ import Icon from "@ant-design/react-native/lib/icon"
 import { SearchInput } from "../components/SearchInput"
 import { useCallback, useEffect, useState } from "react"
 import { BookCard } from "../components/BookCard"
-import { BookApi, bookInfo, categoryInfo } from "../api/bookApi"
+import { BookApi, bookInfo } from "../api/bookApi"
 import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
 import { NoData } from "../components/NoData"
 import { useAppSelector } from "../hook/useStore"
 
 export const Search = () => {
-    const { fetchData: fetchCategoryData } = BookApi("category/list")
+    const { categoryList } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchBookData } = BookApi("list")
     const [search, setSearch] = useState<string>("")
     const [selectCategories, setSelectCategories] = useState<string[]>([])
-    const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
     const [bookList, setBookList] = useState<bookInfo[]>([])
-    const { isRefresh } = useAppSelector((state) => state.mainSlice)
-
-    useEffect(() => {
-        if (!isRefresh) {
-            fetchCategoryData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setCategoryList(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
-        }
-    }, [isRefresh])
 
     useEffect(() => {
         onSearchBook()
