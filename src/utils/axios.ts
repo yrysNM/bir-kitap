@@ -80,11 +80,11 @@ async function refreshAccessToken(): Promise<string> {
             refreshToken,
         })
         .then((res) => {
-            if (res.data?.result_code === 0 && res.data?.data) {
+            if (res.data?.result_code === 0) {
                 AsyncStorage.setItem("token", JSON.stringify(res.data.data))
                 return res.data.data.refreshToken
             } else {
-                // console.error("Somethinh went wrong")
+                console.error("Somethinh went wrong")
                 throw Error("refresh token faild")
             }
         })
