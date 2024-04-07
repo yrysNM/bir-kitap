@@ -25,12 +25,37 @@ export const EditProfile = () => {
         fullname: "",
         gender: "",
     })
+    const [error, setError] = useState<string>("")
 
-    const {fetchData} = UserAPI('profile/edit')
+    const { fetchData } = UserAPI("profile/edit")
 
     const handleChangeEditProfileEvent = (event: any) => {
         const { name, value } = event
         setEdit({ ...edit, [name]: value })
+    }
+
+    const onEdit = async () => {
+        try {
+            if (dateOfBirth && edit.email && edit.fullname && edit.gender) {
+                await fetchData({
+                    fullName: edit.fullname,
+                    gender: edit.gender,
+                })
+                    .then((res) => {
+                        if (res && res.result_code === 0) {
+                            setError("")
+                        }
+                    })
+                    .catch((err) => {
+                        if (err) {
+                            setError("Required all input")
+                        }
+                    })
+            }
+        } catch (error) {
+            setError("Required all input")
+            console.log(error)
+        }
     }
 
     return (
