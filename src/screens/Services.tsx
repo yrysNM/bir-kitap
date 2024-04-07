@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { Page } from "../layouts/Page"
 
-import Icon from "@ant-design/react-native/lib/icon"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { CloudImage } from "../components/CloudImage"
 import BookTrackerImg from "../../assets/images/category/book-tracker.png"
+import BookCrossingImage from "../../assets/crossing.png"
 import BookTestImg from "../../assets/images/category/book-test.png"
 import { useAppSelector } from "../hook/useStore"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
@@ -40,13 +40,13 @@ export const Services = () => {
                 <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTracker" as never)}>
                         <View style={styles.categoryBlock}>
-                            <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                            <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "cover" }} />
                         </View>
                         <Text style={styles.categoryText}>Book Tracker</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookCrossingWebView" as never)}>
                         <View style={styles.categoryBlock}>
-                            <Icon name="read" style={{ fontSize: 54, color: "#808080" }} />
+                        <Image source={BookCrossingImage} style={{ width: 54, height: 54, objectFit: "contain" }} />
                         </View>
                         <Text style={styles.categoryText}>Book crossing</Text>
                     </TouchableOpacity>
@@ -89,19 +89,18 @@ const styles = StyleSheet.create({
     headText: {
         textAlign: "center",
         fontSize: 20,
-        fontWeight: "600",
+        fontWeight: "400",
         lineHeight: 20,
-        opacity: 0.5,
-        color: "#fff",
+        color: "#000",
     },
     serviceCotegory: {
         marginTop: 42,
     },
     contentTitle: {
         fontSize: 20,
-        fontWeight: "500",
+        fontWeight: "400",
         lineHeight: 20,
-        color: "#FFFFFF",
+        color: "#000",
         marginBottom: 27,
     },
     categoryWrapper: {
@@ -115,13 +114,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 29,
-        backgroundColor: "#F9FAF8",
+        backgroundColor: "#005479",
     },
     categoryText: {
         textAlign: "center",
         fontSize: 16,
         fontWeight: "700",
         lineHeight: 16,
-        color: "#FFFFFF",
+        color: "#000",
     },
 })
