@@ -58,7 +58,7 @@ export const Login = () => {
             </View>
             <View style={styles.loginBtnWrapper}>
                 <Button style={{ ...styles.btnWrapper, backgroundColor: "#005479" }} onPress={onLogin}>
-                    <Text style={styles.btnText}>Login in</Text>
+                    <Text style={styles.btnText}>Log in</Text>
                 </Button>
 
                 <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword" as never)}>

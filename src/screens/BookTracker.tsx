@@ -1,42 +1,48 @@
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { SafeAreaView, StatusBar, Text, TouchableOpacity } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
+import { useAppDispatch } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
-import { setHasLogin, setLoading } from "../redux/features/mainSlice"
+import { setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
+import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.0.102:5173/"
+const _webview_base_url = "http://192.168.199.177:5173/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
-    const { fetchData } = BookApi("upload")
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
+    const logOut = logOutHelper()
+    // const { isLoading } = useAppSelector((state) => state.mainSlice)
     const [showWebView] = useState(true)
     const navigation = useNavigation()
+    const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(0)
+    const [token, setToken] = useState<string>("")
 
     useEffect(() => {
-        // AsyncStorage.clear()
-        console.log("___________USERINFO__________")
-        console.log(userInfo)
-    }, [])
+        AsyncStorage.getItem("token").then((value) => {
+            if (value) {
+                setToken(value)
+            } else {
+                setToken("")
+            }
+        })
+    })
 
-    async function injectWebViewData() {
-        const token = await AsyncStorage.getItem("token")
-        webViewEl.current?.injectJavaScript(`
-        setTimeout(() => {
-                localStorage.setItem('token', '${token}');
-            }, 100)
-        `)
+    function injectWebViewData() {
+        const janascript = `
+            localStorage.setItem('token', '${token}');
+        `
+        // webViewEl.current?.injectJavaScript(janascript)
+        return janascript
     }
 
     const handleFileUpload = async () => {
@@ -68,7 +74,7 @@ export const BookTracker = () => {
                     if (res.result_code === 0) {
                         dispatch(setLoading(false))
                         const infoImg = JSON.parse(JSON.stringify(res.data))
-                        const urlImage = `${API_URL}/public/get_resource?name=${infoImg.path}`
+                        const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
                         const info = {
                             type: "file",
                             url: urlImage,
@@ -88,19 +94,20 @@ export const BookTracker = () => {
 
     const handleMessageFromWebview = (e: WebViewMessageEvent) => {
         const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "401") {
-            AsyncStorage.setItem("token", "")
-            dispatch(setHasLogin(false))
-            navigation.navigate("Login" as never)
+        if (messageData && messageData.key === "500") {
+            logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
         }
+
+        return {}
     }
 
     if (showWebView) {
         return (
-            <View style={{ position: "relative", height: "100%", width: "100%", paddingTop: StatusBar.currentHeight }}>
-                <Fuse>
+            <Fuse>
+                {/* {!isLoading && ( */}
+                <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
                     <WebView
                         ref={webViewEl}
                         key={webviewKey}
@@ -117,18 +124,18 @@ export const BookTracker = () => {
                         }}
                         onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                         onMessage={handleMessageFromWebview}
-                        onLoadStart={injectWebViewData}
-                        onLoadEnd={injectWebViewData}
+                        injectedJavaScript={injectWebViewData()}
                         onLoadProgress={({ nativeEvent }) => {
                             if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(true))
+                                setLoading(true)
                             } else if (nativeEvent.url === _webview_base_url) {
-                                dispatch(setLoading(false))
+                                setLoading(false)
                             }
                         }}
                     />
-                </Fuse>
-            </View>
+                </SafeAreaView>
+                {/* )} */}
+            </Fuse>
         )
     }
 
