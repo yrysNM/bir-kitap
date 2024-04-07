@@ -8,9 +8,30 @@ import List from "@ant-design/react-native/lib/list"
 import Icon from "@ant-design/react-native/lib/icon"
 import { useNavigation } from "@react-navigation/native"
 import Popover from "@ant-design/react-native/lib/popover"
+import { useState } from "react"
+import { UserAPI } from "../api/userApi"
+
+interface IEdit {
+    email: string
+    fullname: string
+    gender: string
+}
 
 export const EditProfile = () => {
     const navigation = useNavigation()
+    const [dateOfBirth, setDateOfBirth] = useState<Date>()
+    const [edit, setEdit] = useState<IEdit>({
+        email: "",
+        fullname: "",
+        gender: "",
+    })
+
+    const {fetchData} = UserAPI('profile/edit')
+
+    const handleChangeEditProfileEvent = (event: any) => {
+        const { name, value } = event
+        setEdit({ ...edit, [name]: value })
+    }
 
     return (
         <Fuse>
@@ -28,15 +49,15 @@ export const EditProfile = () => {
                 </View>
                 <View style={styles.userInputWrapper}>
                     <InputStyle inputTitle="E-mail">
-                        <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} />
+                        <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => handleChangeEditProfileEvent(e)} />
                     </InputStyle>
                     <InputStyle inputTitle="Full name">
-                        <InputItem type="text" style={styles.input} placeholder="Jack Jones" />
+                        <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => handleChangeEditProfileEvent(e)} />
                     </InputStyle>
 
                     <InputStyle inputTitle="Date of Birth">
                         <View style={styles.datePickerInput}>
-                            <DatePicker style={{ borderWidth: 0 }} mode="date" defaultDate={new Date()} format="YYYY-MM-DD">
+                            <DatePicker style={{ borderWidth: 0 }} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
                                 <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
                                     Select Date
                                 </List.Item>
@@ -50,6 +71,7 @@ export const EditProfile = () => {
                             useNativeDriver
                             duration={200}
                             easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
+                            onSelect={(e) => setEdit({ ...edit, gender: e })}
                             overlay={
                                 <View style={{ width: 200 }}>
                                     <Popover.Item value="Male">

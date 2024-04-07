@@ -13,3 +13,4 @@ export function UserAPI(url: string, method: string = "POST") {
         fetchData,
     }
 }
+
