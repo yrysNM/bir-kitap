@@ -6,6 +6,7 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 import { useEffect, useState } from "react"
 import { NewsApi, newsInfo } from "../api/newsApi"
 import { CloudImage } from "../components/CloudImage"
+import { Header } from "../components/Header"
 
 const ReaderNews = () => {
     const { id } = useRoute<RouteProp<RootStackParamList, "ReaderNews">>().params
@@ -33,6 +34,7 @@ const ReaderNews = () => {
     return (
         <>
             <Page>
+                <Header isGoBack title=""/>
                 <View style={styles.newsWrapper}>
                     <View style={styles.mainImageBlock}>
                         <CloudImage url={readerData?.imageLink} styleImg={styles.image} />
