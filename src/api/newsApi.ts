@@ -10,7 +10,7 @@ export type newsInfo = {
 }
 
 interface INews extends IResponse {
-    data: string[]
+    data: newsInfo[]
 }
 
 export function NewsApi(url: string, method: string = "POST") {
