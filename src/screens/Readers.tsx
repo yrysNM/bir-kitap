@@ -12,17 +12,11 @@ const Readers = () => {
 
     useEffect(() => {
         const news = async () => {
-            await fetchData({})
-                .then((res) => {
-                    if (res.result_code === 0) {
-                        setReaderData(res.data)
-                    }
-                })
-                .catch((err: any) => {
-                    if (err) {
-                        alert(JSON.stringify(err))
-                    }
-                })
+            await fetchData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setReaderData(res.data)
+                }
+            })
         }
 
         news()
@@ -36,7 +30,7 @@ const Readers = () => {
                     <NoData />
                 ) : (
                     <>
-                        <NewsBlock readerData={readerData}/>
+                        <NewsBlock readerData={readerData} />
                     </>
                 )}
             </View>

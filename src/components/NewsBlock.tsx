@@ -1,6 +1,5 @@
 import React, { FC } from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import ReadersImage from "../../assets/readers.png"
 import ReadersNotif from "../../assets/readaerNotif.png"
 import ReadersMore from "../../assets/readerMore.png"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
