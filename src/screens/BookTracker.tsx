@@ -2,25 +2,25 @@ import { SafeAreaView, StatusBar, Text, TouchableOpacity } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
+import { useAppDispatch } from "../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
-import { setHasLogin, setLoading } from "../redux/features/mainSlice"
+import { setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
-// import { logOut as logOutHelper } from "../helpers/logOut"
+import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.0.115:3000/"
+const _webview_base_url = "http://192.168.199.177:5173/"
 
 export const BookTracker = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
-    // const logOut = logOutHelper()
-    const { isLoading } = useAppSelector((state) => state.mainSlice)
+    const logOut = logOutHelper()
+    // const { isLoading } = useAppSelector((state) => state.mainSlice)
     const [showWebView] = useState(true)
     const navigation = useNavigation()
     const { fetchData } = BookApi("upload")
@@ -39,13 +39,7 @@ export const BookTracker = () => {
 
     function injectWebViewData() {
         const janascript = `
-            // setTimeout(() => {
-                localStorage.setItem('token', '${token}');
-                // window.data = {};
-                // function setData(data) {
-                //     window.data = data
-                // }
-            // }, 20);
+            localStorage.setItem('token', '${token}');
         `
         // webViewEl.current?.injectJavaScript(janascript)
         return janascript
@@ -80,7 +74,7 @@ export const BookTracker = () => {
                     if (res.result_code === 0) {
                         dispatch(setLoading(false))
                         const infoImg = JSON.parse(JSON.stringify(res.data))
-                        const urlImage = `${API_URL}/public/get_resource?name=${infoImg.path}`
+                        const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
                         const info = {
                             type: "file",
                             url: urlImage,
@@ -100,10 +94,8 @@ export const BookTracker = () => {
 
     const handleMessageFromWebview = (e: WebViewMessageEvent) => {
         const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "401") {
-            AsyncStorage.setItem("token", "")
-            dispatch(setHasLogin(false))
-            navigation.navigate("Login" as never)
+        if (messageData && messageData.key === "500") {
+            logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
         }
@@ -114,38 +106,35 @@ export const BookTracker = () => {
     if (showWebView) {
         return (
             <Fuse>
-                {!isLoading && (
-                    <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
-                        <WebView
-                            ref={webViewEl}
-                            key={webviewKey}
-                            webviewDebuggingEnabled={true}
-                            ignoreSilentHardwareSwitch={true}
-                            javaScriptEnabled={true}
-                            style={{ height: "100%", width: "100%" }}
-                            source={{ uri: _webview_base_url }}
-                            originWhitelist={["*"]}
-                            onRenderProcessGone={(syntheticEvent) => {
-                                const { nativeEvent } = syntheticEvent
-                                console.warn("WebView Crashed:", nativeEvent.didCrash)
-                                webViewEl.current?.reload()
-                            }}
-                            onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                            onMessage={handleMessageFromWebview}
-                            // onLoadStart={injectWebViewData}
-                            injectedJavaScript={injectWebViewData()}
-                            // injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
-                            // onLoadEnd={injectWebViewData}
-                            onLoadProgress={({ nativeEvent }) => {
-                                if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                    setLoading(true)
-                                } else if (nativeEvent.url === _webview_base_url) {
-                                    setLoading(false)
-                                }
-                            }}
-                        />
-                    </SafeAreaView>
-                )}
+                {/* {!isLoading && ( */}
+                <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
+                    <WebView
+                        ref={webViewEl}
+                        key={webviewKey}
+                        webviewDebuggingEnabled={true}
+                        ignoreSilentHardwareSwitch={true}
+                        javaScriptEnabled={true}
+                        style={{ height: "100%", width: "100%" }}
+                        source={{ uri: _webview_base_url }}
+                        originWhitelist={["*"]}
+                        onRenderProcessGone={(syntheticEvent) => {
+                            const { nativeEvent } = syntheticEvent
+                            console.warn("WebView Crashed:", nativeEvent.didCrash)
+                            webViewEl.current?.reload()
+                        }}
+                        onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
+                        onMessage={handleMessageFromWebview}
+                        injectedJavaScript={injectWebViewData()}
+                        onLoadProgress={({ nativeEvent }) => {
+                            if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                                setLoading(true)
+                            } else if (nativeEvent.url === _webview_base_url) {
+                                setLoading(false)
+                            }
+                        }}
+                    />
+                </SafeAreaView>
+                {/* )} */}
             </Fuse>
         )
     }

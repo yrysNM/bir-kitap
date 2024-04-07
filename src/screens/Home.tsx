@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Dimensions } from "react-native"
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native"
 import { Page } from "../layouts/Page"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
@@ -13,6 +13,12 @@ import { UserAPI } from "../api/userApi"
 import { setCategoryList, setUserInfo } from "../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
 import { CloudImage } from "../components/CloudImage"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
 export const Home = () => {
     const { fetchData: fetchBookData } = BookApi("list")
@@ -25,6 +31,7 @@ export const Home = () => {
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
+    const navigation = useNavigation<NavigateType>()
 
     useEffect(() => {
         if (!isRefresh) {
@@ -80,10 +87,10 @@ export const Home = () => {
 
     const _renderNews = ({ item }: { item: newsInfo }) => {
         return (
-            <View style={styles.newsBlock}>
+            <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} style={styles.newsBlock}>
                 <CloudImage styleImg={styles.newsImg} url={item.imageLink} />
                 <Text style={styles.newsTitle}>{customContentText(item.content)}</Text>
-            </View>
+            </TouchableOpacity>
         )
     }
 
