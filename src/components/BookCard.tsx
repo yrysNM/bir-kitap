@@ -17,7 +17,8 @@ export const BookCard = ({ bookInfo }: propsInfo) => {
     const navigation = useNavigation<NavigateType>()
 
     const genreText = () => {
-        const genreText = bookInfo.genres.join(", ")
+        if (!bookInfo.genres?.length) return ""
+        const genreText = bookInfo?.genres.join(", ")
         if (genreText.length > 35) {
             return `${genreText.slice(0, 35)}...`
         } else {
@@ -26,7 +27,7 @@ export const BookCard = ({ bookInfo }: propsInfo) => {
     }
 
     return (
-        <TouchableOpacity style={styles.bookCard} onPressIn={() => navigation.navigate("BookDetail", { id: bookInfo.id || "" })}>
+        <TouchableOpacity style={styles.bookCard} delayPressIn={5} onPress={() => navigation.navigate("BookDetail", { id: bookInfo.id || "" })}>
             <CloudImage url={bookInfo.imageLink} styleImg={styles.bookImg} />
 
             <View style={styles.bookInfo}>
