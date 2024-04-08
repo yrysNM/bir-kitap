@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
 import { useAppDispatch } from "../hook/useStore"
 import { setLoading } from "../redux/features/mainSlice"
@@ -12,29 +12,41 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 
-const _webview_base_url = "http://192.168.1.5:5174/"
+// const _webview_base_url = "http://192.168.1.5:5174/"
+const _webview_base_url = "https://birkitap.kz/book-crossing/"
+
+interface IUpload extends IResponse {
+    data: { path: string }
+}
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
-    const { fetchData } = useApi<IResponse>("/bookcrossing/announcement/upload")
+    const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
+    const [token, setToken] = useState<string>("")
 
-    async function injectWebViewData() {
-        const token = await AsyncStorage.getItem("token")
-        webViewEl.current?.injectJavaScript(`
-            setTimeout(() => {
-                localStorage.setItem('token', '${token}');
-                // window.data = {};
-                // function setData(data) {
-                //     window.data = data
-                // }
-            }, 20);
-        `)
+    useEffect(() => {
+        AsyncStorage.getItem("token").then((value) => {
+            if (value) {
+                setToken(value)
+            } else {
+                setToken("")
+            }
+        })
+    })
+
+    function injectWebViewData() {
+        const janascript = `
+        localStorage.setItem('token', '${token}');
+    `
+        // webViewEl.current?.injectJavaScript(janascript)
+        return janascript
     }
 
     const handleFileUpload = async () => {
+        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
@@ -57,17 +69,26 @@ export const BookCrossingWebView = () => {
                 name: uriList.pop(),
             } as never)
 
-            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never).then((res) => {
-                if (res.result_code === 0) {
-                    const { data } = JSON.parse(JSON.stringify(res))
-                    const urlImage = `${API_URL}public/get_resource?name=${data.path}`
-                    const info = {
-                        type: "file",
-                        url: urlImage,
+            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never)
+                .then((res) => {
+                    if (res.result_code === 0) {
+                        dispatch(setLoading(false))
+                        const infoImg = JSON.parse(JSON.stringify(res.data))
+                        const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
+                        const info = {
+                            type: "file",
+                            url: urlImage,
+                        }
+                        webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
+                    } else {
+                        dispatch(setLoading(false))
+                        console.log(res.data)
                     }
-                    webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
-                }
-            })
+                })
+                .catch((err) => {
+                    console.log(JSON.stringify(err))
+                    dispatch(setLoading(false))
+                })
         }
     }
 
@@ -78,10 +99,13 @@ export const BookCrossingWebView = () => {
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
         }
+
+        return {}
     }
 
     return (
         <Fuse>
+            {/* {!isLoading && ( */}
             <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
                 <WebView
                     ref={webViewEl}
@@ -99,18 +123,17 @@ export const BookCrossingWebView = () => {
                     }}
                     onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                     onMessage={handleMessageFromWebview}
-                    onLoadStart={injectWebViewData}
-                    // onLoad={injectWebViewData}
-                    onLoadEnd={injectWebViewData}
+                    injectedJavaScript={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                            dispatch(setLoading(true))
+                            setLoading(true)
                         } else if (nativeEvent.url === _webview_base_url) {
-                            dispatch(setLoading(false))
+                            setLoading(false)
                         }
                     }}
                 />
             </SafeAreaView>
+            {/* )} */}
         </Fuse>
     )
 }

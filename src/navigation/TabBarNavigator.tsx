@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
 import Icon from "@ant-design/react-native/lib/icon"
@@ -10,17 +10,12 @@ import { Profile } from "../screens/Profile"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
-    // const navigation = useNavigation()
-    // const navigationTabbarIndex = navigation.getState().routes[0].state?.index
-    // const navigationTabbarRoutesName = navigation.getState().routes[0].state?.routeNames
-    // const currentRouteName: string = navigationTabbarRoutesName && typeof navigationTabbarIndex !== "undefined" ? navigationTabbarRoutesName[navigationTabbarIndex] : ""
     const iconColor = (isFocused: boolean) => {
         if (isFocused) {
             return "#fff"
         } else {
-        return "#CCCFD0"
+            return "#CCCFD0"
         }
-
     }
 
     return (
@@ -43,9 +38,8 @@ export const TabNavigator = () => {
                         <View>
                             <Icon name="home" style={styles.tabIcon} color={iconColor(focused)} />
                         </View>
-                    )
+                    ),
                 }}
-                
             />
             <Tab.Screen
                 name="Search"
@@ -110,7 +104,7 @@ export const TabNavigator = () => {
 const styles = StyleSheet.create({
     tabbar: {
         paddingVertical: 20,
-        height: 64
+        height: 64,
     },
     tabIcon: {
         fontSize: 30,

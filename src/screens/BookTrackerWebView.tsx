@@ -1,10 +1,8 @@
-import { SafeAreaView, StatusBar, Text, TouchableOpacity } from "react-native"
+import { SafeAreaView, StatusBar } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
 import { useAppDispatch } from "../hook/useStore"
-import { useNavigation } from "@react-navigation/native"
-import { Page } from "../layouts/Page"
 import { setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
@@ -14,15 +12,14 @@ import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.199.177:5173/"
+// const _webview_base_url = "http://192.168.0.114:5173"
+const _webview_base_url = "https://birkitap.kz/book-tracker/"
 
-export const BookTracker = () => {
+export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
     const logOut = logOutHelper()
     // const { isLoading } = useAppSelector((state) => state.mainSlice)
-    const [showWebView] = useState(true)
-    const navigation = useNavigation()
     const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
@@ -46,6 +43,7 @@ export const BookTracker = () => {
     }
 
     const handleFileUpload = async () => {
+        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
@@ -68,7 +66,6 @@ export const BookTracker = () => {
                 name: uriList.pop(),
             } as never)
 
-            dispatch(setLoading(true))
             fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never)
                 .then((res) => {
                     if (res.result_code === 0) {
@@ -103,51 +100,37 @@ export const BookTracker = () => {
         return {}
     }
 
-    if (showWebView) {
-        return (
-            <Fuse>
-                {/* {!isLoading && ( */}
-                <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
-                    <WebView
-                        ref={webViewEl}
-                        key={webviewKey}
-                        webviewDebuggingEnabled={true}
-                        ignoreSilentHardwareSwitch={true}
-                        javaScriptEnabled={true}
-                        style={{ height: "100%", width: "100%" }}
-                        source={{ uri: _webview_base_url }}
-                        originWhitelist={["*"]}
-                        onRenderProcessGone={(syntheticEvent) => {
-                            const { nativeEvent } = syntheticEvent
-                            console.warn("WebView Crashed:", nativeEvent.didCrash)
-                            webViewEl.current?.reload()
-                        }}
-                        onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                        onMessage={handleMessageFromWebview}
-                        injectedJavaScript={injectWebViewData()}
-                        onLoadProgress={({ nativeEvent }) => {
-                            if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                setLoading(true)
-                            } else if (nativeEvent.url === _webview_base_url) {
-                                setLoading(false)
-                            }
-                        }}
-                    />
-                </SafeAreaView>
-                {/* )} */}
-            </Fuse>
-        )
-    }
-
     return (
-        <Page>
-            <TouchableOpacity onPress={() => handleFileUpload()}>
-                <Text>BOOK CROSSING</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate("Genre" as never)}>
-                <Text>Genre</Text>
-            </TouchableOpacity>
-        </Page>
+        <Fuse>
+            {/* {!isLoading && ( */}
+            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
+                <WebView
+                    ref={webViewEl}
+                    key={webviewKey}
+                    webviewDebuggingEnabled={true}
+                    ignoreSilentHardwareSwitch={true}
+                    javaScriptEnabled={true}
+                    style={{ height: "100%", width: "100%" }}
+                    source={{ uri: _webview_base_url }}
+                    originWhitelist={["*"]}
+                    onRenderProcessGone={(syntheticEvent) => {
+                        const { nativeEvent } = syntheticEvent
+                        console.warn("WebView Crashed:", nativeEvent.didCrash)
+                        webViewEl.current?.reload()
+                    }}
+                    onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
+                    onMessage={handleMessageFromWebview}
+                    injectedJavaScript={injectWebViewData()}
+                    onLoadProgress={({ nativeEvent }) => {
+                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                            setLoading(true)
+                        } else if (nativeEvent.url === _webview_base_url) {
+                            setLoading(false)
+                        }
+                    }}
+                />
+            </SafeAreaView>
+            {/* )} */}
+        </Fuse>
     )
 }
