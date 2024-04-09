@@ -12,8 +12,8 @@ import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 
-// const _webview_base_url = "http://192.168.0.114:5173"
-const _webview_base_url = "https://birkitap.kz/book-tracker/"
+const _webview_base_url = "http://192.168.0.124:5173/book-tracker/"
+// const _webview_base_url = "https://birkitap.kz/book-tracker/"
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
@@ -43,13 +43,13 @@ export const BookTrackerWebView = () => {
     }
 
     const handleFileUpload = async () => {
-        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
             base64: true,
         })
 
+        dispatch(setLoading(true))
         if (!response.canceled && response.assets) {
             const uriList = response.assets[0].uri.split("/")
             const file = base64toFiile(`data:image/*;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
