@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native"
 import Popover from "@ant-design/react-native/lib/popover"
 import { useState } from "react"
 import { UserAPI } from "../api/userApi"
+import Button from "@ant-design/react-native/lib/button"
 
 interface IEdit {
     email: string
@@ -29,32 +30,32 @@ export const EditProfile = () => {
 
     const { fetchData } = UserAPI("profile/edit")
 
-    const handleChangeEditProfileEvent = (event: any) => {
-        const { name, value } = event
-        setEdit({ ...edit, [name]: value })
-    }
-
     const onEdit = async () => {
         try {
-            if (dateOfBirth && edit.email && edit.fullname && edit.gender) {
+            if (dateOfBirth && edit.email && edit.fullname) {
                 await fetchData({
                     fullName: edit.fullname,
+                    birth: new Date(dateOfBirth),
                     gender: edit.gender,
                 })
                     .then((res) => {
                         if (res && res.result_code === 0) {
                             setError("")
+                            alert("123")
                         }
+                        alert(JSON.stringify(res))
                     })
                     .catch((err) => {
                         if (err) {
                             setError("Required all input")
+                            alert(JSON.stringify(err))
                         }
                     })
             }
         } catch (error) {
             setError("Required all input")
             console.log(error)
+            alert(JSON.stringify(error))
         }
     }
 
@@ -74,10 +75,10 @@ export const EditProfile = () => {
                 </View>
                 <View style={styles.userInputWrapper}>
                     <InputStyle inputTitle="E-mail">
-                        <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => handleChangeEditProfileEvent(e)} />
+                        <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
                     </InputStyle>
                     <InputStyle inputTitle="Full name">
-                        <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => handleChangeEditProfileEvent(e)} />
+                        <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
                     </InputStyle>
 
                     <InputStyle inputTitle="Date of Birth">
@@ -112,6 +113,10 @@ export const EditProfile = () => {
                             </View>
                         </Popover>
                     </InputStyle>
+
+                    <Button style={styles.footerBtn} onPress={() => onEdit()}>
+                        <Text style={styles.footerBtnText}>Sign up</Text>
+                    </Button>
                 </View>
             </View>
         </Fuse>
@@ -182,5 +187,18 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: "center",
         overflow: "hidden",
+    },
+
+    footerBtn: {
+        borderRadius: 20,
+        width: "100%",
+        height: 54,
+        backgroundColor: "#FFED4A",
+        marginTop: 12,
+    },
+    footerBtnText: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#000",
     },
 })
