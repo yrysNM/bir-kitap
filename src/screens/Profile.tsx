@@ -42,8 +42,10 @@ export const Profile = () => {
     } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
+    const { fetchData: fetchUserInfoData } = UserAPI("info")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
+    const [userInf, setUserInfo] = useState<any>()
     const [tab, setTab] = useState<string>("Survey")
 
     useEffect(() => {
@@ -52,7 +54,19 @@ export const Profile = () => {
                 setInfo(JSON.parse(JSON.stringify(res.data)))
             }
         })
+
+        fetchUserInfoData({}).then((res) => {
+            if (res && res.result_code === 0) {
+                setUserInfo(res.data)
+            }
+        })
     }, [])
+
+    useEffect(() => {
+        if(userInf) {
+            alert(JSON.stringify(userInf))
+        }
+    }, [userInf])
 
     const onChangeTab = (type: string) => {
         setTab(type)
