@@ -80,10 +80,6 @@ export const Services = () => {
                         </TouchableOpacity>
                     ))}
                 </View>
-
-                <TouchableOpacity style={styles.categoryWrapper} onPress={() => onLink('ReadersUser')}>
-                            <Text style={styles.categoryText}>Readers</Text>
-                        </TouchableOpacity>
             </View>
         </Page>
     )

@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     tabBarWrapper: {
         width: "100%",
         borderRadius: 12,
-        backgroundColor: "#FFED4A",
+        backgroundColor: "#000",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-around",
