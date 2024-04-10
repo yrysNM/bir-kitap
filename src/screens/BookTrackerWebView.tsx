@@ -12,7 +12,7 @@ import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.0.124:5173/book-tracker/"
+const _webview_base_url = "http://192.168.1.5:5173/book-tracker/"
 // const _webview_base_url = "https://birkitap.kz/book-tracker/"
 
 export const BookTrackerWebView = () => {
