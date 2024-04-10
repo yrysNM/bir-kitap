@@ -1,11 +1,11 @@
-import { Dimensions, Image, Text, StyleSheet, TouchableOpacity } from "react-native"
+import { Dimensions,  Text, StyleSheet, TouchableOpacity } from "react-native"
 import Carousel from "react-native-snap-carousel"
 import { bookInfo } from "../api/bookApi"
-import { API_URL } from "@env"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../navigation/MainNavigation"
+import { CloudImage } from "./CloudImage"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookDetail">>
 
@@ -13,10 +13,9 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
     const navigation = useNavigation<NavigateType>()
 
     const _renderItem = ({ item }: { item: bookInfo }) => {
-        const imageUrl = `${API_URL}/public/get_resource?name=${item.imageLink}`
         return (
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })}>
-                <Image style={styles.bookImg} source={{ uri: imageUrl }} />
+                <CloudImage styleImg={styles.bookImg} url={item.imageLink} />
                 <Text style={styles.text}>{item.title.length > 15 ? `${item.title.slice(0, 10)}...` : item.title}</Text>
             </TouchableOpacity>
         )
