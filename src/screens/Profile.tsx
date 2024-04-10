@@ -42,10 +42,8 @@ export const Profile = () => {
     } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
-    const { fetchData: fetchUserInfoData } = UserAPI("info")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
-    const [userInf, setUserInfo] = useState<any>()
     const [tab, setTab] = useState<string>("Survey")
 
     useEffect(() => {
@@ -54,19 +52,7 @@ export const Profile = () => {
                 setInfo(JSON.parse(JSON.stringify(res.data)))
             }
         })
-
-        fetchUserInfoData({}).then((res) => {
-            if (res && res.result_code === 0) {
-                setUserInfo(res.data)
-            }
-        })
     }, [])
-
-    useEffect(() => {
-        if(userInf) {
-            alert(JSON.stringify(userInf))
-        }
-    }, [userInf])
 
     const onChangeTab = (type: string) => {
         setTab(type)
@@ -104,16 +90,16 @@ export const Profile = () => {
                 </View>
 
                 <View style={styles.tabBarWrapper}>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")}>
-                        <Text style={{ color: tab === "Survey" ? "#005479" : "#000" }}>Survey</Text>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Survey" ? "#005479" : "#FFED4A" }}>
+                        <Text style={{ color: tab === "Survey" ? "#fff" : "#000" }}>Survey</Text>
                     </TouchableOpacity>
                     <View style={[styles.line]}></View>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Reviews")}>
-                        <Text style={{ color: tab === "Reviews" ? "#005479" : "#000" }}>Reviews</Text>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Reviews")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Reviews" ? "#005479" : "#FFED4A" }}>
+                        <Text style={{ color: tab === "Reviews" ? "#fff" : "#000" }}>Reviews</Text>
                     </TouchableOpacity>
                     <View style={[styles.line]}></View>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")}>
-                        <Text style={{ color: tab === "Posts" ? "#005479" : "#000" }}>Posts</Text>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Posts" ? "#005479" : "#FFED4A" }}>
+                        <Text style={{ color: tab === "Posts" ? "#fff" : "#000" }}>Posts</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.contentWrapper}>
@@ -230,14 +216,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     tabBarWrapper: {
-        width: "100%",
-        borderRadius: 12,
-        backgroundColor: "#000",
         flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-around",
-        height: 47,
-        marginTop: 5,
+    },
+
+    tabBarBlock: {
+        paddingVertical: 14,
+        paddingHorizontal: 30,
     },
     settingIcon: {
         position: "absolute",
