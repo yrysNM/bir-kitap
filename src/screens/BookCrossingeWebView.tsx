@@ -89,6 +89,8 @@ export const BookCrossingWebView = () => {
                     console.log(JSON.stringify(err))
                     dispatch(setLoading(false))
                 })
+        } else {
+            dispatch(setLoading(false))
         }
     }
 
