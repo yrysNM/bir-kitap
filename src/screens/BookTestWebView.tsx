@@ -12,14 +12,14 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 
-// const _webview_base_url = "http://192.168.1.5:5174/"
-const _webview_base_url = "https://birkitap.kz/book-crossing/"
+const _webview_base_url = "http://192.168.0.124:5174/book-test"
+// const _webview_base_url = "https://birkitap.kz/book-crossing/"
 
 interface IUpload extends IResponse {
     data: { path: string }
 }
 
-export const BookCrossingWebView = () => {
+export const BookTestWebView = () => {
     const dispatch = useAppDispatch()
     const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)

@@ -13,6 +13,7 @@ import { BookShowBlock } from "../components/BookShowBlock"
 import { bookInfo } from "../api/bookApi"
 import { NoData } from "../components/NoData"
 import { ReviewCard } from "../components/ReviewCard"
+import { CarouselBookList } from "../components/CarouselBookList"
 
 interface IProfile {
     readBooksCount: number
@@ -45,6 +46,11 @@ export const Profile = () => {
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
     const [tab, setTab] = useState<string>("Survey")
+    const [statusList] = useState([
+        { value: "reading", label: "Reading" },
+        { value: "selected", label: "Read Later" },
+        { value: "finish", label: "Read" },
+    ])
 
     useEffect(() => {
         fetchUserProfileData({}).then((res) => {
@@ -105,9 +111,8 @@ export const Profile = () => {
                 <View style={styles.contentWrapper}>
                     {tab === "Survey" ? (
                         bookType.map((item) => (
-                            <BookShowBlock key={item} bookType={item}>
-                                <Text>{JSON.stringify(info.books[item])}</Text>
-                                {/* {info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />} */}
+                            <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
+                                <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
                             </BookShowBlock>
                         ))
                     ) : tab === "Reviews" ? (
