@@ -43,13 +43,13 @@ export const BookTrackerWebView = () => {
     }
 
     const handleFileUpload = async () => {
+        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
             base64: true,
         })
 
-        dispatch(setLoading(true))
         if (!response.canceled && response.assets) {
             const uriList = response.assets[0].uri.split("/")
             const file = base64toFiile(`data:image/*;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
@@ -86,6 +86,8 @@ export const BookTrackerWebView = () => {
                     console.log(JSON.stringify(err))
                     dispatch(setLoading(false))
                 })
+        } else {
+            dispatch(setLoading(false))
         }
     }
 
