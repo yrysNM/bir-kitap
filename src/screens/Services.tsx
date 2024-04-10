@@ -38,7 +38,7 @@ export const Services = () => {
                 <Text style={styles.contentTitle}>Services</Text>
 
                 <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
-                    <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTracker" as never)}>
+                    <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTrackerWebView" as never)}>
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "cover" }} />
                         </View>
@@ -46,7 +46,7 @@ export const Services = () => {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookCrossingWebView" as never)}>
                         <View style={styles.categoryBlock}>
-                        <Image source={BookCrossingImage} style={{ width: 54, height: 54, objectFit: "contain" }} />
+                            <Image source={BookCrossingImage} style={{ width: 54, height: 54, objectFit: "contain" }} />
                         </View>
                         <Text style={styles.categoryText}>Book crossing</Text>
                     </TouchableOpacity>

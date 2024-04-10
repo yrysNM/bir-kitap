@@ -14,7 +14,7 @@ import { BookDetail } from "../screens/BookDetail"
 import { BookGenres } from "../screens/BookGenres"
 import { NotReady } from "../screens/NotReady"
 import { BookMore } from "../screens/BookMore"
-import { BookTracker } from "../screens/BookTracker"
+import { BookTrackerWebView } from "../screens/BookTrackerWebView"
 import { Reviews } from "../screens/Reviews"
 import { Recommendations } from "../screens/Recommendations"
 import { Collections } from "../screens/Collections"
@@ -36,7 +36,7 @@ export type RootStackParamList = {
     BookGenres: undefined
     NotReady: undefined
     BookMore: { id: string }
-    BookTracker: undefined
+    BookTrackerWebView: undefined
     Reviews: undefined
     Recommendations: undefined
     Collections: undefined
@@ -86,7 +86,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="Readers" component={Readers} />
                     <Stack.Screen name="ReaderNews" component={ReaderNews} />
                     <Stack.Screen name="ReadersUser" component={ReadersUser} />
-                    <Stack.Screen name="BookTracker" component={BookTracker} />
+                    <Stack.Screen name="BookTrackerWebView" component={BookTrackerWebView} />
                     <Stack.Screen name="Genre" component={Genre} />
                     <Stack.Screen name="EditProfile" component={EditProfile} />
                     <Stack.Screen name="BookDetail" component={BookDetail} />
