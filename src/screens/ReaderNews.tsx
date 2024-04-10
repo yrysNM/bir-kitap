@@ -1,16 +1,16 @@
 import { Page } from "../layouts/Page"
-import { Image, StyleSheet, Text, View } from "react-native"
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import ReaderNotif from "../../assets/readaerNotif.png"
-import { RouteProp, useRoute } from "@react-navigation/native"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { useEffect, useState } from "react"
 import { NewsApi, newsInfo } from "../api/newsApi"
 import { CloudImage } from "../components/CloudImage"
-import { Header } from "../components/Header"
+import CloseImage from "../../assets/close.png"
 
 const ReaderNews = () => {
     const { id } = useRoute<RouteProp<RootStackParamList, "ReaderNews">>().params
-
+    const navigation = useNavigation()
     const { fetchData } = NewsApi("get")
     const [readerData, setReaderData] = useState<newsInfo | null>(null)
 
@@ -34,9 +34,11 @@ const ReaderNews = () => {
     return (
         <>
             <Page>
-                <Header isGoBack title=""/>
                 <View style={styles.newsWrapper}>
                     <View style={styles.mainImageBlock}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeImg}>
+                            <Image source={CloseImage} resizeMode="contain" style={styles.closeImg} />
+                        </TouchableOpacity>
                         <CloudImage url={readerData?.imageLink} styleImg={styles.image} />
                     </View>
                     <View style={styles.newsContent}>
@@ -45,10 +47,7 @@ const ReaderNews = () => {
                             <Text style={styles.newsTitle}>{readerData?.title}</Text>
                         </View>
                         <View>
-                            <Text style={styles.newsSubtitle}>
-                                {readerData?.content}
-                                {/* <Text style={{ color: "#808080" }}>еще</Text> */}
-                            </Text>
+                            <Text style={styles.newsSubtitle}>{readerData?.content}</Text>
                         </View>
                     </View>
                 </View>
@@ -66,6 +65,7 @@ const styles = StyleSheet.create({
     mainImageBlock: {
         width: "100%",
         height: 230,
+        position: "relative",
     },
 
     newsContent: {
@@ -103,6 +103,15 @@ const styles = StyleSheet.create({
 
     newsWrapper: {
         position: "relative",
+    },
+
+    closeImg: {
+        position: "absolute",
+        zIndex: 200,
+        width: 40,
+        height: 40,
+        right: 10,
+        top: 10,
     },
 })
 
