@@ -96,7 +96,7 @@ export const Profile = () => {
                 </View>
 
                 <View style={styles.tabBarWrapper}>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Survey" ? "#005479" : "#FFED4A" }}>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Survey" ? "#005479" : "#FFED4A", borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }}>
                         <Text style={{ color: tab === "Survey" ? "#fff" : "#000" }}>Survey</Text>
                     </TouchableOpacity>
                     <View style={[styles.line]}></View>
@@ -104,7 +104,7 @@ export const Profile = () => {
                         <Text style={{ color: tab === "Reviews" ? "#fff" : "#000" }}>Reviews</Text>
                     </TouchableOpacity>
                     <View style={[styles.line]}></View>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Posts" ? "#005479" : "#FFED4A" }}>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Posts" ? "#005479" : "#FFED4A", borderTopRightRadius: 12, borderBottomRightRadius: 12 }}>
                         <Text style={{ color: tab === "Posts" ? "#fff" : "#000" }}>Posts</Text>
                     </TouchableOpacity>
                 </View>

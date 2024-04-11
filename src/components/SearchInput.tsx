@@ -1,7 +1,9 @@
 import Icon from "@ant-design/react-native/lib/icon"
-import { useState } from "react"
+import Drawer from "@ant-design/react-native/lib/drawer"
+import { useEffect, useState } from "react"
 import { TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native"
 import FilterImg from "../../assets/images/filter.png"
+import { GenreAPI } from "../api/genreApi"
 
 type propsInfo = {
     placeholder: string
@@ -11,6 +13,35 @@ type propsInfo = {
 
 export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }: propsInfo) => {
     const [search, setSearch] = useState<string>("")
+    const { fetchData: fetchGenreData } = GenreAPI("list")
+    const [openFilter, setOpenFilter] = useState<boolean>(false)
+    const [dataList, setDataList] = useState<{ id: string; title: string }[]>([])
+    const [genreList, setGenreList] = useState<string[]>([])
+
+    useEffect(() => {
+        fetchGenreData({}).then((res) => {
+            if (res?.result_code === 0) {
+                setDataList(res.data)
+            }
+        })
+    }, [])
+
+    const onSelectGenre = (genreId: string) => {
+        if (isSelectGenre(genreId)) {
+            const filterGenre = genreList.filter((item) => item !== genreId)
+            setGenreList(filterGenre)
+        } else {
+            setGenreList((genres) => [...genres, genreId])
+        }
+    }
+
+    const isSelectGenre = (genreId: string) => {
+        return genreList.includes(genreId)
+    }
+
+    const sideBar = () => {
+        return <Text>test</Text>
+    }
 
     return (
         <View style={styles.searchWrapper}>
@@ -23,6 +54,8 @@ export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }
                     <Image source={FilterImg} style={styles.filterImg} />
                 </View>
             )}
+
+            <Drawer position="right" open={openFilter} onOpenChange={(e) => setOpenFilter(e)}></Drawer>
         </View>
     )
 }

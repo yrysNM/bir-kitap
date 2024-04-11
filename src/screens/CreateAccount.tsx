@@ -80,7 +80,7 @@ export const CreateAccount = () => {
                     <InputItem type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Number phone"}>
-                    <Text style={{ position: "absolute", top: "60%", left: 10 }}>+7</Text>
+                    <Text style={styles.numberText}>+7</Text>
                     <MaskInput
                         value={info.phone}
                         onChangeText={(value) => setInfo({ ...info, phone: value })}
@@ -147,6 +147,13 @@ export const CreateAccount = () => {
 }
 
 const styles = StyleSheet.create({
+    numberText: {
+        position: 'absolute',
+        top: "57%",
+        left: 10,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     iconEye: {
         position: "absolute",
         right: 18,
