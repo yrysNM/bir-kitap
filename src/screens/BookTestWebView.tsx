@@ -12,7 +12,7 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 
-const _webview_base_url = "http://192.168.0.124:5174/book-test"
+const _webview_base_url = "http://192.168.0.124:5173/book-test"
 // const _webview_base_url = "https://birkitap.kz/book-crossing/"
 
 interface IUpload extends IResponse {
