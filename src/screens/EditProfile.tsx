@@ -70,6 +70,8 @@ export const EditProfile = () => {
                 gender: userInfo.gender,
             })
         }
+
+        setDateOfBirth(new Date(userInfo.birth))
     }, [userInfo])
 
     return (
