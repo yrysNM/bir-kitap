@@ -35,7 +35,7 @@ export const EditProfile = () => {
             if (dateOfBirth && edit.email && edit.fullname) {
                 await fetchData({
                     fullName: edit.fullname,
-                    birth: new Date(dateOfBirth),
+                    birth: new Date(dateOfBirth).getTime(),
                     gender: edit.gender,
                 })
                     .then((res) => {
