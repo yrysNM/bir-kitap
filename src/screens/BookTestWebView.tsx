@@ -11,8 +11,9 @@ import useApi from "../hook/useApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
+import { useNavigation } from "@react-navigation/native"
 
-const _webview_base_url = "http://192.168.0.124:5173/book-test"
+const _webview_base_url = "http://192.168.1.5:5173/book-test"
 // const _webview_base_url = "https://birkitap.kz/book-crossing/"
 
 interface IUpload extends IResponse {
@@ -20,6 +21,7 @@ interface IUpload extends IResponse {
 }
 
 export const BookTestWebView = () => {
+    const navifation = useNavigation()
     const dispatch = useAppDispatch()
     const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
@@ -100,6 +102,8 @@ export const BookTestWebView = () => {
             logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
+        } else if (messageData.key === "closeWin") {
+            navifation.goBack()
         }
 
         return {}
