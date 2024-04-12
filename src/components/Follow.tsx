@@ -13,7 +13,7 @@ const Follow = () => {
     const { fetchData: fetchDataUserOnFollow } = UserAPI("unfollow")
 
     const onFollow = async (id: string, followed: boolean) => {
-        const action = followed ? fetchDataUserFollow : fetchDataUserOnFollow
+        const action = !followed ? fetchDataUserFollow : fetchDataUserOnFollow
         try {
             await action({ toUserId: id })
             const updatedUsers = users?.map((user) => {

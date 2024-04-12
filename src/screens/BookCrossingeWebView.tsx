@@ -12,7 +12,7 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 
-// const _webview_base_url = "http://192.168.1.5:5174/"
+// const _webview_base_url = "http://192.168.0.124:5173/"
 const _webview_base_url = "https://birkitap.kz/book-crossing/"
 
 interface IUpload extends IResponse {
@@ -26,6 +26,7 @@ export const BookCrossingWebView = () => {
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
+    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -116,7 +117,7 @@ export const BookCrossingWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%" }}
-                    source={{ uri: _webview_base_url }}
+                    source={{ uri: `${_webview_base_url}?${randomNumber}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent

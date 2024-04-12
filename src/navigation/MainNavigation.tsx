@@ -72,14 +72,8 @@ export const MainNavigation = () => {
     return (
         <Stack.Navigator
             initialRouteName="Root"
-            screenOptions={({ navigation }) => {
-                const navigationTabbarIndex = navigation.getState().routes[0].state?.index
-                const navigationTabbarRoutesName = navigation.getState().routes[0].state?.routeNames
-                const currentRouteName: string = navigationTabbarRoutesName && typeof navigationTabbarIndex !== "undefined" ? navigationTabbarRoutesName[navigationTabbarIndex] : ""
-                return {
-                    headerShown: false,
-                    contentStyle: { backgroundColor: currentRouteName === "Services" ? "#005479" : "#fff" },
-                }
+            screenOptions={{
+                headerShown: false,
             }}>
             {hasLogin ? (
                 <>

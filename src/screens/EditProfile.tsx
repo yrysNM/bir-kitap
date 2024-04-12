@@ -14,6 +14,8 @@ import Button from "@ant-design/react-native/lib/button"
 import { useAppSelector } from "../hook/useStore"
 import { FirstUpperCaseText } from "../helpers/firstUpperCaseText"
 
+const Item = Popover.Item
+
 interface IEdit {
     email: string
     fullname: string
@@ -28,38 +30,20 @@ export const EditProfile = () => {
         fullname: "",
         gender: "",
     })
-    const [error, setError] = useState<string>("")
 
     const { fetchData } = UserAPI("profile/edit")
     const { userInfo } = useAppSelector((state) => state.mainSlice)
 
     const onEdit = async () => {
-        try {
-            if (dateOfBirth && edit.email && edit.fullname) {
-                await fetchData({
-                    fullName: edit.fullname,
-                    birth: Number(new Date(dateOfBirth).getTime()),
-                    gender: "male",
-                })
-                    .then((res) => {
-                        if (res && res.result_code === 0) {
-                            setError("")
-                            alert("123")
-                        }
-                        alert(JSON.stringify(res))
-                    })
-                    .catch((err) => {
-                        if (err) {
-                            setError("Required all input")
-                            alert(JSON.stringify(err))
-                        }
-                    })
+        await fetchData({
+            fullName: edit.fullname,
+            birth: Number(new Date(dateOfBirth || "").getTime()),
+            gender: "male",
+        }).then((res) => {
+            if (res && res.result_code === 0) {
+                alert("123")
             }
-        } catch (error) {
-            setError("Required all input")
-            console.log(error)
-            alert(JSON.stringify(error))
-        }
+        })
     }
 
     useEffect(() => {
@@ -86,7 +70,7 @@ export const EditProfile = () => {
 
                 <View style={{ marginTop: 46, gap: 12, justifyContent: "center", alignItems: "center" }}>
                     <Image source={UserImg} style={styles.userImg} />
-                    <Text style={styles.profileText}>Profile phoxto</Text>
+                    <Text style={styles.profileText}>Profile photo</Text>
                 </View>
                 <View style={styles.userInputWrapper}>
                     <InputStyle inputTitle="E-mail">
@@ -98,7 +82,7 @@ export const EditProfile = () => {
 
                     <InputStyle inputTitle="Date of Birth">
                         <View style={styles.datePickerInput}>
-                            <DatePicker style={{ borderWidth: 0 }} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
+                            <DatePicker style={{ borderWidth: 0 }} minDate={new Date(1970, 7, 6)} maxDate={new Date()} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
                                 <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
                                     Select Date
                                 </List.Item>
@@ -108,23 +92,23 @@ export const EditProfile = () => {
 
                     <InputStyle inputTitle="Gender">
                         <Popover
+                            ref={(ref) => console.log(ref)}
                             placement="top"
                             useNativeDriver
                             duration={200}
                             easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
-                            onSelect={(e) => setEdit({ ...edit, gender: e })}
                             overlay={
                                 <View style={{ width: 200 }}>
-                                    <Popover.Item value="Male">
-                                        <Text>Male</Text>
-                                    </Popover.Item>
-                                    <Popover.Item value="Female">
-                                        <Text>Female</Text>
-                                    </Popover.Item>
+                                    <Item key={"Male"} value="Male">
+                                        <Text onPress={() => setEdit({ ...edit, gender: "Male" })}>Male</Text>
+                                    </Item>
+                                    <Item key={"Female"} value="Female">
+                                        <Text onPress={() => setEdit({ ...edit, gender: "Female" })}>Female</Text>
+                                    </Item>
                                 </View>
                             }>
                             <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 70, marginLeft: -1 }]}>
-                                <Text style={{ color: "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : 'Gender'}</Text>
+                                <Text style={{ color: "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : "Gender"}</Text>
                             </View>
                         </Popover>
                     </InputStyle>

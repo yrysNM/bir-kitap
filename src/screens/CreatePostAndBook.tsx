@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native"
 import { PostAPI, postInfo } from "../api/postApi"
 import Carousel from "@ant-design/react-native/lib/carousel"
 import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
+import { SelectGenres } from "../components/SelectGenres"
 
 const _bookInfo = {
     title: "",
@@ -62,17 +63,17 @@ export const CreatePostAndBook = () => {
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
-            base64: true,
         })
 
         if (!response.canceled && response.assets) {
+            console.log(response);
             const uriList = response.assets[0].uri.split("/")
-            const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
-            const isLt5M: boolean = file.size / 1024 / 1024 < 5
-            if (!isLt5M) {
-                console.log("File size small than 5mb")
-                Toast.fail("File size small than 5mb")
-            }
+            // const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
+            // const isLt5M: boolean = file.size / 1024 / 1024 < 5
+            // if (!isLt5M) {
+            //     console.log("File size small than 5mb")
+            //     Toast.fail("File size small than 5mb")
+            // }
 
             const param = new FormData()
             param.append("file", {
@@ -129,15 +130,6 @@ export const CreatePostAndBook = () => {
                 // navigation.navigate("Home" as never)
             }
         })
-    }
-
-    const toggleGenreBookInfo = (genreTitle: string) => {
-        const isSelectGenre = bookInfo.genres.includes(genreTitle)
-        if (isSelectGenre) {
-            setBookInfo((bookInfo) => ({ ...bookInfo, genres: bookInfo.genres.filter((genre) => genre !== genreTitle) }))
-        } else {
-            setBookInfo((bookInfo) => ({ ...bookInfo, genres: [...bookInfo.genres, genreTitle] }))
-        }
     }
 
     const onChangeTab = () => {
@@ -277,21 +269,29 @@ export const CreatePostAndBook = () => {
                     </View>
                 </Tabs>
             </View>
-            <Modal animationType="slide" transparent maskClosable visible={showModalGenre} onClose={() => setShowModalGenre(false)}>
-                <View style={{ gap: 20 }}>
-                    {genreList.map((genre) => (
-                        <TouchableOpacity key={genre.id} onPress={() => toggleGenreBookInfo(genre.title)} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-                            <Text>{genre.title}</Text>
-                            <View>{bookInfo.genres.includes(genre.title) ? <Icon name="check" /> : null}</View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+            <Modal popup animationType="slide-up" visible={showModalGenre} onClose={() => setShowModalGenre(false)} style={styles.modalWrapper} maskClosable>
+                <SelectGenres
+                    onSelect={(e) => {
+                        setShowModalGenre(false)
+                        setBookInfo({ ...bookInfo, genres: e })
+                    }}
+                    dataList={genreList}
+                    selectedGenres={bookInfo.genres}
+                />
             </Modal>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    modalWrapper: {
+        paddingTop: 15,
+        paddingHorizontal: 32,
+        paddingBottom: 20,
+        backgroundColor: "#fff",
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+    },
     spliBlock: {
         position: "absolute",
         top: 0,

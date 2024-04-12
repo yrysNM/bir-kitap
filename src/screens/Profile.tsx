@@ -51,8 +51,6 @@ export const Profile = () => {
         { value: "selected", label: "Read Later" },
         { value: "finish", label: "Read" },
     ])
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
-
     useEffect(() => {
         fetchUserProfileData({}).then((res) => {
             if (res.result_code === 0) {
@@ -112,11 +110,13 @@ export const Profile = () => {
 
                 <View style={styles.contentWrapper}>
                     {tab === "Survey" ? (
-                        bookType.map((item) => (
-                            <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
-                                <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
-                            </BookShowBlock>
-                        ))
+                        <View style={{ marginBottom: 10 }}>
+                            {bookType.map((item) => (
+                                <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
+                                    <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
+                                </BookShowBlock>
+                            ))}
+                        </View>
                     ) : tab === "Reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                     ) : (

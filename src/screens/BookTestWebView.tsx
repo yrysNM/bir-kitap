@@ -28,6 +28,7 @@ export const BookTestWebView = () => {
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
+    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -120,7 +121,7 @@ export const BookTestWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%" }}
-                    source={{ uri: _webview_base_url }}
+                    source={{ uri: `${_webview_base_url}?${randomNumber}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent

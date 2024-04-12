@@ -18,17 +18,17 @@ export const SelectGenres = ({ onSelect, dataList, selectedGenres }: propsInfo) 
         }
     }, [JSON.stringify(selectedGenres)])
 
-    const onSelectGenre = (genreId: string) => {
-        if (isSelectGenre(genreId)) {
-            const filterGenre = genres.filter((item) => item !== genreId)
+    const onSelectGenre = (genreTitle: string) => {
+        if (isSelectGenre(genreTitle)) {
+            const filterGenre = genres.filter((item) => item !== genreTitle)
             setGenres(filterGenre)
         } else {
-            setGenres([...genres, genreId])
+            setGenres([...genres, genreTitle])
         }
     }
 
-    const isSelectGenre = (genreId: string) => {
-        return genres.includes(genreId)
+    const isSelectGenre = (genreTitle: string) => {
+        return genres.includes(genreTitle)
     }
 
     const onSelectGenres = () => {
@@ -40,8 +40,8 @@ export const SelectGenres = ({ onSelect, dataList, selectedGenres }: propsInfo) 
             <Text style={{ textAlign: "center", fontSize: 16, fontWeight: "600" }}>Genres</Text>
             <View style={styles.genreWrapper}>
                 {dataList?.map((item) => (
-                    <Button key={item.id} activeStyle={false} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.id) ? "#005479" : "#F9FAF8", borderColor: isSelectGenre(item.id) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.id)}>
-                        <Text style={{ ...styles.genreText, color: isSelectGenre(item.id) ? "#F9FAF8" : "#000" }}>{item.title}</Text>
+                    <Button key={item.id} activeStyle={false} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.title) ? "#005479" : "#F9FAF8", borderColor: isSelectGenre(item.title) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.title)}>
+                        <Text style={{ ...styles.genreText, color: isSelectGenre(item.title) ? "#F9FAF8" : "#000" }}>{item.title}</Text>
                     </Button>
                 ))}
             </View>

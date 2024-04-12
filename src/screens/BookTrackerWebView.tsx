@@ -12,8 +12,8 @@ import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.0.124:5174/book-tracker/"
-// const _webview_base_url = "https://birkitap.kz/book-tracker/"
+// const _webview_base_url = "http://192.168.0.124:5174/book-tracker/"
+const _webview_base_url = "https://birkitap.kz/book-tracker/"
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
@@ -23,6 +23,7 @@ export const BookTrackerWebView = () => {
     const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
+    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -113,7 +114,7 @@ export const BookTrackerWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%" }}
-                    source={{ uri: _webview_base_url }}
+                    source={{ uri: `${_webview_base_url}?${randomNumber}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent

@@ -19,7 +19,6 @@ export const Header = ({ isCustomHeader, title, isGoBack = false }: { isCustomHe
 
 const styles = StyleSheet.create({
     headerCustom: {
-        marginTop: -80,
         flexDirection: "column",
     },
     icon: {
