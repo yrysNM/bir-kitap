@@ -1,47 +1,16 @@
 import Icon from "@ant-design/react-native/lib/icon"
-import Drawer from "@ant-design/react-native/lib/drawer"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native"
 import FilterImg from "../../assets/images/filter.png"
-import { GenreAPI } from "../api/genreApi"
 
 type propsInfo = {
     placeholder: string
     onEnterSearch: (e: string) => void
-    isHaveFilter?: boolean
+    onClickFilter?: () => void
 }
 
-export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }: propsInfo) => {
+export const SearchInput = ({ onEnterSearch, placeholder, onClickFilter }: propsInfo) => {
     const [search, setSearch] = useState<string>("")
-    const { fetchData: fetchGenreData } = GenreAPI("list")
-    const [openFilter, setOpenFilter] = useState<boolean>(false)
-    const [dataList, setDataList] = useState<{ id: string; title: string }[]>([])
-    const [genreList, setGenreList] = useState<string[]>([])
-
-    useEffect(() => {
-        fetchGenreData({}).then((res) => {
-            if (res?.result_code === 0) {
-                setDataList(res.data)
-            }
-        })
-    }, [])
-
-    const onSelectGenre = (genreId: string) => {
-        if (isSelectGenre(genreId)) {
-            const filterGenre = genreList.filter((item) => item !== genreId)
-            setGenreList(filterGenre)
-        } else {
-            setGenreList((genres) => [...genres, genreId])
-        }
-    }
-
-    const isSelectGenre = (genreId: string) => {
-        return genreList.includes(genreId)
-    }
-
-    const sideBar = () => {
-        return <Text>test</Text>
-    }
 
     return (
         <View style={styles.searchWrapper}>
@@ -49,13 +18,11 @@ export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }
                 <Icon name="search" style={styles.iconSearch} />
             </TouchableOpacity>
             <TextInput style={styles.inputSearch} value={search} placeholder={placeholder} onChangeText={setSearch} onSubmitEditing={() => onEnterSearch(search)} />
-            {isHaveFilter && (
-                <View style={styles.filterWrapper}>
+            {onClickFilter && (
+                <TouchableOpacity onPress={() => onClickFilter()} style={styles.filterWrapper}>
                     <Image source={FilterImg} style={styles.filterImg} />
-                </View>
+                </TouchableOpacity>
             )}
-
-            <Drawer position="right" open={openFilter} onOpenChange={(e) => setOpenFilter(e)}></Drawer>
         </View>
     )
 }

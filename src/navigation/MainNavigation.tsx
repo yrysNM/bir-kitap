@@ -44,8 +44,8 @@ export type RootStackParamList = {
     Readers: undefined
     ReaderNews: {
         id: string
-    }, 
-    BookTestWebView: undefined,
+    }
+    BookTestWebView: undefined
     ReadersUser: undefined
 }
 
