@@ -1,68 +1,69 @@
-import { Image, StyleSheet, Text, View } from "react-native"
-import ReadersUserImg from "../../assets/images/user.png"
+import { StyleSheet, Text, View } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
 import { useEffect, useState } from "react"
 import { RecommendationAPI } from "../api/recommendationApi"
+import { CloudImage } from "./CloudImage"
+import { UserAPI } from "../api/userApi"
 
 const Follow = () => {
-    const [users, setUsers] = useState<any>()
+    const [users, setUsers] = useState<any[]>()
 
     const { fetchData } = RecommendationAPI("users")
+    const { fetchData: fetchDataUserFollow } = UserAPI("follow")
+    const { fetchData: fetchDataUserOnFollow } = UserAPI("unfollow")
+
+    const onFollow = async (id: string, followed: boolean) => {
+        const action = followed ? fetchDataUserFollow : fetchDataUserOnFollow
+        try {
+            await action({ toUserId: id })
+            const updatedUsers = users?.map((user) => {
+                if (user.id === id) {
+                    return { ...user, followed: !followed }
+                }
+                return user
+            })
+            setUsers(updatedUsers)
+        } catch (error) {
+            alert(JSON.stringify(error))
+        }
+    }
 
     useEffect(() => {
-        fetchData({}).then((res) => {
-            if (res && res.result_code) {
-                setUsers(res.data)
-                alert('1223')
+        const fetchUsers = async () => {
+            try {
+                const res = await fetchData({})
+                if (res.result_code === 0) {
+                    setUsers(res.data)
+                }
+            } catch (error) {
+                alert(JSON.stringify(error))
             }
-        }).catch((err) => {
-            if (err) {
-                alert(JSON.stringify(err))
-            }
-        })
+        }
+        fetchUsers()
     }, [])
-
-    // useEffect(() => {
-    //     alert(JSON.stringify(users))
-    // })
 
     return (
         <View style={styles.followWrapper}>
-            <View style={styles.followBlock}>
-                <View style={styles.followContent}>
-                    <View>
-                        <Image source={ReadersUserImg} alt="Reader User Image" resizeMode="contain" />
-                    </View>
-                    <View>
-                        <Text style={styles.followUser}>Nurdaulet Toregaliyev</Text>
-                        <Text style={{ ...styles.followUser, color: "#7A7878" }}>Начинающий</Text>
-                    </View>
-                </View>
+            {users &&
+                users.map((item) => (
+                    <View style={styles.followBlock} key={item.id}>
+                        <View style={styles.followContent}>
+                            <View>
+                                <CloudImage url={item.avatar} styleImg={styles.followImage} />
+                            </View>
+                            <View>
+                                <Text style={styles.followUser}>{item.fullName}</Text>
+                                <Text style={{ ...styles.followUser, color: "#7A7878" }}>{item.email}</Text>
+                            </View>
+                        </View>
 
-                <View style={styles.followBtnBlock}>
-                    <Button style={styles.followBtn}>
-                        <Text style={styles.followBtnText}>Follow</Text>
-                    </Button>
-                </View>
-            </View>
-
-            <View style={styles.followBlock}>
-                <View style={styles.followContent}>
-                    <View>
-                        <Image source={ReadersUserImg} alt="Reader User Image" resizeMode="contain" />
+                        <View style={styles.followBtnBlock}>
+                            <Button style={!item.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(item.id, item.followed)}>
+                                <Text style={!item.followed ? styles.followBtnText : styles.unFollowBtnText}>{!item.followed ? "Follow" : "Unfollow"}</Text>
+                            </Button>
+                        </View>
                     </View>
-                    <View>
-                        <Text style={styles.followUser}>Ayala Nayashova</Text>
-                        <Text style={{ ...styles.followUser, color: "#7A7878" }}>Начинающий</Text>
-                    </View>
-                </View>
-
-                <View style={styles.followBtnBlock}>
-                    <Button style={styles.unFollowBtn}>
-                        <Text style={styles.unFollowBtnText}>Follow</Text>
-                    </Button>
-                </View>
-            </View>
+                ))}
         </View>
     )
 }
@@ -70,6 +71,11 @@ const Follow = () => {
 const styles = StyleSheet.create({
     followWrapper: {
         marginTop: 36,
+    },
+
+    followImage: {
+        width: 55,
+        height: 55,
     },
 
     followBlock: {

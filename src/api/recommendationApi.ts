@@ -1,8 +1,9 @@
 import useApi from "../hook/useApi"
 import { bookInfo } from "./bookApi"
+import { IFollowedUser } from "./userApi"
 
 interface IRecomendation extends IResponse {
-    data: bookInfo[]
+    data: bookInfo[] | IFollowedUser[]
 }
 
 export function RecommendationAPI(url: string, method: string = "POST") {
