@@ -103,10 +103,10 @@ export const CreateAccount = () => {
                         onSelect={(e) => setInfo({ ...info, gender: e })}
                         overlay={
                             <View style={{ width: 200 }}>
-                                <Popover.Item value="Male">
+                                <Popover.Item value="male">
                                     <Text>Male</Text>
                                 </Popover.Item>
-                                <Popover.Item value="Female">
+                                <Popover.Item value="female">
                                     <Text>Female</Text>
                                 </Popover.Item>
                             </View>
