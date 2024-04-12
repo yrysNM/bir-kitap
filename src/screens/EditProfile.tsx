@@ -8,9 +8,11 @@ import List from "@ant-design/react-native/lib/list"
 import Icon from "@ant-design/react-native/lib/icon"
 import { useNavigation } from "@react-navigation/native"
 import Popover from "@ant-design/react-native/lib/popover"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { UserAPI } from "../api/userApi"
 import Button from "@ant-design/react-native/lib/button"
+import { useAppSelector } from "../hook/useStore"
+import { FirstUpperCaseText } from "../helpers/firstUpperCaseText"
 
 interface IEdit {
     email: string
@@ -29,14 +31,15 @@ export const EditProfile = () => {
     const [error, setError] = useState<string>("")
 
     const { fetchData } = UserAPI("profile/edit")
+    const { userInfo } = useAppSelector((state) => state.mainSlice)
 
     const onEdit = async () => {
         try {
             if (dateOfBirth && edit.email && edit.fullname) {
                 await fetchData({
                     fullName: edit.fullname,
-                    birth: new Date(dateOfBirth),
-                    gender: edit.gender,
+                    birth: Number(new Date(dateOfBirth).getTime()),
+                    gender: "male",
                 })
                     .then((res) => {
                         if (res && res.result_code === 0) {
@@ -58,6 +61,18 @@ export const EditProfile = () => {
             alert(JSON.stringify(error))
         }
     }
+
+    useEffect(() => {
+        if (userInfo) {
+            setEdit({
+                email: userInfo.email,
+                fullname: userInfo.fullName,
+                gender: userInfo.gender,
+            })
+        }
+
+        setDateOfBirth(new Date(userInfo.birth))
+    }, [userInfo])
 
     return (
         <Fuse>
@@ -109,13 +124,13 @@ export const EditProfile = () => {
                                 </View>
                             }>
                             <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 70, marginLeft: -1 }]}>
-                                <Text style={{ color: "#808080" }}>Gender</Text>
+                                <Text style={{ color: "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : 'Gender'}</Text>
                             </View>
                         </Popover>
                     </InputStyle>
 
                     <Button style={styles.footerBtn} onPress={() => onEdit()}>
-                        <Text style={styles.footerBtnText}>Sign up</Text>
+                        <Text style={styles.footerBtnText}>Save</Text>
                     </Button>
                 </View>
             </View>
