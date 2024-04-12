@@ -51,6 +51,7 @@ export const Profile = () => {
         { value: "selected", label: "Read Later" },
         { value: "finish", label: "Read" },
     ])
+    const { userInfo } = useAppSelector((state) => state.mainSlice)
 
     useEffect(() => {
         fetchUserProfileData({}).then((res) => {
@@ -108,7 +109,7 @@ export const Profile = () => {
                         <Text style={{ color: tab === "Posts" ? "#fff" : "#000" }}>Posts</Text>
                     </TouchableOpacity>
                 </View>
-                
+
                 <View style={styles.contentWrapper}>
                     {tab === "Survey" ? (
                         bookType.map((item) => (
