@@ -38,7 +38,7 @@ export const BookTestWebView = () => {
                 setToken("")
             }
         })
-    })
+    }, []);
 
     function injectWebViewData() {
         const janascript = `

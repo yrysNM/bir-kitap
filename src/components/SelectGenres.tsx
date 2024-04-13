@@ -37,7 +37,7 @@ export const SelectGenres = ({ onSelect, dataList, selectedGenres }: propsInfo) 
 
     return (
         <View>
-            <Text style={{ textAlign: "center", fontSize: 16, fontWeight: "600" }}>Genres</Text>
+            <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Genres</Text>
             <View style={styles.genreWrapper}>
                 {dataList?.map((item) => (
                     <Button key={item.id} activeStyle={false} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.title) ? "#005479" : "#F9FAF8", borderColor: isSelectGenre(item.title) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.title)}>

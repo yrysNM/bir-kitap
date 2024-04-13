@@ -13,7 +13,7 @@ export const TabNavigator = () => {
         if (isFocused) {
             return "#fff"
         } else {
-            return "#f8f8f8"
+            return "rgba(248, 248, 248, 0.5)"
         }
     }
 

@@ -19,6 +19,8 @@ import { PostAPI, postInfo } from "../api/postApi"
 import Carousel from "@ant-design/react-native/lib/carousel"
 import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
 import { SelectGenres } from "../components/SelectGenres"
+import { useAppDispatch } from "../hook/useStore"
+import { setLoading } from "../redux/features/mainSlice"
 
 const _bookInfo = {
     title: "",
@@ -37,6 +39,7 @@ const _postInfo = {
 }
 
 export const CreatePostAndBook = () => {
+    const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const { fetchData: fetchGenreData } = GenreAPI("list")
     const { fetchData: fetchCreateBookData } = BookApi("create")
@@ -59,21 +62,25 @@ export const CreatePostAndBook = () => {
         })
     }, [])
 
-    const handleFileUpload = async (isCreateBook: boolean) => {
+    const handleFileUpload = async () => {
+        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
+            base64: true,
         })
 
         if (!response.canceled && response.assets) {
-            console.log(response);
             const uriList = response.assets[0].uri.split("/")
-            // const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
-            // const isLt5M: boolean = file.size / 1024 / 1024 < 5
-            // if (!isLt5M) {
-            //     console.log("File size small than 5mb")
-            //     Toast.fail("File size small than 5mb")
-            // }
+            const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
+            const isLt5M: boolean = file.size / 1024 / 1024 < 5
+            if (!isLt5M) {
+                console.log("The file size must be less than 5 MB.")
+                Toast.fail("The file size must be less than 5 MB.")
+                dispatch(setLoading(false))
+
+                return
+            }
 
             const param = new FormData()
             param.append("file", {
@@ -82,19 +89,19 @@ export const CreatePostAndBook = () => {
                 name: uriList.pop(),
             } as never)
 
-            if (isCreateBook) {
-                fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
-                    if (res.result_code === 0) {
-                        const info: { path: string } = JSON.parse(JSON.stringify(res.data))
-                        const urlImage = `${API_URL}public/get_resource?name=${info.path}`
-                        setImages([...images, urlImage])
-                        setPostInfo({ ...postInfo, attachments: [...postInfo.attachments, info.path] })
-                        setBookInfo({ ...bookInfo, imageLink: info.path })
-                    }
-                })
-            } else {
-                console.log("create post")
-            }
+            fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
+                dispatch(setLoading(false))
+
+                if (res.result_code === 0) {
+                    const info: { path: string } = JSON.parse(JSON.stringify(res.data))
+                    const urlImage = `${API_URL}public/get_resource?name=${info.path}`
+                    setImages([...images, urlImage])
+                    setPostInfo({ ...postInfo, attachments: [...postInfo.attachments, info.path] })
+                    setBookInfo({ ...bookInfo, imageLink: info.path })
+                }
+            })
+        } else {
+            dispatch(setLoading(false))
         }
     }
 
@@ -192,7 +199,7 @@ export const CreatePostAndBook = () => {
                                             </TouchableOpacity>
                                         </>
                                     ) : (
-                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", height: "100%" }} onPress={() => handleFileUpload(true)}>
+                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", height: "100%" }} onPress={() => handleFileUpload()}>
                                             <Icon name="upload" style={styles.uploadIcon} size="lg" />
                                             <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
                                         </TouchableOpacity>
@@ -241,7 +248,7 @@ export const CreatePostAndBook = () => {
                                 <View style={styles.uploadWrapper}>
                                     <Carousel horizontal style={{ width: "100%", height: 169 }}>
                                         <View>
-                                            <TouchableOpacity onPress={() => handleFileUpload(true)} style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
+                                            <TouchableOpacity onPress={() => handleFileUpload()} style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
                                                 <Icon name="upload" style={styles.uploadIcon} size="lg" />
                                                 <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
                                             </TouchableOpacity>

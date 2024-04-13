@@ -101,18 +101,33 @@ export const CreateAccount = () => {
                         duration={200}
                         easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
                         onSelect={(e) => setInfo({ ...info, gender: e })}
-                        overlay={
-                            <View style={{ width: 200 }}>
-                                <Popover.Item value="male">
-                                    <Text>Male</Text>
-                                </Popover.Item>
-                                <Popover.Item value="female">
-                                    <Text>Female</Text>
-                                </Popover.Item>
-                            </View>
-                        }>
+                        overlay={null}
+                        renderOverlayComponent={(_, closePopover) => {
+                            return (
+                                <View style={{ width: 200 }}>
+                                    <Popover.Item key={"Male"} value="male">
+                                        <Text
+                                            onPress={() => {
+                                                setInfo({ ...info, gender: "male" })
+                                                closePopover()
+                                            }}>
+                                            Male
+                                        </Text>
+                                    </Popover.Item>
+                                    <Popover.Item key={"Female"} value="female">
+                                        <Text
+                                            onPress={() => {
+                                                setInfo({ ...info, gender: "female" })
+                                                closePopover()
+                                            }}>
+                                            Female
+                                        </Text>
+                                    </Popover.Item>
+                                </View>
+                            )
+                        }}>
                         <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 35, marginLeft: -1 }]}>
-                            <Text style={{ color: "#808080" }}>{info.gender ? FirstUpperCaseText(info.gender) : "Gender"}</Text>
+                            <Text style={{ color: info.gender ? "#000" : "#808080" }}>{info.gender ? FirstUpperCaseText(info.gender) : "Gender"}</Text>
                         </View>
                     </Popover>
                 </InputStyle>
