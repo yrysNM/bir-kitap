@@ -1,14 +1,12 @@
 import { Header } from "../components/Header"
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
+import { View, StyleSheet, Text, TouchableOpacity, Easing, Dimensions } from "react-native"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
 import Button from "@ant-design/react-native/lib/button"
 import Icon from "@ant-design/react-native/lib/icon"
-import Modal from "@ant-design/react-native/lib/modal"
 import { useState } from "react"
 import { InputStyle } from "../components/InputStyle"
 import List from "@ant-design/react-native/lib/list"
-import { IconNames } from "@ant-design/react-native/es/icon"
 import { RegistrationAPI } from "../api/authApi"
 import { IUserInfo } from "../api/authApi"
 import { useNavigation } from "@react-navigation/native"
@@ -17,16 +15,13 @@ import { Page } from "../layouts/Page"
 import { setHasLogin } from "../redux/features/mainSlice"
 import { useAppDispatch } from "../hook/useStore"
 import MaskInput from "react-native-mask-input"
+import Popover from "@ant-design/react-native/lib/popover"
+import { FirstUpperCaseText } from "../helpers/firstUpperCaseText"
 
 export const CreateAccount = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
-    const [genderList] = useState<{ label: string; value: string; icon: IconNames }[]>([
-        { label: "Female", value: "female", icon: "woman" },
-        { label: "Male", value: "male", icon: "man" },
-    ])
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
-    const [isSelectGender, setIsSelectGender] = useState<boolean>(false)
     const [dateBirth, setDateBirth] = useState<Date | undefined>(undefined)
     const [info, setInfo] = useState<IUserInfo>({
         birth: new Date(),
@@ -64,11 +59,6 @@ export const CreateAccount = () => {
         return Object.values(info).every((item) => item)
     }
 
-    const handleSelectGender = (item: string) => {
-        setInfo((info) => ({ ...info, gender: item }))
-        setIsSelectGender(false)
-    }
-
     return (
         <Page>
             <Header isCustomHeader={true} title={"Create an account"} />
@@ -80,15 +70,15 @@ export const CreateAccount = () => {
                     <InputItem type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Number phone"}>
-                    <Text style={{ position: "absolute", top: "60%", left: 10 }}>+7</Text>
                     <MaskInput
                         value={info.phone}
                         onChangeText={(value) => setInfo({ ...info, phone: value })}
                         placeholder="(777) 777-77-77"
                         keyboardType="numeric"
                         mask={["(", /\d/, /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]}
-                        style={{ ...styles.input, marginLeft: 0, paddingLeft: 30 }}
+                        style={{ ...styles.input, marginBottom: 4, marginLeft: 0, paddingLeft: 30, position: "relative" }}
                     />
+                    <Text style={styles.numberText}>+7</Text>
                 </InputStyle>
                 <InputStyle inputTitle={"Password"}>
                     <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
@@ -97,7 +87,7 @@ export const CreateAccount = () => {
                 </InputStyle>
                 <InputStyle inputTitle={"Date of Birth"}>
                     <View style={styles.datePickerInput}>
-                        <DatePicker style={{ borderWidth: 0 }} mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format="YYYY-MM-DD">
+                        <DatePicker style={{ borderWidth: 0 }} minDate={new Date(1970, 7, 6)} maxDate={new Date()} mode="date" defaultDate={new Date()} value={dateBirth} onChange={(value) => setDateBirth(value)} format="YYYY-MM-DD">
                             <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
                                 Select Date
                             </List.Item>
@@ -105,22 +95,41 @@ export const CreateAccount = () => {
                     </View>
                 </InputStyle>
                 <InputStyle inputTitle={"Gender"}>
-                    <View style={styles.datePickerInput}>
-                        <TouchableOpacity style={{ ...styles.selectGenderInput }} onPress={() => setIsSelectGender(true)}>
-                            <Text style={{ fontSize: 19, fontWeight: "500", color: genderList.some((item) => item.value === info.gender) ? "#000" : "#808080" }}>{info.gender ? genderList.find((item) => item.value === info.gender)?.label : "Gender"}</Text>
-                            <Icon name="down" size={25} color="black" />
-                        </TouchableOpacity>
-                        <Modal animationType="slide" transparent maskClosable visible={isSelectGender} onClose={() => setIsSelectGender(false)}>
-                            <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10, gap: 20 }}>
-                                {genderList.map((gender) => (
-                                    <TouchableOpacity style={{ alignItems: "center", justifyContent: "space-between", flexDirection: "row", gap: 50 }} key={gender.value} onPress={() => handleSelectGender(gender.value)}>
-                                        <Text>{gender.label}</Text>
-                                        <Icon name={gender.icon} size={20} color={"#000"} />
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </Modal>
-                    </View>
+                    <Popover
+                        placement="top"
+                        useNativeDriver
+                        duration={200}
+                        easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
+                        onSelect={(e) => setInfo({ ...info, gender: e })}
+                        overlay={null}
+                        renderOverlayComponent={(_, closePopover) => {
+                            return (
+                                <View style={{ width: 200 }}>
+                                    <Popover.Item key={"Male"} value="male">
+                                        <Text
+                                            onPress={() => {
+                                                setInfo({ ...info, gender: "male" })
+                                                closePopover()
+                                            }}>
+                                            Male
+                                        </Text>
+                                    </Popover.Item>
+                                    <Popover.Item key={"Female"} value="female">
+                                        <Text
+                                            onPress={() => {
+                                                setInfo({ ...info, gender: "female" })
+                                                closePopover()
+                                            }}>
+                                            Female
+                                        </Text>
+                                    </Popover.Item>
+                                </View>
+                            )
+                        }}>
+                        <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 35, marginLeft: -1 }]}>
+                            <Text style={{ color: info.gender ? "#000" : "#808080" }}>{info.gender ? FirstUpperCaseText(info.gender) : "Gender"}</Text>
+                        </View>
+                    </Popover>
                 </InputStyle>
 
                 <View style={styles.footerInfo}>
@@ -147,6 +156,13 @@ export const CreateAccount = () => {
 }
 
 const styles = StyleSheet.create({
+    numberText: {
+        position: "absolute",
+        bottom: 0,
+        top: "50%",
+        right: 0,
+        left: 10,
+    },
     iconEye: {
         position: "absolute",
         right: 18,

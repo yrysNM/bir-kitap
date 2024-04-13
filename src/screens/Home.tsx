@@ -46,7 +46,7 @@ export const Home = () => {
             }
         })
 
-        fetchBookData({
+        await fetchBookData({
             start: 0,
             length: 10,
         }).then((res) => {

@@ -2,26 +2,39 @@ import { Text, StyleSheet, View } from "react-native"
 import { Page } from "../layouts/Page"
 import Icon from "@ant-design/react-native/lib/icon"
 import { SearchInput } from "../components/SearchInput"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { BookCard } from "../components/BookCard"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
 import { NoData } from "../components/NoData"
 import { useAppSelector } from "../hook/useStore"
+import { SelectGenres } from "../components/SelectGenres"
+import Modal from "@ant-design/react-native/lib/modal"
+import { GenreAPI } from "../api/genreApi"
 
 export const Search = () => {
     const { categoryList } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchBookData } = BookApi("list")
+    const { fetchData: fetchGenreData } = GenreAPI("list")
+
+    const [genreList, setGenreList] = useState<{ id: string; title: string }[]>([])
+
     const [search, setSearch] = useState<string>("")
     const [selectCategories, setSelectCategories] = useState<string[]>([])
+    const [selectGenres, setSelectGenres] = useState<string[]>([])
+    const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [bookList, setBookList] = useState<bookInfo[]>([])
 
     useEffect(() => {
-        onSearchBook()
-    }, [search, JSON.stringify(selectCategories)])
+        fetchGenreData({}).then((res) => {
+            if (res?.result_code === 0) {
+                setGenreList(res.data)
+            }
+        })
+    }, [])
 
-    const onSearchBook = useCallback(() => {
-        if (!search.length && !selectCategories.length) {
+    useEffect(() => {
+        if (!search.length && !selectCategories.length && !selectGenres.length) {
             setBookList([])
             return
         }
@@ -29,19 +42,20 @@ export const Search = () => {
         fetchBookData({
             title: search,
             filter: {
-                genres: selectCategories,
+                genres: selectGenres,
+                categories: selectCategories,
             },
         }).then((res) => {
-            if (res.result_code === 0) {
+            if (res?.result_code === 0) {
                 setBookList(res.data)
             }
         })
-    }, [search, JSON.stringify(selectCategories)])
+    }, [search, JSON.stringify(selectCategories), JSON.stringify(selectGenres)])
 
     return (
         <Page>
             <Text style={styles.headText}>Search</Text>
-            <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search books" />
+            <SearchInput onEnterSearch={(e) => setSearch(e)} onClickFilter={() => setVisibleModal(true)} placeholder="Search books" />
             <View style={{ marginTop: 18 }}>
                 <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "object" ? setSelectCategories(e) : null)} isMultiple={true} />
             </View>
@@ -51,13 +65,31 @@ export const Search = () => {
                     <Text style={styles.searchText}>Search books</Text>
                 </View>
             ) : (
-                <View style={styles.bookWrapper}>{bookList.length ? bookList.map((book) => <BookCard key={book.id} bookInfo={book} />) : <NoData />}</View>
+                <View style={styles.bookWrapper}>{bookList.length ? bookList.map((book, i) => <BookCard key={i} bookInfo={book} />) : <NoData />}</View>
             )}
+            <Modal popup animationType="slide-up" visible={visibleModal} onClose={() => setVisibleModal(false)} style={styles.modalWrapper} maskClosable>
+                <SelectGenres
+                    onSelect={(e) => {
+                        setVisibleModal(false)
+                        setSelectGenres(e)
+                    }}
+                    dataList={genreList}
+                    selectedGenres={selectGenres}
+                />
+            </Modal>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    modalWrapper: {
+        paddingTop: 15,
+        paddingHorizontal: 32,
+        paddingBottom: 20,
+        backgroundColor: "#fff",
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+    },
     bookWrapper: {
         flexWrap: "wrap",
         flexDirection: "row",

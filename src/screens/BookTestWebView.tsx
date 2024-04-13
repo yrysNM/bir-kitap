@@ -11,21 +11,24 @@ import useApi from "../hook/useApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
+import { useNavigation } from "@react-navigation/native"
 
-const _webview_base_url = "http://192.168.0.124:5174/book-test"
-// const _webview_base_url = "https://birkitap.kz/book-crossing/"
+// const _webview_base_url = "http://192.168.0.124:5173/book-test"
+const _webview_base_url = "https://birkitap.kz/book-test/"
 
 interface IUpload extends IResponse {
     data: { path: string }
 }
 
 export const BookTestWebView = () => {
+    const navifation = useNavigation()
     const dispatch = useAppDispatch()
     const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
+    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -35,7 +38,7 @@ export const BookTestWebView = () => {
                 setToken("")
             }
         })
-    })
+    }, []);
 
     function injectWebViewData() {
         const janascript = `
@@ -100,6 +103,8 @@ export const BookTestWebView = () => {
             logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
+        } else if (messageData.key === "closeWin") {
+            navifation.goBack()
         }
 
         return {}
@@ -116,7 +121,7 @@ export const BookTestWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%" }}
-                    source={{ uri: _webview_base_url }}
+                    source={{ uri: `${_webview_base_url}?${randomNumber}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent

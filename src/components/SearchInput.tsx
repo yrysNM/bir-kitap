@@ -6,10 +6,10 @@ import FilterImg from "../../assets/images/filter.png"
 type propsInfo = {
     placeholder: string
     onEnterSearch: (e: string) => void
-    isHaveFilter?: boolean
+    onClickFilter?: () => void
 }
 
-export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }: propsInfo) => {
+export const SearchInput = ({ onEnterSearch, placeholder, onClickFilter }: propsInfo) => {
     const [search, setSearch] = useState<string>("")
 
     return (
@@ -18,10 +18,10 @@ export const SearchInput = ({ onEnterSearch, placeholder, isHaveFilter = false }
                 <Icon name="search" style={styles.iconSearch} />
             </TouchableOpacity>
             <TextInput style={styles.inputSearch} value={search} placeholder={placeholder} onChangeText={setSearch} onSubmitEditing={() => onEnterSearch(search)} />
-            {isHaveFilter && (
-                <View style={styles.filterWrapper}>
+            {onClickFilter && (
+                <TouchableOpacity onPress={() => onClickFilter()} style={styles.filterWrapper}>
                     <Image source={FilterImg} style={styles.filterImg} />
-                </View>
+                </TouchableOpacity>
             )}
         </View>
     )

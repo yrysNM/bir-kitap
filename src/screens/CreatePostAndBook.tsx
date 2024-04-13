@@ -18,6 +18,9 @@ import { useNavigation } from "@react-navigation/native"
 import { PostAPI, postInfo } from "../api/postApi"
 import Carousel from "@ant-design/react-native/lib/carousel"
 import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
+import { SelectGenres } from "../components/SelectGenres"
+import { useAppDispatch } from "../hook/useStore"
+import { setLoading } from "../redux/features/mainSlice"
 
 const _bookInfo = {
     title: "",
@@ -36,6 +39,7 @@ const _postInfo = {
 }
 
 export const CreatePostAndBook = () => {
+    const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const { fetchData: fetchGenreData } = GenreAPI("list")
     const { fetchData: fetchCreateBookData } = BookApi("create")
@@ -58,7 +62,8 @@ export const CreatePostAndBook = () => {
         })
     }, [])
 
-    const handleFileUpload = async (isCreateBook: boolean) => {
+    const handleFileUpload = async () => {
+        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
@@ -70,8 +75,11 @@ export const CreatePostAndBook = () => {
             const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
             const isLt5M: boolean = file.size / 1024 / 1024 < 5
             if (!isLt5M) {
-                console.log("File size small than 5mb")
-                Toast.fail("File size small than 5mb")
+                console.log("The file size must be less than 5 MB.")
+                Toast.fail("The file size must be less than 5 MB.")
+                dispatch(setLoading(false))
+
+                return
             }
 
             const param = new FormData()
@@ -81,19 +89,19 @@ export const CreatePostAndBook = () => {
                 name: uriList.pop(),
             } as never)
 
-            if (isCreateBook) {
-                fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
-                    if (res.result_code === 0) {
-                        const info: { path: string } = JSON.parse(JSON.stringify(res.data))
-                        const urlImage = `${API_URL}public/get_resource?name=${info.path}`
-                        setImages([...images, urlImage])
-                        setPostInfo({ ...postInfo, attachments: [...postInfo.attachments, info.path] })
-                        setBookInfo({ ...bookInfo, imageLink: info.path })
-                    }
-                })
-            } else {
-                console.log("create post")
-            }
+            fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
+                dispatch(setLoading(false))
+
+                if (res.result_code === 0) {
+                    const info: { path: string } = JSON.parse(JSON.stringify(res.data))
+                    const urlImage = `${API_URL}public/get_resource?name=${info.path}`
+                    setImages([...images, urlImage])
+                    setPostInfo({ ...postInfo, attachments: [...postInfo.attachments, info.path] })
+                    setBookInfo({ ...bookInfo, imageLink: info.path })
+                }
+            })
+        } else {
+            dispatch(setLoading(false))
         }
     }
 
@@ -129,15 +137,6 @@ export const CreatePostAndBook = () => {
                 // navigation.navigate("Home" as never)
             }
         })
-    }
-
-    const toggleGenreBookInfo = (genreTitle: string) => {
-        const isSelectGenre = bookInfo.genres.includes(genreTitle)
-        if (isSelectGenre) {
-            setBookInfo((bookInfo) => ({ ...bookInfo, genres: bookInfo.genres.filter((genre) => genre !== genreTitle) }))
-        } else {
-            setBookInfo((bookInfo) => ({ ...bookInfo, genres: [...bookInfo.genres, genreTitle] }))
-        }
     }
 
     const onChangeTab = () => {
@@ -200,7 +199,7 @@ export const CreatePostAndBook = () => {
                                             </TouchableOpacity>
                                         </>
                                     ) : (
-                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", height: "100%" }} onPress={() => handleFileUpload(true)}>
+                                        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", height: "100%" }} onPress={() => handleFileUpload()}>
                                             <Icon name="upload" style={styles.uploadIcon} size="lg" />
                                             <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
                                         </TouchableOpacity>
@@ -249,7 +248,7 @@ export const CreatePostAndBook = () => {
                                 <View style={styles.uploadWrapper}>
                                     <Carousel horizontal style={{ width: "100%", height: 169 }}>
                                         <View>
-                                            <TouchableOpacity onPress={() => handleFileUpload(true)} style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
+                                            <TouchableOpacity onPress={() => handleFileUpload()} style={{ justifyContent: "center", alignItems: "center", height: "100%" }}>
                                                 <Icon name="upload" style={styles.uploadIcon} size="lg" />
                                                 <Text style={styles.uploadText}>File size must to be 5MB❗</Text>
                                             </TouchableOpacity>
@@ -277,21 +276,29 @@ export const CreatePostAndBook = () => {
                     </View>
                 </Tabs>
             </View>
-            <Modal animationType="slide" transparent maskClosable visible={showModalGenre} onClose={() => setShowModalGenre(false)}>
-                <View style={{ gap: 20 }}>
-                    {genreList.map((genre) => (
-                        <TouchableOpacity key={genre.id} onPress={() => toggleGenreBookInfo(genre.title)} style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
-                            <Text>{genre.title}</Text>
-                            <View>{bookInfo.genres.includes(genre.title) ? <Icon name="check" /> : null}</View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+            <Modal popup animationType="slide-up" visible={showModalGenre} onClose={() => setShowModalGenre(false)} style={styles.modalWrapper} maskClosable>
+                <SelectGenres
+                    onSelect={(e) => {
+                        setShowModalGenre(false)
+                        setBookInfo({ ...bookInfo, genres: e })
+                    }}
+                    dataList={genreList}
+                    selectedGenres={bookInfo.genres}
+                />
             </Modal>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    modalWrapper: {
+        paddingTop: 15,
+        paddingHorizontal: 32,
+        paddingBottom: 20,
+        backgroundColor: "#fff",
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+    },
     spliBlock: {
         position: "absolute",
         top: 0,

@@ -12,17 +12,17 @@ import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 
-const _webview_base_url = "http://192.168.1.5:5173/book-tracker/"
-// const _webview_base_url = "https://birkitap.kz/book-tracker/"
+// const _webview_base_url = "http://192.168.0.124:5174/book-tracker/"
+const _webview_base_url = "https://birkitap.kz/book-tracker/"
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
     const dispatch = useAppDispatch()
     const logOut = logOutHelper()
-    // const { isLoading } = useAppSelector((state) => state.mainSlice)
     const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
+    // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -32,7 +32,7 @@ export const BookTrackerWebView = () => {
                 setToken("")
             }
         })
-    })
+    }, [])
 
     function injectWebViewData() {
         const janascript = `
@@ -57,6 +57,9 @@ export const BookTrackerWebView = () => {
             if (!isLt5M) {
                 console.log("File size small than 5mb")
                 Toast.fail("File size small than 5mb")
+                dispatch(setLoading(false))
+
+                return
             }
 
             const param = new FormData()
@@ -66,26 +69,21 @@ export const BookTrackerWebView = () => {
                 name: uriList.pop(),
             } as never)
 
-            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never)
-                .then((res) => {
-                    if (res.result_code === 0) {
-                        dispatch(setLoading(false))
-                        const infoImg = JSON.parse(JSON.stringify(res.data))
-                        const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
-                        const info = {
-                            type: "file",
-                            url: urlImage,
-                        }
-                        webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
-                    } else {
-                        dispatch(setLoading(false))
-                        console.log(res.data)
-                    }
-                })
-                .catch((err) => {
-                    console.log(JSON.stringify(err))
+            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never).then((res) => {
+                if (res.result_code === 0) {
                     dispatch(setLoading(false))
-                })
+                    const infoImg = JSON.parse(JSON.stringify(res.data))
+                    const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
+                    const info = {
+                        type: "file",
+                        url: urlImage,
+                    }
+                    webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
+                } else {
+                    dispatch(setLoading(false))
+                    console.log(res.data)
+                }
+            })
         } else {
             dispatch(setLoading(false))
         }
@@ -113,7 +111,7 @@ export const BookTrackerWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%" }}
-                    source={{ uri: _webview_base_url }}
+                    source={{ uri: `${_webview_base_url}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent
@@ -125,9 +123,9 @@ export const BookTrackerWebView = () => {
                     injectedJavaScript={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                            setLoading(true)
-                        } else if (nativeEvent.url === _webview_base_url) {
-                            setLoading(false)
+                            dispatch(setLoading(true))
+                        } else {
+                            dispatch(setLoading(false))
                         }
                     }}
                 />

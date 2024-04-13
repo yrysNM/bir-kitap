@@ -51,8 +51,6 @@ export const Profile = () => {
         { value: "selected", label: "Read Later" },
         { value: "finish", label: "Read" },
     ])
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
-
     useEffect(() => {
         fetchUserProfileData({}).then((res) => {
             if (res.result_code === 0) {
@@ -97,7 +95,7 @@ export const Profile = () => {
                 </View>
 
                 <View style={styles.tabBarWrapper}>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Survey" ? "#005479" : "#FFED4A" }}>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Survey" ? "#005479" : "#FFED4A", borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }}>
                         <Text style={{ color: tab === "Survey" ? "#fff" : "#000" }}>Survey</Text>
                     </TouchableOpacity>
                     <View style={[styles.line]}></View>
@@ -105,18 +103,20 @@ export const Profile = () => {
                         <Text style={{ color: tab === "Reviews" ? "#fff" : "#000" }}>Reviews</Text>
                     </TouchableOpacity>
                     <View style={[styles.line]}></View>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Posts" ? "#005479" : "#FFED4A" }}>
+                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Posts" ? "#005479" : "#FFED4A", borderTopRightRadius: 12, borderBottomRightRadius: 12 }}>
                         <Text style={{ color: tab === "Posts" ? "#fff" : "#000" }}>Posts</Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.contentWrapper}>
                     {tab === "Survey" ? (
-                        bookType.map((item) => (
-                            <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
-                                <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
-                            </BookShowBlock>
-                        ))
+                        <View style={{ marginBottom: 10 }}>
+                            {bookType.map((item) => (
+                                <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
+                                    <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
+                                </BookShowBlock>
+                            ))}
+                        </View>
                     ) : tab === "Reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                     ) : (

@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
 import Icon from "@ant-design/react-native/lib/icon"
 import { Services } from "../screens/Services"
-// import { useNavigation } from "@react-navigation/native"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
 import { Search } from "../screens/Search"
 import { Profile } from "../screens/Profile"
@@ -14,7 +13,7 @@ export const TabNavigator = () => {
         if (isFocused) {
             return "#fff"
         } else {
-            return "#CCCFD0"
+            return "rgba(248, 248, 248, 0.5)"
         }
     }
 
@@ -103,12 +102,14 @@ export const TabNavigator = () => {
 
 const styles = StyleSheet.create({
     tabbar: {
-        paddingVertical: 20,
-        height: 64,
+        height: 71,
     },
     tabIcon: {
+        justifyContent: "center",
+        alignItems: "center",
         fontSize: 30,
         width: 30,
-        height: 30,
+        verticalAlign: "middle",
+        height: 71,
     },
 })
