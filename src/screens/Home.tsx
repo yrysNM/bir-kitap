@@ -55,7 +55,7 @@ export const Home = () => {
             }
         })
 
-        fetchReViewData({
+      await  fetchReViewData({
             start: 0,
             length: 5,
         }).then((res) => {
