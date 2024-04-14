@@ -18,7 +18,7 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })} delayPressIn={5}>
                 <CloudImage styleImg={styles.bookImg} url={item.imageLink} />
                 <View>
-                    <Text style={styles.text}>{SplitText(item.title, 10)}</Text>
+                    <Text style={styles.text}>{SplitText(item.title, 20)}</Text>
                     <View style={styles.textInfo}>
                         <Text style={styles.descr}>{SplitText(item.author, 15)}</Text>
                         <Text style={styles.descr}>{item.year}</Text>
@@ -34,9 +34,11 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
 const styles = StyleSheet.create({
     card: {
         width: 145,
+        flex: 1,
         paddingVertical: 10,
         paddingHorizontal: 15,
         gap: 10,
+        justifyContent: "space-around",
         marginRight: 15,
         borderRadius: 16,
         backgroundColor: "#fff",

@@ -19,7 +19,7 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                     <View style={styles.reviewUserInfo}>
                         <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} />
                         <View style={{ flexShrink: 1 }}>
-                            <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
+                            <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>
                         </View>
                     </View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "600",
         lineHeight: 17,
-        color: "#000000",
+        color: "#212121",
     },
 
     reviewUserNic: {

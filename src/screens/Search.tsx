@@ -54,7 +54,6 @@ export const Search = () => {
 
     return (
         <Page>
-            <Text style={styles.headText}>Search</Text>
             <SearchInput onEnterSearch={(e) => setSearch(e)} onClickFilter={() => setVisibleModal(true)} placeholder="Search books" />
             <View style={{ marginTop: 18 }}>
                 <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "object" ? setSelectCategories(e) : null)} isMultiple={true} />
@@ -97,14 +96,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 25,
         marginVertical: 30,
-    },
-    headText: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: "600",
-        lineHeight: 20,
-        opacity: 0.5,
-        color: "#000000",
     },
     searchBlock: {
         position: "absolute",

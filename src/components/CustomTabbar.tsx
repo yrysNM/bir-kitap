@@ -8,7 +8,7 @@ export const CustomTabbar = ({ state, descriptors, navigation }: BottomTabBarPro
         if (isFocused) {
             return "#0A78D6"
         } else {
-            return "rgba(10, 120, 214, 0.5)"
+            return "#212121"
         }
     }
 
@@ -63,7 +63,7 @@ export const CustomTabbar = ({ state, descriptors, navigation }: BottomTabBarPro
                 }
 
                 return (
-                    <TouchableOpacity style={styles.tabbarBlock} onPress={onPress} testID={options.tabBarTestID} onLongPress={onLongPress} accessibilityState={isFocused ? { selected: true } : {}} accessibilityLabel={options.tabBarAccessibilityLabel} accessibilityRole="button">
+                    <TouchableOpacity key={index} style={styles.tabbarBlock} onPress={onPress} testID={options.tabBarTestID} onLongPress={onLongPress} accessibilityState={isFocused ? { selected: true } : {}} accessibilityLabel={options.tabBarAccessibilityLabel} accessibilityRole="button">
                         <View>
                             <Icon name={iconList.find((item) => item.key === label)?.iconName as IconNames} style={styles.tabIcon} color={iconColor(isFocused)} />
                         </View>
@@ -80,16 +80,17 @@ const styles = StyleSheet.create({
         height: 74,
         flexDirection: "row",
         alignItems: "center",
-        gap: 12,
+        backgroundColor: "#FFF",
     },
     tabbarBlock: {
+        flex: 1,
         paddingVertical: 12,
         flexDirection: "column",
         gap: 5,
         justifyContent: "center",
         alignItems: "center",
-        width: 64,
         height: "100%",
+        zIndex: 100,
     },
     tabIcon: {
         justifyContent: "center",
