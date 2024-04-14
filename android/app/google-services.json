@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "674084663660",
+    "project_id": "bir-kitap",
+    "storage_bucket": "bir-kitap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674084663660:android:079f908dd89f2077448349",
+        "android_client_info": {
+          "package_name": "mobile.birkitap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVIo9bDMYtfkVUlJrhkL6cdMZ_FGwtMzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
