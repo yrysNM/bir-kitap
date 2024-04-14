@@ -63,6 +63,6 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "500",
         lineHeight: 16,
-        color: "#808080",
+        color: "#6D7885",
     },
 })
