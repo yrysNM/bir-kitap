@@ -24,6 +24,7 @@ const initialState: IState = {
         password: "",
         birth: new Date(),
         gender: "",
+        avatar: ""
     },
     categoryList: [],
 }
