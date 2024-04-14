@@ -11,9 +11,9 @@ const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
     const iconColor = (isFocused: boolean) => {
         if (isFocused) {
-            return "#fff"
+            return "#0A78D6"
         } else {
-            return "rgba(248, 248, 248, 0.5)"
+            return "rgba(10, 120, 214, 0.5)"
         }
     }
 
@@ -23,7 +23,7 @@ export const TabNavigator = () => {
             screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: false,
-                tabBarStyle: { ...styles.tabbar, backgroundColor: "#005479" },
+                tabBarStyle: { ...styles.tabbar, backgroundColor: "#fff" },
                 tabBarHideOnKeyboard: true,
             }}>
             <Tab.Screen
