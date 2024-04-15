@@ -178,7 +178,6 @@ export const CreatePostAndBook = () => {
 
     return (
         <Page>
-            <Text style={styles.headText}>Create book & Create post</Text>
 
             <View style={{ flex: 1, height: "auto", marginBottom: 5 }}>
                 <Tabs tabs={tabs} swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)}>
@@ -324,14 +323,6 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         lineHeight: 18,
         color: "#FFFFFF",
-    },
-    headText: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: "600",
-        lineHeight: 20,
-        opacity: 0.5,
-        color: "#000000",
     },
     input: {
         height: 42,
