@@ -17,6 +17,7 @@ export interface IUserInfo {
     password: string
     birth: Date
     gender: string
+    avatar?: string
 }
 
 export interface ILogin {

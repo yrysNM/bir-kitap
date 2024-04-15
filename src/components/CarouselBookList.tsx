@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     card: {
         width: 145,
         flex: 1,
+        marginVertical: 3,
         paddingVertical: 10,
         paddingHorizontal: 15,
         gap: 10,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
             height: 1,
         },
         elevation: 1,
-        shadowRadius: 16,
+        shadowRadius: 1,
         shadowOpacity: 0.3,
     },
     bookImg: {

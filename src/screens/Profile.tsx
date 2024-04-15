@@ -1,5 +1,4 @@
-import { Image, View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
-import UserProfileImg from "../../assets/images/custom-user-profile.jpg"
+import { View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
 import { useAppSelector } from "../hook/useStore"
 import { useEffect, useState } from "react"
 import { UserAPI } from "../api/userApi"
@@ -14,6 +13,7 @@ import { bookInfo } from "../api/bookApi"
 import { NoData } from "../components/NoData"
 import { ReviewCard } from "../components/ReviewCard"
 import { CarouselBookList } from "../components/CarouselBookList"
+import { CloudImage } from "../components/CloudImage"
 
 interface IProfile {
     readBooksCount: number
@@ -39,7 +39,7 @@ const _infoTemp = {
 export const Profile = () => {
     const navigation = useNavigation()
     const {
-        userInfo: { fullName },
+        userInfo: { fullName, avatar },
     } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
@@ -71,7 +71,7 @@ export const Profile = () => {
                 <Icon name="setting" style={styles.settingIcon} />
             </TouchableOpacity>
             <View style={styles.profileInfoWrapper}>
-                <Image source={UserProfileImg} style={styles.userProfileImg} />
+                <CloudImage url={avatar || ""} styleImg={styles.userProfileImg} />
 
                 <Text style={styles.fullName}>{fullName}</Text>
 
@@ -232,10 +232,13 @@ const styles = StyleSheet.create({
     },
     settingIcon: {
         position: "absolute",
-        top: 20,
+        top: 10,
         right: 0,
-        color: "#000",
+        color: "#212121",
         fontSize: 30,
+        padding: 10,
+        backgroundColor: "#fff",
+        borderRadius: 1000,
     },
     profileInfoWrapper: {
         marginTop: 70,
@@ -255,7 +258,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "600",
         lineHeight: 27,
-        color: "#000000",
+        color: "#212121",
     },
     userStatistic: {
         flexDirection: "row",
@@ -267,7 +270,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "600",
         lineHeight: 20,
-        color: "#000000",
+        color: "#212121",
     },
     statisticDescr: {
         textAlign: "center",

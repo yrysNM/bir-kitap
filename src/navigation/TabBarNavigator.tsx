@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Home } from "../screens/Home"
-import { Animated, StyleSheet } from "react-native"
+import { Animated, Dimensions, StyleSheet } from "react-native"
 import { Services } from "../screens/Services"
 import { CreatePostAndBook } from "../screens/CreatePostAndBook"
 import { Search } from "../screens/Search"
@@ -21,7 +21,7 @@ export const TabNavigator = () => {
             const dataRoot = e.data.state.routes[indexRoute]
             if (dataRoot.name === "Root") {
                 Animated.timing(translationTabBar, {
-                    toValue: 8 + (dataRoot.state?.index || 0) * 78,
+                    toValue: 8 + ((dataRoot.state?.index || 0) * Dimensions.get("window").width) / 5,
                     duration: 500,
                     useNativeDriver: true,
                 }).start()
@@ -32,7 +32,7 @@ export const TabNavigator = () => {
             unsubscribeFocus()
         }
     }, [navigation])
-    
+
     return (
         <>
             <Animated.View style={[styles.tabIconBlock, { backgroundColor: "rgba(23, 126, 221, 0.2)", position: "absolute", bottom: 30, left: 0, zIndex: 1, transform: [{ translateX: translationTabBar }] }]}></Animated.View>

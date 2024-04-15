@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 20,
         borderRadius: 10,
+        shadowRadius: 1,
         marginRight: 10,
         shadowColor: "rgba(19, 12, 12, 0.3)",
         shadowOffset: {
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
             height: 1,
         },
         elevation: 1,
-        shadowRadius: 6,
+        marginHorizontal: 3,
         shadowOpacity: 0.3,
     },
     bookTypeBlock: {

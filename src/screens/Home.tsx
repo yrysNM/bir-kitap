@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image } from "react-native"
+import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native"
 import { Page } from "../layouts/Page"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
@@ -18,9 +18,6 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { SplitText } from "../helpers/splitText"
-import BookTrackerImg from "../../assets/images/category/book-tracker.png"
-import BookCrossingImage from "../../assets/crossing.png"
-import BookTestImg from "../../assets/images/category/book-test.png"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -96,21 +93,6 @@ export const Home = () => {
                 <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
             </View>
 
-            <View style={styles.services}>
-                <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTrackerWebView" as never)}>
-                    <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "cover" }} />
-                    <Text style={styles.categoryText}>Book Tracker</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookCrossingWebView" as never)}>
-                    <Image source={BookCrossingImage} style={{ width: 54, height: 54, objectFit: "contain" }} />
-                    <Text style={styles.categoryText}>Book crossing</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTestWebView" as never)}>
-                    <Image source={BookTestImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
-                    <Text style={styles.categoryText}>Book Test</Text>
-                </TouchableOpacity>
-            </View>
-
             <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
                 <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>
             </BookShowBlock>
@@ -155,9 +137,8 @@ const styles = StyleSheet.create({
         lineHeight: 15,
         color: "#808080",
     },
-    services:{
+    services: {
         flexDirection: "column",
         gap: 4,
-        
-    }
+    },
 })
