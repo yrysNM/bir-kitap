@@ -1,9 +1,8 @@
-import { View, Dimensions, Image, Text, StyleSheet } from "react-native"
+import { View, Dimensions, Text, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
 import { bookReviewInfo } from "../api/reviewApi"
 import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
-import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 import { useAppSelector } from "../hook/useStore"
 
 export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
@@ -17,7 +16,8 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
-                        <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} />
+                        {/* <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} /> */}
+                        <CloudImage styleImg={styles.reviewUserProfileImg} url={item.avatar || ""} />
                         <View style={{ flexShrink: 1 }}>
                             <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>

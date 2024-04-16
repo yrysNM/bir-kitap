@@ -35,7 +35,7 @@ export const TabNavigator = () => {
 
     return (
         <>
-            <Animated.View style={[styles.tabIconBlock, { backgroundColor: "rgba(23, 126, 221, 0.2)", position: "absolute", bottom: 30, left: 0, zIndex: 1, transform: [{ translateX: translationTabBar }] }]}></Animated.View>
+            <Animated.View style={[styles.tabIconBlock, { transform: [{ translateX: translationTabBar }] }]}></Animated.View>
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
@@ -68,5 +68,10 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         paddingHorizontal: 20,
         borderRadius: 20,
+        backgroundColor: "rgba(23, 126, 221, 0.2)",
+        position: "absolute",
+        bottom: 30,
+        left: 0,
+        zIndex: 1,
     },
 })

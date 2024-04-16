@@ -70,7 +70,7 @@ export const EditProfile = () => {
 
     return (
         <Fuse>
-            <View style={{ backgroundColor: "#005479" }}>
+            <View style={{ backgroundColor: "#0A78D6" }}>
                 <View style={styles.headerCommon}>
                     <TouchableOpacity onPressIn={() => navigation.goBack()}>
                         <Icon style={styles.icon} name="left" />
