@@ -3,7 +3,6 @@ import Carousel from "react-native-snap-carousel"
 import { bookReviewInfo } from "../api/reviewApi"
 import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
-import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 import { useAppSelector } from "../hook/useStore"
 
 export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
@@ -17,7 +16,7 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
-                        <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} />
+                        <CloudImage url={item?.avatar} styleImg={styles.avatar} />
                         <View style={{ flexShrink: 1 }}>
                             <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#005479" : "#000" }]}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>
@@ -64,6 +63,12 @@ const styles = StyleSheet.create({
         objectFit: "cover",
     },
 
+    avatar: {
+        width: 30,
+        height: 30,
+        objectFit: "cover",
+    },
+
     reviewBookInfo: {
         flex: 1,
         flexDirection: "column",
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
     reviewUserInfo: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: 2,
     },
 
     reviewUserProfileImg: {

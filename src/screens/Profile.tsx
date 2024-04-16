@@ -148,19 +148,19 @@ export const Profile = () => {
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="key" />
-                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Change Password (soon)</Text>
+                        <Text style={[styles.infoText]}>Change Password</Text>
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="global" />
-                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Language (soon)</Text>
+                        <Text style={[styles.infoText]}>Language</Text>
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="info-circle" />
-                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Language (soon)</Text>
+                        <Text style={[styles.infoText]}>Language</Text>
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="usergroup-add" />
-                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Information (soon)</Text>
+                        <Text style={[styles.infoText]}>Information</Text>
                     </View>
                     <TouchableOpacity style={styles.modalWrapperBlock} onPress={() => logOut()}>
                         <Icon name="logout" style={{ color: "red" }} />
