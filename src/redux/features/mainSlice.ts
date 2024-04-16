@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { AxiosError } from "axios"
 import { IUserInfo } from "../../api/authApi"
-import { categoryInfo } from "../../api/bookApi"
 
 interface IState {
     hasLogin: boolean
@@ -9,7 +8,6 @@ interface IState {
     error: AxiosError | null
     isRefresh: boolean
     userInfo: IUserInfo
-    categoryList: categoryInfo[]
 }
 
 const initialState: IState = {
@@ -26,7 +24,6 @@ const initialState: IState = {
         gender: "",
         avatar: "",
     },
-    categoryList: [],
 }
 
 export const mainSlice = createSlice({
@@ -48,12 +45,9 @@ export const mainSlice = createSlice({
         setRefresh(state, action: PayloadAction<boolean>) {
             state.isRefresh = action.payload
         },
-        setCategoryList(state, action: PayloadAction<categoryInfo[]>) {
-            state.categoryList = action.payload
-        },
     },
 })
 
-export const { setUserInfo, setLoading, setHasLogin, setError, setRefresh, setCategoryList } = mainSlice.actions
+export const { setUserInfo, setLoading, setHasLogin, setError, setRefresh } = mainSlice.actions
 
 export default mainSlice.reducer

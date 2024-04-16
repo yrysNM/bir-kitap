@@ -4,21 +4,21 @@ import Icon from "@ant-design/react-native/lib/icon"
 import { SearchInput } from "../components/SearchInput"
 import { useEffect, useState } from "react"
 import { BookCard } from "../components/BookCard"
-import { BookApi, bookInfo } from "../api/bookApi"
+import { BookApi, bookInfo, categoryInfo } from "../api/bookApi"
 import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
 import { NoData } from "../components/NoData"
-import { useAppSelector } from "../hook/useStore"
 import { SelectGenres } from "../components/SelectGenres"
 import Modal from "@ant-design/react-native/lib/modal"
 import { GenreAPI } from "../api/genreApi"
 
 export const Search = () => {
-    const { categoryList } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchBookData } = BookApi("list")
     const { fetchData: fetchGenreData } = GenreAPI("list")
+    const { fetchData: fetchCategoryData } = BookApi("category/list")
 
     const [genreList, setGenreList] = useState<{ id: string; title: string }[]>([])
 
+    const [categoryList, setCategoryList] = useState<categoryInfo[]>([])
     const [search, setSearch] = useState<string>("")
     const [selectCategories, setSelectCategories] = useState<string[]>([])
     const [selectGenres, setSelectGenres] = useState<string[]>([])
@@ -26,12 +26,22 @@ export const Search = () => {
     const [bookList, setBookList] = useState<bookInfo[]>([])
 
     useEffect(() => {
+        loadData()
+    }, [])
+
+    const loadData = async () => {
+        await fetchCategoryData({}).then((res) => {
+            if (res.result_code === 0) {
+                setCategoryList(JSON.parse(JSON.stringify(res.data)))
+            }
+        })
+
         fetchGenreData({}).then((res) => {
             if (res?.result_code === 0) {
                 setGenreList(res.data)
             }
         })
-    }, [])
+    }
 
     useEffect(() => {
         if (!search.length && !selectCategories.length && !selectGenres.length) {

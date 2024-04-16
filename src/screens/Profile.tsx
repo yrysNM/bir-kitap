@@ -46,7 +46,7 @@ export const Profile = () => {
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
-    const [tab, setTab] = useState<string>("Survey")
+    const [tab, setTab] = useState<string>("survey")
     const statusList = [
         { value: "reading", label: "Reading" },
         { value: "selected", label: "Read Later" },

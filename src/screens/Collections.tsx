@@ -21,7 +21,6 @@ export const Collections = () => {
     }, [])
 
     const collectionsTypes = Object.keys(collectionList)
-
     return (
         <Page>
             <Header isCustomHeader={false} isGoBack title="Collections" />

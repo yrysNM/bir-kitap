@@ -1,19 +1,15 @@
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native"
-import Icon from "@ant-design/react-native/lib/icon"
+import { Text, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import ArrowBack from "../../assets/images/arrow-back.png"
 
 export const Header = ({ isCustomHeader, title, isGoBack = false }: { isCustomHeader?: boolean; title: string; isGoBack?: boolean }) => {
     const navigation = useNavigation()
 
     return (
-        <View style={isCustomHeader ? styles.headerCustom : styles.headerCommon}>
-            {isGoBack && (
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon style={styles.icon} name="left" />
-                </TouchableOpacity>
-            )}
+        <TouchableOpacity onPress={() => isGoBack && navigation.goBack()} style={isCustomHeader ? styles.headerCustom : styles.headerCommon}>
+            {isGoBack && <Image source={ArrowBack} style={styles.icon_back} />}
             <Text style={isCustomHeader ? styles.title : styles.titleCommon}>{title}</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -21,10 +17,10 @@ const styles = StyleSheet.create({
     headerCustom: {
         flexDirection: "column",
     },
-    icon: {
-        color: "#000",
-        fontSize: 35,
-        borderRadius: 10,
+    icon_back: {
+        width: 24,
+        height: 24,
+        objectFit: "contain",
     },
     title: {
         marginTop: 5,
@@ -33,7 +29,8 @@ const styles = StyleSheet.create({
     },
     titleCommon: {
         fontWeight: "600",
-        fontSize: 20,
+        fontSize: 24,
+        marginBottom: 2,
     },
     headerCommon: {
         marginTop: 20,

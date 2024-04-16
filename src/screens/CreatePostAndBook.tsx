@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     createBtn: {
         width: "100%",
         borderRadius: 13,
-        backgroundColor: "#005479",
+        backgroundColor: "#0A78D6",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 0,

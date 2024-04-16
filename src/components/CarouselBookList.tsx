@@ -17,7 +17,7 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
         return (
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })} delayPressIn={5}>
                 <CloudImage styleImg={styles.bookImg} url={item.imageLink} />
-                <View>
+                <View style={{ flex: 1, justifyContent: "space-between" }}>
                     <Text style={styles.text}>{SplitText(item.title, 20)}</Text>
                     <View style={styles.textInfo}>
                         <Text style={styles.descr}>{SplitText(item.author, 15)}</Text>

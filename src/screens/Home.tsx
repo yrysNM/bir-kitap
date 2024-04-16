@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { CarouselREviewList } from "../components/CarouselReviewList"
 import { UserAPI } from "../api/userApi"
-import { setCategoryList, setUserInfo } from "../redux/features/mainSlice"
+import { setUserInfo } from "../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
 import { CloudImage } from "../components/CloudImage"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
@@ -26,7 +26,6 @@ export const Home = () => {
     const { fetchData: fetchReViewData } = ReviewApi("list")
     const { fetchData: fetchUserData } = UserAPI("info")
     const { fetchData: fetchNewsData } = NewsApi("list")
-    const { fetchData: fetchCategoryData } = BookApi("category/list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
@@ -68,12 +67,6 @@ export const Home = () => {
         fetchUserData({}).then((res) => {
             if (res.result_code === 0) {
                 dispatch(setUserInfo(res.data))
-            }
-        })
-
-        fetchCategoryData({}).then((res) => {
-            if (res.result_code === 0) {
-                dispatch(setCategoryList(JSON.parse(JSON.stringify(res.data))))
             }
         })
     }
