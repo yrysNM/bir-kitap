@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     starUnselected: {
-        color: "#aaa",
+        color: "#6D7885",
     },
     starSelected: {
         color: "#ffb300",

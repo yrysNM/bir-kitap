@@ -1,5 +1,4 @@
-import { Image, View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
-import UserProfileImg from "../../assets/images/custom-user-profile.jpg"
+import { View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
 import { useAppSelector } from "../hook/useStore"
 import { useEffect, useState } from "react"
 import { UserAPI } from "../api/userApi"
@@ -14,6 +13,8 @@ import { bookInfo } from "../api/bookApi"
 import { NoData } from "../components/NoData"
 import { ReviewCard } from "../components/ReviewCard"
 import { CarouselBookList } from "../components/CarouselBookList"
+import { CloudImage } from "../components/CloudImage"
+import { CustomTabs } from "../components/CustomTabs"
 
 interface IProfile {
     readBooksCount: number
@@ -39,18 +40,23 @@ const _infoTemp = {
 export const Profile = () => {
     const navigation = useNavigation()
     const {
-        userInfo: { fullName },
+        userInfo: { fullName, avatar },
     } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
-    const [tab, setTab] = useState<string>("Survey")
-    const [statusList] = useState([
+    const [tab, setTab] = useState<string>("survey")
+    const statusList = [
         { value: "reading", label: "Reading" },
         { value: "selected", label: "Read Later" },
         { value: "finish", label: "Read" },
-    ])
+    ]
+    const tabList = [
+        { value: "survey", label: "Survey" },
+        { value: "reviews", label: "Reviews" },
+        { value: "posts", label: "Posts" },
+    ]
     useEffect(() => {
         fetchUserProfileData({}).then((res) => {
             if (res.result_code === 0) {
@@ -71,7 +77,7 @@ export const Profile = () => {
                 <Icon name="setting" style={styles.settingIcon} />
             </TouchableOpacity>
             <View style={styles.profileInfoWrapper}>
-                <Image source={UserProfileImg} style={styles.userProfileImg} />
+                <CloudImage url={avatar || ""} styleImg={styles.userProfileImg} />
 
                 <Text style={styles.fullName}>{fullName}</Text>
 
@@ -94,22 +100,10 @@ export const Profile = () => {
                     </View>
                 </View>
 
-                <View style={styles.tabBarWrapper}>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Survey")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Survey" ? "#005479" : "#FFED4A", borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }}>
-                        <Text style={{ color: tab === "Survey" ? "#fff" : "#000" }}>Survey</Text>
-                    </TouchableOpacity>
-                    <View style={[styles.line]}></View>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Reviews")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Reviews" ? "#005479" : "#FFED4A" }}>
-                        <Text style={{ color: tab === "Reviews" ? "#fff" : "#000" }}>Reviews</Text>
-                    </TouchableOpacity>
-                    <View style={[styles.line]}></View>
-                    <TouchableOpacity onPressIn={() => onChangeTab("Posts")} style={{ ...styles.tabBarBlock, backgroundColor: tab === "Posts" ? "#005479" : "#FFED4A", borderTopRightRadius: 12, borderBottomRightRadius: 12 }}>
-                        <Text style={{ color: tab === "Posts" ? "#fff" : "#000" }}>Posts</Text>
-                    </TouchableOpacity>
-                </View>
+                <CustomTabs valueList={tabList} onClickTab={onChangeTab} />
 
                 <View style={styles.contentWrapper}>
-                    {tab === "Survey" ? (
+                    {tab === "survey" ? (
                         <View style={{ marginBottom: 10 }}>
                             {bookType.map((item) => (
                                 <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
@@ -117,7 +111,7 @@ export const Profile = () => {
                                 </BookShowBlock>
                             ))}
                         </View>
-                    ) : tab === "Reviews" ? (
+                    ) : tab === "reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                     ) : (
                         <NoData />
@@ -136,17 +130,17 @@ export const Profile = () => {
                             setVisibleModal(false)
                             navigation.navigate("EditProfile" as never)
                         }}>
-                        <Icon name="edit" />
+                        <Icon name="edit" color="#212121" />
                         <Text style={styles.infoText}>Edit Profile</Text>
                     </TouchableOpacity>
                     <View style={[styles.modalWrapperBlock, { justifyContent: "space-between" }]}>
                         <View style={styles.modalWrapperBlock}>
-                            <Icon name="profile" />
+                            <Icon name="profile" color="#212121" />
                             <Text style={styles.infoText}>Switch to author</Text>
                         </View>
                         <Switch />
                     </View>
-                    <View style={styles.modalWrapperBlock}>
+                    {/* <View style={styles.modalWrapperBlock}>
                         <Icon name="key" />
                         <Text style={[styles.infoText]}>Change Password</Text>
                     </View>
@@ -160,8 +154,9 @@ export const Profile = () => {
                     </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="usergroup-add" />
-                        <Text style={[styles.infoText]}>Information</Text>
-                    </View>
+                        <Text style={[styles.infoText, { opacity: 0.3 }]}>Information (soon)</Text>
+                    </View> */}
+
                     <TouchableOpacity style={styles.modalWrapperBlock} onPress={() => logOut()}>
                         <Icon name="logout" style={{ color: "red" }} />
                         <Text style={[styles.infoText, { color: "red" }]}>Log out</Text>
@@ -202,7 +197,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "600",
         lineHeight: 20,
-        color: "#F9FAF8",
+        color: "#212121",
     },
     modalInfoBlock: {
         flexDirection: "column",
@@ -212,7 +207,7 @@ const styles = StyleSheet.create({
         paddingTop: 62,
         paddingHorizontal: 32,
         paddingBottom: 20,
-        backgroundColor: "#005479",
+        backgroundColor: "#fff",
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
     },
@@ -222,20 +217,15 @@ const styles = StyleSheet.create({
         width: 1,
         backgroundColor: "#fff",
     },
-    tabBarWrapper: {
-        flexDirection: "row",
-    },
-
-    tabBarBlock: {
-        paddingVertical: 14,
-        paddingHorizontal: 30,
-    },
     settingIcon: {
         position: "absolute",
-        top: 20,
+        top: 10,
         right: 0,
-        color: "#000",
+        color: "#212121",
         fontSize: 30,
+        padding: 10,
+        backgroundColor: "#fff",
+        borderRadius: 1000,
     },
     profileInfoWrapper: {
         marginTop: 70,
@@ -255,7 +245,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "600",
         lineHeight: 27,
-        color: "#000000",
+        color: "#212121",
     },
     userStatistic: {
         flexDirection: "row",
@@ -267,7 +257,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "600",
         lineHeight: 20,
-        color: "#000000",
+        color: "#212121",
     },
     statisticDescr: {
         textAlign: "center",

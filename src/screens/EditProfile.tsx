@@ -70,13 +70,11 @@ export const EditProfile = () => {
 
     return (
         <Fuse>
-            <View style={{ backgroundColor: "#005479" }}>
-                <View style={styles.headerCommon}>
-                    <TouchableOpacity onPressIn={() => navigation.goBack()}>
-                        <Icon style={styles.icon} name="left" />
-                    </TouchableOpacity>
+            <View style={{ backgroundColor: "#0A78D6" }}>
+                <TouchableOpacity onPressIn={() => navigation.goBack()} style={styles.headerCommon}>
+                    <Icon style={styles.icon} name="left" />
                     <Text style={styles.titleCommon}>Edit Profile</Text>
-                </View>
+                </TouchableOpacity>
 
                 <View style={{ marginTop: 46, gap: 12, justifyContent: "center", alignItems: "center" }}>
                     <CloudImage url={edit.avatar} styleImg={styles.userImg} />
@@ -150,19 +148,20 @@ export const EditProfile = () => {
 const styles = StyleSheet.create({
     icon: {
         color: "#fff",
-        fontSize: 35,
+        fontSize: 20,
         borderRadius: 10,
     },
     titleCommon: {
         fontWeight: "600",
         fontSize: 20,
         color: "#fff",
+        marginBottom: 3,
     },
     headerCommon: {
         marginTop: 34,
         marginLeft: 16,
         flexDirection: "row",
-        gap: 15,
+        gap: 10,
         alignItems: "center",
     },
 
@@ -186,9 +185,14 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 50,
         borderTopLeftRadius: 50,
         backgroundColor: "#F9FAF8",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "rgba(0, 0, 0, 1.0)",
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 1,
+            height: 0,
+        },
+        shadowRadius: 6,
+        elevation: 6,
+        shadowOpacity: 1,
     },
     input: {
         width: "100%",

@@ -2,11 +2,15 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native"
 import { Page } from "../layouts/Page"
 
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
-import { CloudImage } from "../components/CloudImage"
 import BookTrackerImg from "../../assets/images/category/book-tracker.png"
-import BookCrossingImage from "../../assets/crossing.png"
+import BookCrossingImage from "../../assets/images/category/crossing.png"
 import BookTestImg from "../../assets/images/category/book-test.png"
-import { useAppSelector } from "../hook/useStore"
+import ReadersImg from "../../assets/images/category/readers.png"
+import ReviewsImg from "../../assets/images/category/reviews.png"
+import RecommendImg from "../../assets/images/category/recomend.png"
+import CollectionImg from "../../assets/images/category/collection.png"
+import NewsImg from "../../assets/images/category/news.png"
+import GenresImg from "../../assets/images/category/genres.png"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../navigation/MainNavigation"
@@ -14,7 +18,38 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList>>
 
 export const Services = () => {
-    const { categoryList } = useAppSelector((state) => state.mainSlice)
+    const categoryList = [
+        {
+            title: "Genres",
+            icon: GenresImg,
+            url: "BookGenres",
+        },
+        {
+            title: "News",
+            icon: NewsImg,
+            url: "Readers",
+        },
+        {
+            title: "Collections",
+            icon: CollectionImg,
+            url: "Collections",
+        },
+        {
+            title: "Recomend",
+            icon: RecommendImg,
+            url: "Recommendations",
+        },
+        {
+            title: "Reviews",
+            icon: ReviewsImg,
+            url: "Reviews",
+        },
+        {
+            title: "Readers",
+            icon: ReadersImg,
+            url: "ReadersUser",
+        },
+    ]
     const navigation = useNavigation<NavigateType>()
 
     const onLink = (linkName?: string) => {
@@ -33,7 +68,6 @@ export const Services = () => {
 
     return (
         <Page>
-            <Text style={styles.headText}>Categories & Services</Text>
             <View style={styles.serviceCotegory}>
                 <Text style={styles.contentTitle}>Services</Text>
 
@@ -64,7 +98,7 @@ export const Services = () => {
                     {categoryList.slice(0, 3).map((item, i) => (
                         <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
                             <View style={styles.categoryBlock}>
-                                <CloudImage url={item.icon} styleImg={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                                <Image source={item.icon} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
                             </View>
                             <Text style={styles.categoryText}>{item.title}</Text>
                         </TouchableOpacity>
@@ -74,7 +108,7 @@ export const Services = () => {
                     {categoryList.slice(3, 6).map((item, i) => (
                         <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
                             <View style={styles.categoryBlock}>
-                                <CloudImage url={item.icon} styleImg={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                                <Image source={item.icon} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
                             </View>
                             <Text style={styles.categoryText}>{item.title}</Text>
                         </TouchableOpacity>
@@ -86,13 +120,6 @@ export const Services = () => {
 }
 
 const styles = StyleSheet.create({
-    headText: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: "400",
-        lineHeight: 20,
-        color: "#000",
-    },
     serviceCotegory: {
         marginTop: 42,
     },
@@ -100,7 +127,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "400",
         lineHeight: 20,
-        color: "#000",
+        color: "#212121",
         marginBottom: 27,
     },
     categoryWrapper: {
@@ -113,14 +140,22 @@ const styles = StyleSheet.create({
     categoryBlock: {
         paddingHorizontal: 15,
         paddingVertical: 10,
-        borderRadius: 29,
-        backgroundColor: "#005479",
+        borderRadius: 6,
+        backgroundColor: "#fff",
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 1,
+            height: 0,
+        },
+        shadowRadius: 6,
+        elevation: 6,
+        shadowOpacity: 1,
     },
     categoryText: {
         textAlign: "center",
         fontSize: 16,
         fontWeight: "700",
         lineHeight: 16,
-        color: "#000",
+        color: "#212121",
     },
 })

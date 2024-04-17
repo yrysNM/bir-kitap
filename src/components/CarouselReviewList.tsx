@@ -1,4 +1,4 @@
-import { View, Dimensions, Image, Text, StyleSheet } from "react-native"
+import { View, Dimensions, Text, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
 import { bookReviewInfo } from "../api/reviewApi"
 import { CloudImage } from "./CloudImage"
@@ -16,9 +16,10 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
-                        <CloudImage url={item?.avatar} styleImg={styles.avatar} />
+                        {/* <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} /> */}
+                        <CloudImage styleImg={styles.reviewUserProfileImg} url={item.avatar || ""} />
                         <View style={{ flexShrink: 1 }}>
-                            <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#005479" : "#000" }]}>{item.userName}</Text>
+                            <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>Book Lover</Text>
                         </View>
                     </View>
@@ -33,21 +34,19 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
 
 const styles = StyleSheet.create({
     reviewWrapper: {
-        marginRight: 17,
-        marginLeft: 10,
-        backgroundColor: "#f9faf8",
-        // width: 254,
-        flex: 1,
-        // height: 171,
+        marginRight: 15,
+        backgroundColor: "#fff",
+        width: 265,
+        marginHorizontal: 3,
         borderRadius: 15,
-        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowColor: "rgba(19, 12, 12, 0.3)",
         shadowOffset: {
-            width: 0,
-            height: 4,
+            width: 1,
+            height: 1,
         },
-        elevation: 7,
-        shadowRadius: 4,
-        shadowOpacity: 1,
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 0.3,
         marginBottom: 10,
         paddingVertical: 10,
         paddingHorizontal: 19,
@@ -55,7 +54,6 @@ const styles = StyleSheet.create({
         gap: 14,
         alignItems: "flex-start",
     },
-
     bookReviewImg: {
         width: 84,
         height: 120,
@@ -76,34 +74,35 @@ const styles = StyleSheet.create({
     },
 
     reviewBookMessage: {
-        fontSize: 7,
+        fontSize: 10,
         fontWeight: "600",
-        lineHeight: 10,
+        lineHeight: 16,
     },
 
     reviewUserInfo: {
         flexDirection: "row",
-        alignItems: "center",
-        gap: 2,
+        alignItems: "flex-start",
+        gap: 8,
     },
 
     reviewUserProfileImg: {
         width: 31,
         height: 31,
         borderRadius: 500,
+        marginTop: -3,
     },
 
     reviewUserName: {
-        fontSize: 11,
+        fontSize: 14,
         fontWeight: "600",
-        lineHeight: 15,
-        color: "#000000",
+        lineHeight: 17,
+        color: "#212121",
     },
 
     reviewUserNic: {
-        fontSize: 8,
+        fontSize: 10,
         fontWeight: "600",
-        lineHeight: 10,
-        color: "#7A7878",
+        lineHeight: 13,
+        color: "#6D7885",
     },
 })

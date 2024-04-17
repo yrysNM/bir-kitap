@@ -12,7 +12,7 @@ export type bookReviewInfo = {
     createtime: number
     updatetime: number
     book: bookInfo
-    avatar: string
+    avatar?: string
 }
 
 interface IBook extends IResponse {

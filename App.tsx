@@ -30,7 +30,7 @@ export default function App() {
     return (
         <ProviderRedux store={store}>
             <Provider locale={enUS}>
-                <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#fff" } }}>
+                <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#F7F9F6" } }}>
                     <MainNavigation />
                 </NavigationContainer>
             </Provider>

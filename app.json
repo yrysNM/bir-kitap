@@ -10,7 +10,7 @@
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
-            "backgroundColor": "#005479",
+            "backgroundColor": "#0A78D6",
             "boxShadow": "inset 0 4px 4px 0 rgba(0, 0, 0, 0.25)"
         },
         "assetBundlePatterns": ["**/*"],
@@ -43,7 +43,8 @@
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
-            "googleServicesFile": "./google-services.json"
+            "googleServicesFile": "./google-services.json",
+            "softwareKeyboardLayoutMode": "pan"
         },
         "web": {
             "favicon": "./assets/favicon.png"

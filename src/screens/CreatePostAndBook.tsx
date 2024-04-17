@@ -21,6 +21,7 @@ import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
 import { SelectGenres } from "../components/SelectGenres"
 import { useAppDispatch } from "../hook/useStore"
 import { setLoading } from "../redux/features/mainSlice"
+import { CustomTabs } from "../components/CustomTabs"
 
 const _bookInfo = {
     title: "",
@@ -45,7 +46,10 @@ export const CreatePostAndBook = () => {
     const { fetchData: fetchCreateBookData } = BookApi("create")
     const { fetchData: fetchCreatePostData } = PostAPI("create")
     const { fetchData: fetchUploadBookImgData } = BookApi("upload")
-    const [tabs] = useState<{ title: string }[]>([{ title: "Create book" }, { title: "Create post" }])
+    const tabs = [
+        { title: "Create book", label: "Create book", value: " create_book" },
+        { title: "Create post", label: "Create post ", value: "create_post" },
+    ]
     const [genreList, setGenreList] = useState<genreInfo[]>([])
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
     const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
@@ -159,27 +163,22 @@ export const CreatePostAndBook = () => {
         const { goToTab, onTabClick } = tabProps
 
         return (
-            <View style={styles.tabWrapper}>
-                {tabProps.tabs.map((tab, i) => (
-                    <TouchableOpacity
-                        key={i}
-                        onPress={() => {
-                            onTabClick && onTabClick(tabs[i], i)
-                            goToTab && goToTab(i)
-                            onChangeTab()
-                        }}>
-                        <Text style={{ ...styles.tabText, color: tabProps.activeTab === i ? "#FFED4A" : "#fff" }}>{tab.title}</Text>
-                    </TouchableOpacity>
-                ))}
-                <View style={styles.spliBlock}></View>
-            </View>
+            <CustomTabs
+                valueList={tabs}
+                onClickTab={(e) => {
+                    const tabsIdex = tabs.findIndex((tab) => tab.value === e)
+                    if (tabsIdex !== -1) {
+                        onTabClick && onTabClick(tabs[tabsIdex], tabsIdex)
+                        goToTab && goToTab(tabsIdex)
+                        onChangeTab()
+                    }
+                }}
+            />
         )
     }
 
     return (
         <Page>
-            <Text style={styles.headText}>Create book & Create post</Text>
-
             <View style={{ flex: 1, height: "auto", marginBottom: 5 }}>
                 <Tabs tabs={tabs} swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)}>
                     {/* Create book */}
@@ -308,31 +307,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         zIndex: 10,
     },
-    tabWrapper: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-around",
-        width: "100%",
-        height: 47,
-        borderRadius: 12,
-        backgroundColor: "#005479",
-        marginTop: 5,
-    },
-    tabText: {
-        textAlign: "center",
-        fontSize: 15,
-        fontWeight: "600",
-        lineHeight: 18,
-        color: "#FFFFFF",
-    },
-    headText: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: "600",
-        lineHeight: 20,
-        opacity: 0.5,
-        color: "#000000",
-    },
     input: {
         height: 42,
         width: "100%",
@@ -402,7 +376,7 @@ const styles = StyleSheet.create({
     createBtn: {
         width: "100%",
         borderRadius: 13,
-        backgroundColor: "#005479",
+        backgroundColor: "#0A78D6",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 0,
