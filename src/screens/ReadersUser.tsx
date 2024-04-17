@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import {  View } from "react-native"
 import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
 import { SearchInput } from "../components/SearchInput"

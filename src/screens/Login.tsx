@@ -1,5 +1,5 @@
 import { Header } from "../components/Header"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
@@ -15,7 +15,6 @@ import { Page } from "../layouts/Page"
 export const Login = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
-    const inputName = useRef<string>("")
     const { isLoading, hasLogin } = useAppSelector((state) => state.mainSlice)
     const [info, setInfo] = useState<ILogin>({
         username: "",
@@ -23,7 +22,6 @@ export const Login = () => {
     })
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
     const { fetchData } = LoginAPI()
-    const [isInputFocus, setIsInputFocus] = useState(false)
 
     const onLogin = async () => {
         await fetchData(info).then(async (res) => {
@@ -49,39 +47,11 @@ export const Login = () => {
 
             <View style={{ marginTop: 20, gap: 35 }}>
                 <InputStyle inputTitle={"E-mail"}>
-                    <InputItem
-                        onFocus={() => {
-                            setIsInputFocus(true)
-                            inputName.current = "email"
-                        }}
-                        onBlur={() => {
-                            setIsInputFocus(false)
-                            inputName.current = "email"
-                        }}
-                        last
-                        type="email-address"
-                        style={[styles.input, { borderWidth: isInputFocus && inputName.current === "email" ? 0.5 : 0 }]}
-                        value={info.username}
-                        onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
+                    <InputItem last type="email-address" style={[styles.input]} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
                 </InputStyle>
 
                 <InputStyle inputTitle={"Password"}>
-                    <InputItem
-                        last
-                        onFocus={() => {
-                            setIsInputFocus(true)
-                            inputName.current = "password"
-                        }}
-                        onBlur={() => {
-                            setIsInputFocus(false)
-                            inputName.current = "password"
-                        }}
-                        type={!isVisiblePassword ? "password" : "text"}
-                        style={[styles.input, { borderWidth: isInputFocus && inputName.current === "password" ? 0.5 : 0 }]}
-                        value={info.password}
-                        onChange={(value) => setInfo((info) => ({ ...info, password: value }))}
-                        placeholder={"******"}
-                    />
+                    <InputItem last type={!isVisiblePassword ? "password" : "text"} style={[styles.input]} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
                     {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
@@ -120,12 +90,12 @@ const styles = StyleSheet.create({
     },
     input: {
         borderStyle: "solid",
-        // borderWidth: 12,
+        borderWidth: 0.5,
         borderColor: "#212121",
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         marginLeft: -15,
         marginRight: -15,
         backgroundColor: "#FFF",

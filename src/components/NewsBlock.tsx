@@ -1,7 +1,6 @@
 import React, { FC } from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import ReadersNotif from "../../assets/readaerNotif.png"
-import ReadersMore from "../../assets/readerMore.png"
+import ReadersNotif from "../../assets/images/readaerNotif.png"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { newsInfo } from "../api/newsApi"
 import { CloudImage } from "./CloudImage"
@@ -28,7 +27,7 @@ const NewsBlock: FC<IProps> = ({ readerData }) => {
                             <CloudImage url={item.imageLink} styleImg={styles.image} />
                             <View style={styles.readerContent}>
                                 <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
-                                    <Image source={ReadersNotif} alt="ReadersNotif" resizeMode="cover" />
+                                    <Image source={ReadersNotif} alt="ReadersNotif" resizeMode="contain" style={{ width: 15, height: 15 }} />
 
                                     <View style={styles.readerTitle}>
                                         <View style={styles.readerTitleBlock}>
@@ -39,7 +38,7 @@ const NewsBlock: FC<IProps> = ({ readerData }) => {
 
                                 <View>
                                     <Text style={styles.readerText}>
-                                        {item.content} {item.imageLink}
+                                        {item.content} 
                                     </Text>
                                     <Text style={styles.readerText}>
                                         for more infromation write email <Text style={styles.readeremail}>ayalanayashova1@mail.ru</Text>
@@ -47,10 +46,6 @@ const NewsBlock: FC<IProps> = ({ readerData }) => {
                                 </View>
 
                                 <Text style={styles.readerTime}>{timestampToDate(item.createtime)}</Text>
-
-                                <View style={styles.readerMore}>
-                                    <Image source={ReadersMore} alt="Reader More" resizeMode="cover" />
-                                </View>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -61,21 +56,20 @@ const NewsBlock: FC<IProps> = ({ readerData }) => {
 
 const styles = StyleSheet.create({
     readerbook: {
+        backgroundColor: "#fff",
         width: "100%",
-        borderWidth: 1,
-        borderColor: "black",
         paddingVertical: 15,
-        paddingHorizontal: 21,
+        paddingHorizontal: 15,
         borderRadius: 9.5,
         marginBottom: 16,
 
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
-            width: 0,
-            height: 3,
+            width: 1,
+            height: 1,
         },
-        elevation: 0,
-        shadowRadius: 4,
+        elevation: 1,
+        shadowRadius: 1,
         shadowOpacity: 1,
     },
 
@@ -83,6 +77,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: 14,
         height: 200,
+        borderRadius: 12,
     },
 
     readerContent: {
@@ -95,7 +90,7 @@ const styles = StyleSheet.create({
     },
 
     readerTitleBlock: {
-        backgroundColor: "#DC9E41",
+        backgroundColor: "#0A78D6",
         borderRadius: 10,
         paddingVertical: 5,
         paddingHorizontal: 15,
@@ -115,12 +110,6 @@ const styles = StyleSheet.create({
     readerTime: {
         fontSize: 8,
         color: "#7A7878",
-    },
-
-    readerMore: {
-        position: "absolute",
-        top: 5,
-        right: 0,
     },
 })
 

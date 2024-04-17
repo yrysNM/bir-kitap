@@ -13,12 +13,14 @@ import { IUserInfo } from "../api/authApi"
 import { ReviewCard } from "../components/ReviewCard"
 import { NotReady } from "./NotReady"
 import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
+import { useAppSelector } from "../hook/useStore"
 
 export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
     const { fetchData: fetchReviewsData } = RecommendationAPI("reviews")
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
     const { fetchData: fetchUsersData } = RecommendationAPI("users")
+    const { isRefresh } = useAppSelector((state) => state.mainSlice)
 
     const [recommendationType, setRecommendationType] = useState<string>("Books")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
@@ -42,14 +44,16 @@ export const Recommendations = () => {
     ])
 
     useEffect(() => {
-        onLoadData()
-    }, [recommendationType])
+        if (!isRefresh) {
+            onLoadData()
+        }
+    }, [recommendationType, isRefresh])
 
     const onLoadData = useCallback(() => {
         if (recommendationType === "Books") {
             fetchBookData({}).then((res) => {
                 if (res.result_code === 0) {
-                    setBookDataList(res.data)
+                    setBookDataList(JSON.parse(JSON.stringify(res.data)));
                 }
             })
         } else if (recommendationType === "Reviews") {
