@@ -146,7 +146,7 @@ export const CreateAccount = () => {
                     <View style={{ alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 3 }}>
                         <Text style={styles.logText}>Already have an account?</Text>
                         <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigation.navigate("Login" as never)}>
-                            <Text style={styles.logText}>Log in</Text>
+                            <Text style={[styles.logText, {color: '#0A78D6'}]}>Log in</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         width: "100%",
         height: 54,
-        backgroundColor: "#0c1e34",
+        backgroundColor: "#0A78D6",
     },
     footerBtnText: {
         fontSize: 16,

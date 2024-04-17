@@ -1,5 +1,5 @@
 import { Header } from "../components/Header"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
@@ -15,6 +15,7 @@ import { Page } from "../layouts/Page"
 export const Login = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
+    const inputName = useRef<string>("")
     const { isLoading, hasLogin } = useAppSelector((state) => state.mainSlice)
     const [info, setInfo] = useState<ILogin>({
         username: "",
@@ -22,6 +23,7 @@ export const Login = () => {
     })
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
     const { fetchData } = LoginAPI()
+    const [isInputFocus, setIsInputFocus] = useState(false)
 
     const onLogin = async () => {
         await fetchData(info).then(async (res) => {
@@ -47,17 +49,45 @@ export const Login = () => {
 
             <View style={{ marginTop: 20, gap: 35 }}>
                 <InputStyle inputTitle={"E-mail"}>
-                    <InputItem last type="email-address" style={styles.input} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
+                    <InputItem
+                        onFocus={() => {
+                            setIsInputFocus(true)
+                            inputName.current = "email"
+                        }}
+                        onBlur={() => {
+                            setIsInputFocus(false)
+                            inputName.current = "email"
+                        }}
+                        last
+                        type="email-address"
+                        style={[styles.input, { borderWidth: isInputFocus && inputName.current === "email" ? 0.5 : 0 }]}
+                        value={info.username}
+                        onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
                 </InputStyle>
 
                 <InputStyle inputTitle={"Password"}>
-                    <InputItem last type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                    <InputItem
+                        last
+                        onFocus={() => {
+                            setIsInputFocus(true)
+                            inputName.current = "password"
+                        }}
+                        onBlur={() => {
+                            setIsInputFocus(false)
+                            inputName.current = "password"
+                        }}
+                        type={!isVisiblePassword ? "password" : "text"}
+                        style={[styles.input, { borderWidth: isInputFocus && inputName.current === "password" ? 0.5 : 0 }]}
+                        value={info.password}
+                        onChange={(value) => setInfo((info) => ({ ...info, password: value }))}
+                        placeholder={"******"}
+                    />
                     {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
             </View>
             <View style={styles.loginBtnWrapper}>
-                <Button style={{ ...styles.btnWrapper, backgroundColor: "#005479" }} onPress={onLogin}>
+                <Button style={{ ...styles.btnWrapper, backgroundColor: "#0A78D6" }} onPress={onLogin}>
                     <Text style={styles.btnText}>Log in</Text>
                 </Button>
 
@@ -67,13 +97,13 @@ export const Login = () => {
 
                 <View>
                     <View style={styles.orText}>
-                        <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
+                        <View style={{ flex: 1, height: 1, backgroundColor: "#6D7885" }}></View>
                         <Text>or</Text>
-                        <View style={{ flex: 1, height: 1, width: "100%", backgroundColor: "#7a7878" }}></View>
+                        <View style={{ flex: 1, height: 1, backgroundColor: "#6D7885" }}></View>
                     </View>
                 </View>
 
-                <Button style={{ ...styles.btnWrapper, backgroundColor: "#0C1E34", marginTop: 40 }} onPress={() => navigation.navigate("CreateAccount" as never)}>
+                <Button style={{ ...styles.btnWrapper, backgroundColor: "#212121", marginTop: 40 }} onPress={() => navigation.navigate("CreateAccount" as never)}>
                     <Text style={styles.btnText}>Create an account</Text>
                 </Button>
             </View>
@@ -86,18 +116,27 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: 18,
         top: 43,
-        color: "#000",
+        color: "#212121",
     },
     input: {
         borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "#000",
+        // borderWidth: 12,
+        borderColor: "#212121",
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 10,
         borderRadius: 20,
         marginLeft: -15,
         marginRight: -15,
+        backgroundColor: "#FFF",
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 1,
+            height: 0,
+        },
+        shadowRadius: 2,
+        elevation: 6,
+        shadowOpacity: 1,
     },
     inputExtensionText: {
         marginLeft: 5,
