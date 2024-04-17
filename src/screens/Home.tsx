@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     newsBlock: {
+        marginVertical: 2,
         width: 170,
         paddingVertical: 5,
         paddingHorizontal: 10,
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
             height: 1,
         },
         elevation: 1,
-        shadowRadius: 16,
+        shadowRadius: 1,
         shadowOpacity: 0.3,
         backgroundColor: "#fff",
     },

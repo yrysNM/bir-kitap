@@ -4,9 +4,15 @@ import { useEffect, useState } from "react"
 import { RecommendationAPI } from "../api/recommendationApi"
 import { CloudImage } from "./CloudImage"
 import { UserAPI } from "../api/userApi"
+import { IUserInfo } from "../api/authApi"
+
+interface IRecommendationUser extends IUserInfo {
+    id: string
+    followed: boolean
+}
 
 const Follow = () => {
-    const [users, setUsers] = useState<any[]>()
+    const [users, setUsers] = useState<IRecommendationUser[]>([])
 
     const { fetchData } = RecommendationAPI("users")
     const { fetchData: fetchDataUserFollow } = UserAPI("follow")
@@ -14,18 +20,14 @@ const Follow = () => {
 
     const onFollow = async (id: string, followed: boolean) => {
         const action = !followed ? fetchDataUserFollow : fetchDataUserOnFollow
-        try {
-            await action({ toUserId: id })
-            const updatedUsers = users?.map((user) => {
-                if (user.id === id) {
-                    return { ...user, followed: !followed }
-                }
-                return user
-            })
-            setUsers(updatedUsers)
-        } catch (error) {
-            alert(JSON.stringify(error))
-        }
+        await action({ toUserId: id })
+        const updatedUsers = users?.map((user) => {
+            if (user.id === id) {
+                return { ...user, followed: !followed }
+            }
+            return user
+        })
+        setUsers(updatedUsers)
     }
 
     useEffect(() => {
@@ -33,7 +35,7 @@ const Follow = () => {
             try {
                 const res = await fetchData({})
                 if (res.result_code === 0) {
-                    setUsers(res.data)
+                    setUsers(JSON.parse(JSON.stringify(res.data)))
                 }
             } catch (error) {
                 alert(JSON.stringify(error))
@@ -53,7 +55,7 @@ const Follow = () => {
                             </View>
                             <View>
                                 <Text style={styles.followUser}>{item.fullName}</Text>
-                                <Text style={{ ...styles.followUser, color: "#7A7878" }}>{item.email}</Text>
+                                <Text style={{ ...styles.followUser, color: "#6D7885" }}>{item.email}</Text>
                             </View>
                         </View>
 
@@ -76,6 +78,7 @@ const styles = StyleSheet.create({
     followImage: {
         width: 55,
         height: 55,
+        borderRadius: 1000,
     },
 
     followBlock: {
@@ -83,6 +86,18 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 17,
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        shadowColor: "rgba(19, 12, 12, 0.3)",
+        shadowOffset: {
+            width: 0.5,
+            height: 0.5,
+        },
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 0.3,
     },
 
     followUser: {
@@ -98,15 +113,23 @@ const styles = StyleSheet.create({
     },
 
     followBtnBlock: {
-        flex: 2,
+        flex: 1.5,
     },
 
     followBtn: {
-        borderRadius: 20,
+        borderRadius: 10,
         width: "100%",
-        height: 54,
-        backgroundColor: "#005479",
-        paddingVertical: 8,
+        height: 44,
+        backgroundColor: "#0A78D6",
+        paddingVertical: 5,
+        shadowColor: "rgba(10, 120, 214, 0.3)",
+        shadowOffset: {
+            width: 0.5,
+            height: 0.5,
+        },
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 0.3,
     },
     followBtnText: {
         fontSize: 16,
@@ -114,13 +137,19 @@ const styles = StyleSheet.create({
         color: "#fff",
     },
     unFollowBtn: {
-        borderRadius: 20,
+        borderRadius: 10,
         width: "100%",
-        height: 54,
-        backgroundColor: "transparent",
-        paddingVertical: 8,
-        borderWidth: 1,
-        borderColor: "#000",
+        height: 44,
+        paddingVertical: 5,
+        backgroundColor: "#fff",
+        shadowColor: "rgba(19, 12, 12, 0.3)",
+        shadowOffset: {
+            width: 0.5,
+            height: 0.5,
+        },
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 0.3,
     },
     unFollowBtnText: {
         fontSize: 16,

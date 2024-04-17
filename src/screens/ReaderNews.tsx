@@ -1,12 +1,13 @@
 import { Page } from "../layouts/Page"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import ReaderNotif from "../../assets/readaerNotif.png"
+import ReaderNotif from "../../assets/images/readaerNotif.png"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { useEffect, useState } from "react"
 import { NewsApi, newsInfo } from "../api/newsApi"
 import { CloudImage } from "../components/CloudImage"
-import CloseImage from "../../assets/close.png"
+import CloseImage from "../../assets/images/close.png"
+import { NoData } from "../components/NoData"
 
 const ReaderNews = () => {
     const { id } = useRoute<RouteProp<RootStackParamList, "ReaderNews">>().params
@@ -32,27 +33,31 @@ const ReaderNews = () => {
     }, [id])
 
     return (
-        <>
-            <Page>
-                <View style={styles.newsWrapper}>
-                    <View style={styles.mainImageBlock}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeImg}>
-                            <Image source={CloseImage} resizeMode="contain" style={styles.closeImg} />
-                        </TouchableOpacity>
-                        <CloudImage url={readerData?.imageLink} styleImg={styles.image} />
-                    </View>
-                    <View style={styles.newsContent}>
-                        <View style={styles.newsInfo}>
-                            <Image source={ReaderNotif} alt="Reader Notif" resizeMode="cover" />
-                            <Text style={styles.newsTitle}>{readerData?.title}</Text>
+        <Page>
+            <View style={styles.newsWrapper}>
+                {readerData ? (
+                    <>
+                        <View style={styles.mainImageBlock}>
+                            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeImg}>
+                                <Image source={CloseImage} resizeMode="contain" style={styles.closeImg} />
+                            </TouchableOpacity>
+                            <CloudImage url={readerData?.imageLink} styleImg={styles.image} />
                         </View>
-                        <View>
-                            <Text style={styles.newsSubtitle}>{readerData?.content}</Text>
+                        <View style={styles.newsContent}>
+                            <View style={styles.newsInfo}>
+                                <Image source={ReaderNotif} alt="Reader Notif" resizeMode="contain" style={{ width: 17, height: 17 }} />
+                                <Text style={styles.newsTitle}>{readerData?.title}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.newsSubtitle}>{readerData?.content}</Text>
+                            </View>
                         </View>
-                    </View>
-                </View>
-            </Page>
-        </>
+                    </>
+                ) : (
+                    <NoData />
+                )}
+            </View>
+        </Page>
     )
 }
 
@@ -64,17 +69,17 @@ const styles = StyleSheet.create({
 
     mainImageBlock: {
         width: "100%",
-        height: 230,
-        position: "relative",
+        height: 270,
+        position: "absolute",
     },
 
     newsContent: {
+        marginTop: 230,
         paddingVertical: 29,
         paddingHorizontal: 16,
-        position: "absolute",
         backgroundColor: "white",
         width: "100%",
-        top: "85%",
+        height: "100%",
         borderRadius: 43,
         alignItems: "center",
     },
@@ -85,7 +90,6 @@ const styles = StyleSheet.create({
         gap: 10,
         width: "100%",
         maxWidth: 260,
-        // marginLeft: -30,
 
         marginBottom: 30,
     },
@@ -108,8 +112,8 @@ const styles = StyleSheet.create({
     closeImg: {
         position: "absolute",
         zIndex: 200,
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 30,
         right: 10,
         top: 10,
     },

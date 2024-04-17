@@ -9,7 +9,7 @@ export interface IFollowedUser {
     password: string
     birth: string
     gender: string
-    genres: any
+    genres: string[],
     createtime: string
     refreshToken: string
     lastLogin: string

@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
 import { Page } from "../layouts/Page"
 import { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -81,7 +81,7 @@ export const BookDetail = () => {
             length: 5,
         }).then((res) => {
             if (res.result_code === 0) {
-                setDataList(res?.data)
+                setDataList(JSON.parse(JSON.stringify(res.data)))
             }
         })
     }
@@ -129,7 +129,7 @@ export const BookDetail = () => {
                 <Text style={styles.descrText}>Description</Text>
                 <Text style={styles.bookDescr}>{bookInfo?.book.description}</Text>
             </View>
-            <View style={{ marginTop: 30 }}>
+            <View style={{ marginVertical: 30 }}>
                 <Text style={styles.descrText}>Reviews</Text>
 
                 <View style={{ marginTop: 17 }}>
@@ -145,7 +145,7 @@ export const BookDetail = () => {
                     </Button>
                 </View>
                 {bookInfo?.reviews.map((review) => (
-                    <View key={review.id}>
+                    <View key={review.id} style={styles.reviewWrapper}>
                         <View style={styles.reviewProfileBlock}>
                             <CloudImage styleImg={{ width: 32, height: 32 }} url={review.avatar} />
                             <View>
@@ -175,6 +175,21 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginBottom: 20,
     },
+    reviewWrapper: {
+        borderRadius: 12,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        backgroundColor: "#fff",
+        shadowColor: "rgba(19, 12, 12, 0.3)",
+        shadowOffset: {
+            width: 0.5,
+            height: 0.5,
+        },
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 0.3,
+        marginBottom: 10,
+    },
     listHeaderBlock: {
         marginTop: 25,
         flexDirection: "row",
@@ -190,7 +205,7 @@ const styles = StyleSheet.create({
     iconBack: {
         marginTop: 25,
         fontSize: 30,
-        color: "#000",
+        color: "#212121",
     },
     bookWrapper: {
         justifyContent: "center",
@@ -202,7 +217,7 @@ const styles = StyleSheet.create({
         borderRadius: 18,
         objectFit: "cover",
         borderWidth: 0.1,
-        borderColor: "#000",
+        borderColor: "#212121",
         marginBottom: 17,
     },
     bookTitle: {
@@ -210,13 +225,13 @@ const styles = StyleSheet.create({
         fontSize: 23,
         fontWeight: "600",
         lineHeight: 23,
-        color: "#000000",
+        color: "#212121",
     },
     bookAuthor: {
         fontSize: 13,
         fontWeight: "600",
         fontStyle: "normal",
-        color: "#7A7878",
+        color: "#6D7885",
     },
     descrText: {
         fontSize: 20,
@@ -240,14 +255,14 @@ const styles = StyleSheet.create({
         gap: 10,
         borderRadius: 12,
         backgroundColor: "#FFFFFF",
-        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowColor: "rgba(19, 12, 12, 0.3)",
         shadowOffset: {
-            width: 0,
-            height: 4,
+            width: 0.5,
+            height: 0.5,
         },
-        elevation: 19,
-        shadowRadius: 4,
-        shadowOpacity: 1,
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 0.3,
         paddingVertical: 10,
     },
     statisticBlock: {
@@ -265,13 +280,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "600",
         lineHeight: 20,
-        color: "#000000",
+        color: "#212121",
     },
     statisticTitle: {
         fontSize: 10,
         fontWeight: "500",
         lineHeight: 10.565958023071289,
-        color: "#000000",
+        color: "#212121",
     },
     reviewsWRapper: {
         marginLeft: 11,
@@ -283,14 +298,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
-        marginTop: 23,
     },
     reviewUserName: {
         fontSize: 12,
         fontWeight: "600",
         fontStyle: "normal",
         lineHeight: 15,
-        color: "#000000",
+        color: "#212121",
     },
     reviewMessage: {
         fontSize: 10,
@@ -303,28 +317,34 @@ const styles = StyleSheet.create({
         fontSize: 9,
         fontWeight: "600",
         lineHeight: 9,
-        color: "#7A7878",
+        color: "#6D7885",
     },
     rateText: {
         fontSize: 14,
         fontWeight: "600",
         lineHeight: 18,
-        color: "#7A7878",
+        color: "#6D7885",
     },
     textAreaInput: {
         marginTop: 22,
         height: 120,
         width: Dimensions.get("window").width - 32,
-        borderWidth: 0.5,
-        borderColor: "#000",
-        borderStyle: "solid",
         borderRadius: 14,
         paddingLeft: 14,
-        paddingTop: 25,
+        paddingTop: 15,
+        backgroundColor: "#fff",
+        shadowColor: "rgba(19, 12, 12, 0.3)",
+        shadowOffset: {
+            width: 0.5,
+            height: 0.5,
+        },
+        elevation: 1,
+        shadowRadius: 1,
+        shadowOpacity: 1,
     },
     btnReview: {
         borderRadius: 14,
-        backgroundColor: "#005479",
+        backgroundColor: "#0A78D6",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 0,
