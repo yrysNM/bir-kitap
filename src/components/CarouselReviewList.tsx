@@ -61,6 +61,12 @@ const styles = StyleSheet.create({
         objectFit: "cover",
     },
 
+    avatar: {
+        width: 30,
+        height: 30,
+        objectFit: "cover",
+    },
+
     reviewBookInfo: {
         flex: 1,
         flexDirection: "column",

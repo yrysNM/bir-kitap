@@ -4,8 +4,7 @@ import { StarRate } from "./StarRate"
 import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 import { bookReviewInfo } from "../api/reviewApi"
 
-export const ReviewCard = ({reviewInfo}: {reviewInfo: bookReviewInfo}) => {
-
+export const ReviewCard = ({ reviewInfo }: { reviewInfo: bookReviewInfo }) => {
     return (
         <View style={styles.reviewWrapper}>
             <CloudImage url={reviewInfo?.book?.imageLink} styleImg={styles.bookReviewImg} />
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 0,
-            height: 0
+            height: 0,
         },
         shadowRadius: 6,
         elevation: 6,

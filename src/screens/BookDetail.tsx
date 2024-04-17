@@ -9,7 +9,6 @@ import { CloudImage } from "../components/CloudImage"
 import Icon from "@ant-design/react-native/lib/icon"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
-import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 import { RecommendationAPI } from "../api/recommendationApi"
 import { CarouselBookList } from "../components/CarouselBookList"
 import { NoData } from "../components/NoData"
@@ -26,6 +25,7 @@ type bookReviewInfo = {
     rating: number
     createTime: number
     updatetime: number
+    avatar: string
 }
 interface IBookInfo {
     book: bookInfo
@@ -81,7 +81,7 @@ export const BookDetail = () => {
             length: 5,
         }).then((res) => {
             if (res.result_code === 0) {
-                setDataList(res.data)
+                setDataList(res?.data)
             }
         })
     }
@@ -147,7 +147,7 @@ export const BookDetail = () => {
                 {bookInfo?.reviews.map((review) => (
                     <View key={review.id}>
                         <View style={styles.reviewProfileBlock}>
-                            <Image source={UserCustomProfileImg} style={{ borderRadius: 500, width: 32, height: 32 }} />
+                            <CloudImage styleImg={{ width: 32, height: 32 }} url={review.avatar} />
                             <View>
                                 <Text style={[styles.reviewUserName, { color: review.userName === fullName ? "#005479" : "#000" }]}>{review.userName}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
