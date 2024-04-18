@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 20,
         borderRadius: 10,
-        shadowRadius: 1,
         marginRight: 10,
+        shadowRadius: 1,
         shadowColor: "rgba(19, 12, 12, 0.3)",
         shadowOffset: {
             width: 1,
@@ -80,6 +80,9 @@ const styles = StyleSheet.create({
         elevation: 1,
         marginHorizontal: 3,
         shadowOpacity: 0.3,
+        borderWidth: 0.5,
+        borderStyle: "solid",
+        borderColor: "#6D7885",
     },
     bookTypeBlock: {
         backgroundColor: "#FFFFFF",

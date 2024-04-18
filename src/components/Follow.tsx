@@ -113,13 +113,14 @@ const styles = StyleSheet.create({
     },
 
     followBtnBlock: {
-        flex: 1.5,
+        flex: 1,
     },
 
     followBtn: {
+        borderWidth: 0,
         borderRadius: 10,
         width: "100%",
-        height: 44,
+        height: 34,
         backgroundColor: "#0A78D6",
         paddingVertical: 5,
         shadowColor: "rgba(10, 120, 214, 0.3)",
@@ -132,14 +133,16 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
     },
     followBtnText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "600",
         color: "#fff",
     },
     unFollowBtn: {
         borderRadius: 10,
+        borderWidth: 0.5,
+        borderColor: "#6D7885",
         width: "100%",
-        height: 44,
+        height: 34,
         paddingVertical: 5,
         backgroundColor: "#fff",
         shadowColor: "rgba(19, 12, 12, 0.3)",
@@ -152,9 +155,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
     },
     unFollowBtnText: {
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: "600",
-        color: "#000",
+        color: "#212121",
     },
 })
 

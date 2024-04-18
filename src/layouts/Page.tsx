@@ -4,10 +4,11 @@ import { Fuse } from "./Fuse"
 import { useRoute } from "@react-navigation/native"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { setRefresh } from "../redux/features/mainSlice"
+import { Loading } from "../components/Loading"
 
 export const Page = ({ children }: { children: React.ReactNode }) => {
     const route = useRoute()
-    const { isRefresh } = useAppSelector((state) => state.mainSlice)
+    const { isRefresh, isLoading } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
 
     const onRefresh = useCallback(() => {
@@ -23,6 +24,7 @@ export const Page = ({ children }: { children: React.ReactNode }) => {
             <ScrollView contentContainerStyle={{ flexGrow: 1, marginBottom: 20, paddingHorizontal: route.name === "ReaderNews" ? 0 : 16 }} refreshControl={<RefreshControl refreshing={isRefresh} onRefresh={onRefresh} />}>
                 <Fuse>{children}</Fuse>
             </ScrollView>
+            {isLoading && <Loading />}
         </SafeAreaView>
     )
 }
