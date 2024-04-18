@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Image } from "react-native"
 import { Page } from "../layouts/Page"
 import { useEffect, useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
@@ -6,7 +6,6 @@ import { BookApi, bookInfo } from "../api/bookApi"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
-import Icon from "@ant-design/react-native/lib/icon"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
 import { RecommendationAPI } from "../api/recommendationApi"
@@ -14,6 +13,7 @@ import { CarouselBookList } from "../components/CarouselBookList"
 import { NoData } from "../components/NoData"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { useAppSelector } from "../hook/useStore"
+import ArrowBack from "../../assets/images/arrow-back.png"
 
 type bookReviewInfo = {
     id?: string
@@ -101,7 +101,7 @@ export const BookDetail = () => {
     return (
         <Page>
             <TouchableOpacity onPress={() => navigate.goBack()}>
-                <Icon name="left" style={styles.iconBack} />
+                <Image source={ArrowBack} style={styles.iconBack} />
             </TouchableOpacity>
             <View style={styles.bookWrapper}>
                 <CloudImage styleImg={styles.bookImg} url={bookInfo?.book.imageLink} />
@@ -204,8 +204,9 @@ const styles = StyleSheet.create({
     },
     iconBack: {
         marginTop: 25,
-        fontSize: 30,
-        color: "#212121",
+        width: 24,
+        height: 24,
+        objectFit: "contain",
     },
     bookWrapper: {
         justifyContent: "center",

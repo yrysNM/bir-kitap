@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native"
 import { Page } from "../layouts/Page"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Header } from "../components/Header"
 import View from "@ant-design/react-native/lib/view"
 import { bookInfo } from "../api/bookApi"
@@ -9,24 +9,22 @@ import { BookCard } from "../components/BookCard"
 import { NoData } from "../components/NoData"
 import { bookReviewInfo } from "../api/reviewApi"
 import { postInfo } from "../api/postApi"
-import { IUserInfo } from "../api/authApi"
 import { ReviewCard } from "../components/ReviewCard"
-import { NotReady } from "./NotReady"
 import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
 import { useAppSelector } from "../hook/useStore"
+import { PostCard } from "../components/PostCard"
+import Follow from "../components/Follow"
 
 export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
     const { fetchData: fetchReviewsData } = RecommendationAPI("reviews")
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
-    const { fetchData: fetchUsersData } = RecommendationAPI("users")
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
 
     const [recommendationType, setRecommendationType] = useState<string>("Books")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [postDataList, setPostDataList] = useState<postInfo[]>([])
-    const [userDataList, setUserDataList] = useState<IUserInfo[]>([])
 
     const [tabs] = useState<{ title: string }[]>([
         {
@@ -45,37 +43,32 @@ export const Recommendations = () => {
 
     useEffect(() => {
         if (!isRefresh) {
-            onLoadData()
+            setRecommendationType("Books")
+            onLoadData("Books")
         }
-    }, [recommendationType, isRefresh])
+    }, [isRefresh])
 
-    const onLoadData = useCallback(() => {
-        if (recommendationType === "Books") {
+    const onLoadData = (e: string) => {
+        if (e === "Books") {
             fetchBookData({}).then((res) => {
                 if (res.result_code === 0) {
-                    setBookDataList(JSON.parse(JSON.stringify(res.data)));
+                    setBookDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
-        } else if (recommendationType === "Reviews") {
+        } else if (e === "Reviews") {
             fetchReviewsData({}).then((res) => {
                 if (res.result_code === 0) {
                     setReviewDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
-        } else if (recommendationType === "Posts") {
+        } else if (e === "Posts") {
             fetchPostsData({}).then((res) => {
                 if (res.result_code === 0) {
                     setPostDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
-        } else {
-            fetchUsersData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setUserDataList(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
         }
-    }, [recommendationType])
+    }
 
     return (
         <Page>
@@ -86,6 +79,7 @@ export const Recommendations = () => {
                     handleBookType={(e) => {
                         if (typeof e === "string") {
                             setRecommendationType(e)
+                            onLoadData(e)
                         }
                     }}
                     isMultiple={false}
@@ -98,9 +92,9 @@ export const Recommendations = () => {
             ) : recommendationType === "Reviews" ? (
                 <View style={styles.reviewWrapper}>{reviewDataList.length ? reviewDataList.map((review) => <ReviewCard key={review.id} reviewInfo={review} />) : <NoData />}</View>
             ) : recommendationType === "Posts" ? (
-                <NotReady />
+                <View style={{ marginTop: 10 }}>{postDataList.length ? postDataList.map((post) => <PostCard postInfo={post} key={post.id} />) : <NoData />}</View>
             ) : recommendationType === "Users" ? (
-                <NotReady />
+                <Follow />
             ) : null}
 
             <View style={{ marginBottom: 5, flex: 1, height: "auto" }}></View>
