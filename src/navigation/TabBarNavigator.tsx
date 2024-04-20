@@ -47,7 +47,7 @@ export const TabNavigator = () => {
                 tabBar={CustomTabbar}>
                 <Tab.Screen name="Home" component={Home} />
                 <Tab.Screen name="Search" component={Search} />
-                <Tab.Screen name="CreatePost" component={CreatePostAndBook} />
+                <Tab.Screen name="Create" component={CreatePostAndBook} />
                 <Tab.Screen name="Services" component={Services} />
                 <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>

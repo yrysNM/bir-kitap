@@ -1,14 +1,14 @@
 {
     "cli": {
         "version": ">= 7.6.0",
-        "appVersionSource": "remote"
+        "appVersionSource": "local"
     },
     "build": {
         "preview": {
+            "distribution": "internal",
             "android": {
                 "buildType": "apk"
-            },
-            "distribution": "internal"
+            }
         },
         "preview2": {
             "android": {
