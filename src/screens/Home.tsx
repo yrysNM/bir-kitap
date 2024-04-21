@@ -2,7 +2,6 @@ import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-nati
 import { Page } from "../layouts/Page"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
-import { NoData } from "../components/NoData"
 import { NewsApi, newsInfo } from "../api/newsApi"
 import { CarouselBookList } from "../components/CarouselBookList"
 import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
@@ -73,12 +72,12 @@ export const Home = () => {
     }
 
     const _renderNews = ({ item }: { item: newsInfo }) => {
-        return isLoading ? (
+        return isLoading && !news.length ? (
             <SkeletonHomeNewsCard />
         ) : (
             <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} delayPressIn={5} style={styles.newsBlock}>
                 <CloudImage styleImg={styles.newsImg} url={item.imageLink} />
-                <Text style={styles.newsTitle}>{SplitText(item.content, 25)}12</Text>
+                <Text style={styles.newsTitle}>{SplitText(item.content, 25)}</Text>
             </TouchableOpacity>
         )
     }
@@ -90,11 +89,11 @@ export const Home = () => {
             </View>
 
             <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
-                <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} isLoading={isLoading} /> : <NoData />}</View>
+                <CarouselBookList dataList={bookDataList} />
             </BookShowBlock>
 
             <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
-                <View>{reviewDataList.length ? <CarouselREviewList dataList={reviewDataList} isLoading={isLoading} /> : <NoData />}</View>
+                <CarouselREviewList dataList={reviewDataList} />
             </BookShowBlock>
         </Page>
     )

@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     userImg: {
         width: 135,
         height: 135,
-        objectFit: "contain",
+        objectFit: "cover",
         borderRadius: 1000,
     },
     profileText: {

@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     userProfileImg: {
         width: 120,
         height: 120,
-        objectFit: "contain",
+        objectFit: "cover",
         borderRadius: 1000,
     },
     fullName: {
