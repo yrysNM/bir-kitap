@@ -44,7 +44,7 @@
                 "backgroundColor": "#ffffff"
             },
             "googleServicesFile": "./google-services.json",
-            "softwareKeyboardLayoutMode": "pan"
+            // "softwareKeyboardLayoutMode": "pan"
         },
         "web": {
             "favicon": "./assets/favicon.png"

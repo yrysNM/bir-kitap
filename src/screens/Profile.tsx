@@ -117,9 +117,9 @@ export const Profile = () => {
                         </View>
                     ) : tab === "reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
-                    ) : (
+                    ) : tab === "posts" ? (
                         <View style={{ marginTop: 10 }}>{info.posts.length ? info.posts.map((post) => <PostCard postInfo={post} key={post.id} />) : <NoData />}</View>
-                    )}
+                    ) : null}
                 </View>
             </View>
 
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     userProfileImg: {
         width: 120,
         height: 120,
-        objectFit: "contain",
+        objectFit: "cover",
         borderRadius: 1000,
     },
     fullName: {

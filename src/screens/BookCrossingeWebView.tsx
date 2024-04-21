@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { setLoading } from "../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
@@ -11,9 +11,10 @@ import useApi from "../hook/useApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
+import { Loading } from "../components/Loading"
 
-// const _webview_base_url = "http://192.168.0.124:5173/"
-const _webview_base_url = "https://birkitap.kz/book-crossing/"
+const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
+// const _webview_base_url = "https://birkitap.kz/book-crossing/"
 
 interface IUpload extends IResponse {
     data: { path: string }
@@ -21,6 +22,7 @@ interface IUpload extends IResponse {
 
 export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
+    const { isLoading } = useAppSelector((state) => state.mainSlice)
     const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
     const logOut = logOutHelper()
@@ -36,7 +38,7 @@ export const BookCrossingWebView = () => {
                 setToken("")
             }
         })
-    }, []);
+    }, [])
 
     function injectWebViewData() {
         const janascript = `
@@ -107,15 +109,15 @@ export const BookCrossingWebView = () => {
 
     return (
         <Fuse>
-            {/* {!isLoading && ( */}
-            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
+            {isLoading && <Loading />}
+            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
                 <WebView
                     ref={webViewEl}
                     key={webviewKey}
                     webviewDebuggingEnabled={true}
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
-                    style={{ height: "100%", width: "100%" }}
+                    style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
                     source={{ uri: `${_webview_base_url}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
@@ -135,7 +137,6 @@ export const BookCrossingWebView = () => {
                     }}
                 />
             </SafeAreaView>
-            {/* )} */}
         </Fuse>
     )
 }

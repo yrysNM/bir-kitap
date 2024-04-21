@@ -12,7 +12,6 @@ import { useRef, useEffect } from "react"
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
     const translationTabBar = useRef(new Animated.Value(0)).current
-
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -41,13 +40,13 @@ export const TabNavigator = () => {
                 screenOptions={{
                     headerShown: false,
                     tabBarShowLabel: false,
-                    tabBarStyle: { ...styles.tabbar, backgroundColor: "#fff" },
                     tabBarHideOnKeyboard: true,
+                    tabBarStyle: { ...styles.tabbar, backgroundColor: "#fff" },
                 }}
                 tabBar={CustomTabbar}>
                 <Tab.Screen name="Home" component={Home} />
                 <Tab.Screen name="Search" component={Search} />
-                <Tab.Screen name="CreatePost" component={CreatePostAndBook} />
+                <Tab.Screen name="Create" component={CreatePostAndBook} />
                 <Tab.Screen name="Services" component={Services} />
                 <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>

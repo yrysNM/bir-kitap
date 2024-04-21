@@ -22,7 +22,7 @@ export const CustomTabbar = ({ state, descriptors, navigation }: BottomTabBarPro
             iconName: "search",
         },
         {
-            key: "CreatePost",
+            key: "Create",
             iconName: "plus",
         },
         {

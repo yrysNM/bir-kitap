@@ -5,10 +5,12 @@ import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
 import { useAppSelector } from "../hook/useStore"
 import { SkeletonCardReviewsCard } from "./SkeletonCards"
+import { NoData } from "./NoData"
 
-export const CarouselREviewList = ({ dataList, isLoading }: { dataList: bookReviewInfo[]; isLoading: boolean }) => {
+export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
     const {
         userInfo: { fullName },
+        isLoading,
     } = useAppSelector((state) => state.mainSlice)
 
     const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
@@ -31,7 +33,7 @@ export const CarouselREviewList = ({ dataList, isLoading }: { dataList: bookRevi
             </View>
         )
     }
-    return <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
+    return dataList.length ? <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <NoData />
 }
 
 const styles = StyleSheet.create({
