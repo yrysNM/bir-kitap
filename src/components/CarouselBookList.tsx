@@ -7,14 +7,17 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { CloudImage } from "./CloudImage"
 import { SplitText } from "../helpers/splitText"
+import { SkeletonHomeBooksCard } from "./SkeletonCards"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookDetail">>
 
-export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
+export const CarouselBookList = ({ dataList, isLoading }: { dataList: bookInfo[]; isLoading: boolean }) => {
     const navigation = useNavigation<NavigateType>()
 
     const _renderItem = ({ item }: { item: bookInfo }) => {
-        return (
+        return isLoading ? (
+            <SkeletonHomeBooksCard />
+        ) : (
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })} delayPressIn={5}>
                 <CloudImage styleImg={styles.bookImg} url={item.imageLink} />
                 <View style={{ flex: 1, justifyContent: "space-between" }}>

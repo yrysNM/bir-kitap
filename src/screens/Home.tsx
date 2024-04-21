@@ -18,6 +18,9 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { SplitText } from "../helpers/splitText"
+import SkeletonContent from "react-native-skeleton-content"
+import Skeleton from "../components/Skeletno"
+import { SkeletonHomeNewsCard } from "../components/SkeletonCards"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -29,7 +32,7 @@ export const Home = () => {
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
-    const { isRefresh } = useAppSelector((state) => state.mainSlice)
+    const { isRefresh, isLoading } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const navigation = useNavigation<NavigateType>()
 
@@ -72,10 +75,12 @@ export const Home = () => {
     }
 
     const _renderNews = ({ item }: { item: newsInfo }) => {
-        return (
+        return isLoading ? (
+            <SkeletonHomeNewsCard />
+        ) : (
             <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} delayPressIn={5} style={styles.newsBlock}>
                 <CloudImage styleImg={styles.newsImg} url={item.imageLink} />
-                <Text style={styles.newsTitle}>{SplitText(item.content, 25)}</Text>
+                <Text style={styles.newsTitle}>{SplitText(item.content, 25)}12</Text>
             </TouchableOpacity>
         )
     }
@@ -87,11 +92,11 @@ export const Home = () => {
             </View>
 
             <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
-                <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} /> : <NoData />}</View>
+                <View>{bookDataList.length ? <CarouselBookList dataList={bookDataList} isLoading={isLoading} /> : <NoData />}</View>
             </BookShowBlock>
 
             <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
-                <View>{reviewDataList.length ? <CarouselREviewList dataList={reviewDataList} /> : <NoData />}</View>
+                <View>{reviewDataList.length ? <CarouselREviewList dataList={reviewDataList} isLoading={isLoading} /> : <NoData />}</View>
             </BookShowBlock>
         </Page>
     )
