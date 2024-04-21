@@ -2,7 +2,7 @@ import { SafeAreaView, StatusBar } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { setLoading } from "../redux/features/mainSlice"
 import { Fuse } from "../layouts/Fuse"
 import * as ImagePicker from "expo-image-picker"
@@ -11,16 +11,18 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../helpers/base64toFile"
 import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
+import { Loading } from "../components/Loading"
 
-// const _webview_base_url = "http://192.168.0.124:5174/book-tracker/"
-const _webview_base_url = "https://birkitap.kz/book-tracker/"
+const _webview_base_url = "http://192.168.1.5:5174/book-tracker/"
+// const _webview_base_url = "https://birkitap.kz/book-tracker/"
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
+    const { isLoading } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const logOut = logOutHelper()
     const { fetchData } = BookApi("upload")
-    const [webviewKey, setWebviewKey] = useState<number>(0)
+    const [webviewKey, setWebviewKey] = useState<number>(1)
     const [token, setToken] = useState<string>("")
     // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
@@ -102,15 +104,15 @@ export const BookTrackerWebView = () => {
 
     return (
         <Fuse>
-            {/* {!isLoading && ( */}
-            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
+            {isLoading && <Loading />}
+            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
                 <WebView
                     ref={webViewEl}
                     key={webviewKey}
                     webviewDebuggingEnabled={true}
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
-                    style={{ height: "100%", width: "100%" }}
+                    style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
                     source={{ uri: `${_webview_base_url}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
@@ -130,7 +132,6 @@ export const BookTrackerWebView = () => {
                     }}
                 />
             </SafeAreaView>
-            {/* )} */}
         </Fuse>
     )
 }

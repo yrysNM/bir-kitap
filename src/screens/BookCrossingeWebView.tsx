@@ -13,7 +13,7 @@ import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 import { Loading } from "../components/Loading"
 
-const _webview_base_url = "http://192.168.1.100:5174/book-crossing/"
+const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
 // const _webview_base_url = "https://birkitap.kz/book-crossing/"
 
 interface IUpload extends IResponse {
@@ -110,14 +110,14 @@ export const BookCrossingWebView = () => {
     return (
         <Fuse>
             {isLoading && <Loading />}
-            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#fff" }}>
+            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
                 <WebView
                     ref={webViewEl}
                     key={webviewKey}
                     webviewDebuggingEnabled={true}
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
-                    style={{ height: "100%", width: "100%" }}
+                    style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
                     source={{ uri: `${_webview_base_url}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {

@@ -46,7 +46,7 @@ export const Home = () => {
             }
         })
 
-        await fetchBookData({
+        fetchBookData({
             start: 0,
             length: 10,
         }).then((res) => {
@@ -55,7 +55,7 @@ export const Home = () => {
             }
         })
 
-        await fetchReViewData({
+        fetchReViewData({
             start: 0,
             length: 5,
         }).then((res) => {

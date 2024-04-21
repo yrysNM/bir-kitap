@@ -71,7 +71,7 @@ export const Services = () => {
             <View style={styles.serviceCotegory}>
                 <Text style={styles.contentTitle}>Services</Text>
 
-                <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
+                <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "center", flexWrap: "wrap" }}>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTrackerWebView" as never)}>
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "cover" }} />
@@ -94,7 +94,7 @@ export const Services = () => {
             </View>
             <View style={{ marginTop: 58 }}>
                 <Text style={styles.contentTitle}>Categories </Text>
-                <View style={{ gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                     {categoryList.slice(0, 3).map((item, i) => (
                         <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
                             <View style={styles.categoryBlock}>
@@ -104,7 +104,7 @@ export const Services = () => {
                         </TouchableOpacity>
                     ))}
                 </View>
-                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                     {categoryList.slice(3, 6).map((item, i) => (
                         <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
                             <View style={styles.categoryBlock}>
@@ -128,13 +128,13 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         lineHeight: 20,
         color: "#212121",
-        marginBottom: 27,
+        marginBottom: 17,
     },
     categoryWrapper: {
         alignItems: "center",
         flexDirection: "column",
         flexWrap: "wrap",
-        width: 93,
+        width: 95,
         gap: 5,
     },
     categoryBlock: {
