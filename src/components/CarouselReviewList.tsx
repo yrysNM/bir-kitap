@@ -4,19 +4,21 @@ import { bookReviewInfo } from "../api/reviewApi"
 import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
 import { useAppSelector } from "../hook/useStore"
+import { SkeletonCardReviewsCard } from "./SkeletonCards"
 
-export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
+export const CarouselREviewList = ({ dataList, isLoading }: { dataList: bookReviewInfo[]; isLoading: boolean }) => {
     const {
         userInfo: { fullName },
     } = useAppSelector((state) => state.mainSlice)
 
     const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
-        return (
+        return isLoading ? (
+            <SkeletonCardReviewsCard />
+        ) : (
             <View style={styles.reviewWrapper}>
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
-                        {/* <Image style={styles.reviewUserProfileImg} source={UserCustomProfileImg} /> */}
                         <CloudImage styleImg={styles.reviewUserProfileImg} url={item.avatar || ""} />
                         <View style={{ flexShrink: 1 }}>
                             <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
