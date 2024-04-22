@@ -13,8 +13,8 @@ import { BookApi } from "../api/bookApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { Loading } from "../components/Loading"
 
-const _webview_base_url = "http://192.168.1.5:5174/book-tracker/"
-// const _webview_base_url = "https://birkitap.kz/book-tracker/"
+// const _webview_base_url = "http://192.168.1.5:5174/book-tracker/"
+const _webview_base_url = "https://birkitap.kz/book-tracker/?random=12"
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)

@@ -14,8 +14,8 @@ import { Fuse } from "../layouts/Fuse"
 import { useNavigation } from "@react-navigation/native"
 import { Loading } from "../components/Loading"
 
-const _webview_base_url = "http://192.168.1.5:5175/book-test"
-// const _webview_base_url = "https://birkitap.kz/book-test/"
+// const _webview_base_url = "http://192.168.1.5:5175/book-test"
+const _webview_base_url = "https://birkitap.kz/book-test/?random=12"
 
 interface IUpload extends IResponse {
     data: { path: string }

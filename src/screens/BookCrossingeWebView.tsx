@@ -13,8 +13,8 @@ import { SafeAreaView, StatusBar } from "react-native"
 import { Fuse } from "../layouts/Fuse"
 import { Loading } from "../components/Loading"
 
-const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
-// const _webview_base_url = "https://birkitap.kz/book-crossing/"
+// const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
+const _webview_base_url = "https://birkitap.kz/book-crossing/?random=12"
 
 interface IUpload extends IResponse {
     data: { path: string }
