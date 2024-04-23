@@ -1,23 +1,24 @@
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native"
-import { Page } from "../layouts/Page"
-import { BookApi, bookInfo } from "../api/bookApi"
+import { Page } from "../../layouts/Page"
+import { BookApi, bookInfo } from "../../api/bookApi"
 import { useEffect, useState } from "react"
-import { NewsApi, newsInfo } from "../api/newsApi"
-import { CarouselBookList } from "../components/CarouselBookList"
-import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
-import { BookShowBlock } from "../components/BookShowBlock"
-import { CarouselREviewList } from "../components/CarouselReviewList"
-import { UserAPI } from "../api/userApi"
-import { setUserInfo } from "../redux/features/mainSlice"
+import { NewsApi, newsInfo } from "../../api/newsApi"
+import { CarouselBookList } from "../../components/CarouselBookList"
+import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
+import { useAppDispatch, useAppSelector } from "../../hook/useStore"
+import { BookShowBlock } from "../../components/BookShowBlock"
+import { CarouselREviewList } from "../../components/CarouselReviewList"
+import { UserAPI } from "../../api/userApi"
+import { setUserInfo } from "../../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
-import { CloudImage } from "../components/CloudImage"
+import { CloudImage } from "../../components/CloudImage"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RootStackParamList } from "../navigation/MainNavigation"
-import { SplitText } from "../helpers/splitText"
-import { SkeletonHomeNewsCard } from "../components/SkeletonCards"
+import { RootStackParamList } from "../../navigation/MainNavigation"
+import { SplitText } from "../../helpers/splitText"
+import { SkeletonHomeNewsCard } from "../../components/SkeletonCards"
+import { NoData } from "../../components/NoData"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -46,7 +47,7 @@ export const Home = () => {
             }
         })
 
-        fetchBookData({
+        await fetchBookData({
             start: 0,
             length: 10,
         }).then((res) => {
@@ -85,7 +86,8 @@ export const Home = () => {
     return (
         <Page>
             <View style={styles.newsWrapper}>
-                <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
+                {news.length ? <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeNewsCard />}
+                {!news.length && !isLoading ? <NoData /> : null}
             </View>
 
             <BookShowBlock bookType="Books" navigationUrl="BookMore/books">

@@ -1,15 +1,15 @@
 import { Text, StyleSheet, View } from "react-native"
-import { Page } from "../layouts/Page"
+import { Page } from "../../layouts/Page"
 import Icon from "@ant-design/react-native/lib/icon"
-import { SearchInput } from "../components/SearchInput"
+import { SearchInput } from "../../components/SearchInput"
 import { useEffect, useState } from "react"
-import { BookCard } from "../components/BookCard"
-import { BookApi, bookInfo, categoryInfo } from "../api/bookApi"
-import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
-import { NoData } from "../components/NoData"
-import { SelectGenres } from "../components/SelectGenres"
+import { BookCard } from "../../components/BookCard"
+import { BookApi, bookInfo, categoryInfo } from "../../api/bookApi"
+import { CarouselBookTypeFilter } from "../../components/CarouselBookTypeFilter"
+import { NoData } from "../../components/NoData"
+import { SelectGenres } from "../../components/SelectGenres"
 import Modal from "@ant-design/react-native/lib/modal"
-import { GenreAPI } from "../api/genreApi"
+import { GenreAPI } from "../../api/genreApi"
 
 export const Search = () => {
     const { fetchData: fetchBookData } = BookApi("list")

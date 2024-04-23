@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from "react"
-import { Animated, View, StyleSheet, StyleProp, ViewStyle, TextStyle } from "react-native"
+import { Animated, StyleSheet, StyleProp, ViewStyle, TextStyle } from "react-native"
 
 interface ISkeletonProps {
     width: number
@@ -37,7 +37,7 @@ const Skeleton: FC<ISkeletonProps> = ({ width, height, varient, styleProps, styl
         anim.start()
 
         return () => anim.stop()
-    }, [opacity])
+    }, [])
 
     return <Animated.View style={[styles.skeleton, { opacity: opacity.current, height, width, borderRadius }, styleProps, stylePropsText]} />
 }

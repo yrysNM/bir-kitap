@@ -1,28 +1,31 @@
-import { SafeAreaView, StatusBar } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
-import { setLoading } from "../redux/features/mainSlice"
-import { Fuse } from "../layouts/Fuse"
+import { useAppDispatch, useAppSelector } from "../../hook/useStore"
+import { setLoading } from "../../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
-import { base64toFiile } from "../helpers/base64toFile"
-import { BookApi } from "../api/bookApi"
-import { logOut as logOutHelper } from "../helpers/logOut"
-import { Loading } from "../components/Loading"
+import { base64toFiile } from "../../helpers/base64toFile"
+import useApi from "../../hook/useApi"
+import { logOut as logOutHelper } from "../../helpers/logOut"
+import { SafeAreaView, StatusBar } from "react-native"
+import { Loading } from "../../components/Loading"
 
-// const _webview_base_url = "http://192.168.1.5:5174/book-tracker/"
-const _webview_base_url = "https://birkitap.kz/book-tracker/?random=12"
+// const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
+const _webview_base_url = "https://birkitap.kz/book-crossing/?random=12"
 
-export const BookTrackerWebView = () => {
-    const webViewEl = useRef<WebView>(null)
-    const { isLoading } = useAppSelector((state) => state.mainSlice)
+interface IUpload extends IResponse {
+    data: { path: string }
+}
+
+export const BookCrossingWebView = () => {
     const dispatch = useAppDispatch()
+    const { isLoading } = useAppSelector((state) => state.mainSlice)
+    const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
+    const webViewEl = useRef<WebView>(null)
     const logOut = logOutHelper()
-    const { fetchData } = BookApi("upload")
-    const [webviewKey, setWebviewKey] = useState<number>(1)
+    const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
     // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
@@ -38,8 +41,8 @@ export const BookTrackerWebView = () => {
 
     function injectWebViewData() {
         const janascript = `
-            localStorage.setItem('token', '${token}');
-        `
+        localStorage.setItem('token', '${token}');
+    `
         // webViewEl.current?.injectJavaScript(janascript)
         return janascript
     }
@@ -72,8 +75,8 @@ export const BookTrackerWebView = () => {
             } as never)
 
             fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never).then((res) => {
+                dispatch(setLoading(false))
                 if (res.result_code === 0) {
-                    dispatch(setLoading(false))
                     const infoImg = JSON.parse(JSON.stringify(res.data))
                     const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
                     const info = {
@@ -97,13 +100,14 @@ export const BookTrackerWebView = () => {
             logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
+            return
         }
 
         return {}
     }
 
     return (
-        <Fuse>
+        <>
             {isLoading && <Loading />}
             <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
                 <WebView
@@ -132,6 +136,6 @@ export const BookTrackerWebView = () => {
                     }}
                 />
             </SafeAreaView>
-        </Fuse>
+        </>
     )
 }

@@ -1,5 +1,5 @@
-import { Page } from "../layouts/Page"
-import { Header } from "../components/Header"
+import { Page } from "../../layouts/Page"
+import { Header } from "../../components/Header"
 
 export const ForgotPassword = () => {
     return (

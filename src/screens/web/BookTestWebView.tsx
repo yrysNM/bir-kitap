@@ -1,34 +1,35 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
-import { setLoading } from "../redux/features/mainSlice"
+import { useAppDispatch, useAppSelector } from "../../hook/useStore"
+import { setLoading } from "../../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
-import { base64toFiile } from "../helpers/base64toFile"
-import useApi from "../hook/useApi"
-import { logOut as logOutHelper } from "../helpers/logOut"
+import { base64toFiile } from "../../helpers/base64toFile"
+import useApi from "../../hook/useApi"
+import { logOut as logOutHelper } from "../../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
-import { Fuse } from "../layouts/Fuse"
-import { Loading } from "../components/Loading"
+import { useNavigation } from "@react-navigation/native"
+import { Loading } from "../../components/Loading"
 
-// const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
-const _webview_base_url = "https://birkitap.kz/book-crossing/?random=12"
+// const _webview_base_url = "http://192.168.1.5:5175/book-test"
+const _webview_base_url = "https://birkitap.kz/book-test/?random=12"
 
 interface IUpload extends IResponse {
     data: { path: string }
 }
 
-export const BookCrossingWebView = () => {
-    const dispatch = useAppDispatch()
+export const BookTestWebView = () => {
+    const navifation = useNavigation()
     const { isLoading } = useAppSelector((state) => state.mainSlice)
+    const dispatch = useAppDispatch()
     const { fetchData } = useApi<IUpload>("/bookcrossing/announcement/upload")
     const webViewEl = useRef<WebView>(null)
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
-    // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
+    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -63,9 +64,6 @@ export const BookCrossingWebView = () => {
             if (!isLt5M) {
                 console.log("File size small than 5mb")
                 Toast.fail("File size small than 5mb")
-                dispatch(setLoading(false))
-
-                return
             }
 
             const param = new FormData()
@@ -75,21 +73,26 @@ export const BookCrossingWebView = () => {
                 name: uriList.pop(),
             } as never)
 
-            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never).then((res) => {
-                dispatch(setLoading(false))
-                if (res.result_code === 0) {
-                    const infoImg = JSON.parse(JSON.stringify(res.data))
-                    const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
-                    const info = {
-                        type: "file",
-                        url: urlImage,
+            fetchData(param, { "Content-Type": "multipart/form-data", accept: "application/json" } as never)
+                .then((res) => {
+                    if (res.result_code === 0) {
+                        dispatch(setLoading(false))
+                        const infoImg = JSON.parse(JSON.stringify(res.data))
+                        const urlImage = `${API_URL}public/get_resource?name=${infoImg.path}`
+                        const info = {
+                            type: "file",
+                            url: urlImage,
+                        }
+                        webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
+                    } else {
+                        dispatch(setLoading(false))
+                        console.log(res.data)
                     }
-                    webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
-                } else {
+                })
+                .catch((err) => {
+                    console.log(JSON.stringify(err))
                     dispatch(setLoading(false))
-                    console.log(res.data)
-                }
-            })
+                })
         } else {
             dispatch(setLoading(false))
         }
@@ -101,14 +104,15 @@ export const BookCrossingWebView = () => {
             logOut()
         } else if (messageData.key === "uploadImg") {
             handleFileUpload()
-            return
+        } else if (messageData.key === "closeWin") {
+            navifation.goBack()
         }
 
         return {}
     }
 
     return (
-        <Fuse>
+        <>
             {isLoading && <Loading />}
             <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
                 <WebView
@@ -118,7 +122,7 @@ export const BookCrossingWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                    source={{ uri: `${_webview_base_url}` }}
+                    source={{ uri: `${_webview_base_url}?${randomNumber}` }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent
@@ -130,13 +134,13 @@ export const BookCrossingWebView = () => {
                     injectedJavaScript={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                            dispatch(setLoading(true))
-                        } else {
-                            dispatch(setLoading(false))
+                            setLoading(true)
+                        } else if (nativeEvent.url === _webview_base_url) {
+                            setLoading(false)
                         }
                     }}
                 />
             </SafeAreaView>
-        </Fuse>
+        </>
     )
 }

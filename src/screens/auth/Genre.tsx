@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { GenreAPI } from "../api/genreApi"
-import { Header } from "../components/Header"
+import { GenreAPI } from "../../api/genreApi"
+import { Header } from "../../components/Header"
 import { View, Text, StyleSheet } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
 import { useNavigation } from "@react-navigation/native"
-import { Page } from "../layouts/Page"
-import { UserAPI } from "../api/userApi"
+import { Page } from "../../layouts/Page"
+import { UserAPI } from "../../api/userApi"
 
 export const Genre = () => {
     const navigation = useNavigation()

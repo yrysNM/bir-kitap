@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native"
-import Skeleton from "./Skeletno"
+import Skeleton from "./Skeleton"
 
 export const SkeletonHomeNewsCard = () => {
     return (

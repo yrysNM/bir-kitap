@@ -34,7 +34,12 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
         )
     }
 
-    return dataList.length ? <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={160} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <NoData />
+    return (
+        <>
+            {dataList.length ? <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={160} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeBooksCard />}
+            {!dataList.length && !isLoading ? <NoData /> : null}
+        </>
+    )
 }
 
 const styles = StyleSheet.create({

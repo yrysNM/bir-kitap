@@ -1,16 +1,16 @@
-import { Header } from "../components/Header"
+import { Header } from "../../components/Header"
 import { useState } from "react"
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
-import { InputStyle } from "../components/InputStyle"
+import { InputStyle } from "../../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
-import { ILogin, LoginAPI } from "../api/authApi"
+import { ILogin, LoginAPI } from "../../api/authApi"
 import Button from "@ant-design/react-native/lib/button"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { useNavigation } from "@react-navigation/native"
-import { setHasLogin, setUserInfo } from "../redux/features/mainSlice"
+import { setHasLogin, setUserInfo } from "../../redux/features/mainSlice"
 import Icon from "@ant-design/react-native/lib/icon"
-import { Page } from "../layouts/Page"
+import { Page } from "../../layouts/Page"
 
 export const Login = () => {
     const navigation = useNavigation()

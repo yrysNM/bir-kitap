@@ -1,7 +1,6 @@
 import { Text, View, StyleSheet, TouchableOpacity, Easing, Dimensions } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
-import { Fuse } from "../layouts/Fuse"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
 import List from "@ant-design/react-native/lib/list"
 import Icon from "@ant-design/react-native/lib/icon"
@@ -69,79 +68,77 @@ export const EditProfile = () => {
     }
 
     return (
-        <Fuse>
-            <View style={{ backgroundColor: "#0A78D6" }}>
-                <TouchableOpacity onPressIn={() => navigation.goBack()} style={styles.headerCommon}>
-                    <Icon style={styles.icon} name="left" />
-                    <Text style={styles.titleCommon}>Edit Profile</Text>
-                </TouchableOpacity>
+        <View style={{ backgroundColor: "#0A78D6" }}>
+            <TouchableOpacity onPressIn={() => navigation.goBack()} style={styles.headerCommon}>
+                <Icon style={styles.icon} name="left" />
+                <Text style={styles.titleCommon}>Edit Profile</Text>
+            </TouchableOpacity>
 
-                <View style={{ marginTop: 46, gap: 12, justifyContent: "center", alignItems: "center" }}>
-                    <CloudImage url={edit.avatar} styleImg={styles.userImg} />
-                    <Text style={styles.profileText}>Profile photo</Text>
-                </View>
-                <View style={styles.userInputWrapper}>
-                    <InputStyle inputTitle="E-mail">
-                        <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
-                    </InputStyle>
-                    <InputStyle inputTitle="Full name">
-                        <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
-                    </InputStyle>
-
-                    <InputStyle inputTitle="Date of Birth">
-                        <View style={styles.datePickerInput}>
-                            <DatePicker style={{ borderWidth: 0 }} minDate={new Date(1970, 7, 6)} maxDate={new Date()} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
-                                <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
-                                    Select Date
-                                </List.Item>
-                            </DatePicker>
-                        </View>
-                    </InputStyle>
-
-                    <InputStyle inputTitle="Gender">
-                        <Popover
-                            ref={popoverRef}
-                            placement="top"
-                            useNativeDriver
-                            duration={200}
-                            easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
-                            overlay={null}
-                            renderOverlayComponent={(_, closePopover) => {
-                                return (
-                                    <View style={{ width: 200 }}>
-                                        <Item key={"Male"} value="male">
-                                            <Text
-                                                onPress={() => {
-                                                    onSelectGender("male")
-                                                    closePopover()
-                                                }}>
-                                                Male
-                                            </Text>
-                                        </Item>
-                                        <Item key={"Female"} value="female">
-                                            <Text
-                                                onPress={() => {
-                                                    onSelectGender("female")
-                                                    closePopover()
-                                                }}>
-                                                Female
-                                            </Text>
-                                        </Item>
-                                    </View>
-                                )
-                            }}>
-                            <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 70, marginLeft: -1 }]}>
-                                <Text style={{ color: edit.gender ? "#000" : "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : "Gender"}</Text>
-                            </View>
-                        </Popover>
-                    </InputStyle>
-
-                    <Button style={styles.footerBtn} onPress={() => onEdit()}>
-                        <Text style={styles.footerBtnText}>Save</Text>
-                    </Button>
-                </View>
+            <View style={{ marginTop: 46, gap: 12, justifyContent: "center", alignItems: "center" }}>
+                <CloudImage url={edit.avatar} styleImg={styles.userImg} />
+                <Text style={styles.profileText}>Profile photo</Text>
             </View>
-        </Fuse>
+            <View style={styles.userInputWrapper}>
+                <InputStyle inputTitle="E-mail">
+                    <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
+                </InputStyle>
+                <InputStyle inputTitle="Full name">
+                    <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
+                </InputStyle>
+
+                <InputStyle inputTitle="Date of Birth">
+                    <View style={styles.datePickerInput}>
+                        <DatePicker style={{ borderWidth: 0 }} minDate={new Date(1970, 7, 6)} maxDate={new Date()} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
+                            <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
+                                Select Date
+                            </List.Item>
+                        </DatePicker>
+                    </View>
+                </InputStyle>
+
+                <InputStyle inputTitle="Gender">
+                    <Popover
+                        ref={popoverRef}
+                        placement="top"
+                        useNativeDriver
+                        duration={200}
+                        easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
+                        overlay={null}
+                        renderOverlayComponent={(_, closePopover) => {
+                            return (
+                                <View style={{ width: 200 }}>
+                                    <Item key={"Male"} value="male">
+                                        <Text
+                                            onPress={() => {
+                                                onSelectGender("male")
+                                                closePopover()
+                                            }}>
+                                            Male
+                                        </Text>
+                                    </Item>
+                                    <Item key={"Female"} value="female">
+                                        <Text
+                                            onPress={() => {
+                                                onSelectGender("female")
+                                                closePopover()
+                                            }}>
+                                            Female
+                                        </Text>
+                                    </Item>
+                                </View>
+                            )
+                        }}>
+                        <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 70, marginLeft: -1 }]}>
+                            <Text style={{ color: edit.gender ? "#000" : "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : "Gender"}</Text>
+                        </View>
+                    </Popover>
+                </InputStyle>
+
+                <Button style={styles.footerBtn} onPress={() => onEdit()}>
+                    <Text style={styles.footerBtnText}>Save</Text>
+                </Button>
+            </View>
+        </View>
     )
 }
 

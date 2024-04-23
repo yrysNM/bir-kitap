@@ -1,22 +1,22 @@
-import { Header } from "../components/Header"
+import { Header } from "../../components/Header"
 import { View, StyleSheet, Text, TouchableOpacity, Easing, Dimensions } from "react-native"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
 import Button from "@ant-design/react-native/lib/button"
 import Icon from "@ant-design/react-native/lib/icon"
 import { useState } from "react"
-import { InputStyle } from "../components/InputStyle"
+import { InputStyle } from "../../components/InputStyle"
 import List from "@ant-design/react-native/lib/list"
-import { RegistrationAPI } from "../api/authApi"
-import { IUserInfo } from "../api/authApi"
+import { RegistrationAPI } from "../../api/authApi"
+import { IUserInfo } from "../../api/authApi"
 import { useNavigation } from "@react-navigation/native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { Page } from "../layouts/Page"
-import { setHasLogin } from "../redux/features/mainSlice"
-import { useAppDispatch } from "../hook/useStore"
+import { Page } from "../../layouts/Page"
+import { setHasLogin } from "../../redux/features/mainSlice"
+import { useAppDispatch } from "../../hook/useStore"
 import MaskInput from "react-native-mask-input"
 import Popover from "@ant-design/react-native/lib/popover"
-import { FirstUpperCaseText } from "../helpers/firstUpperCaseText"
+import { FirstUpperCaseText } from "../../helpers/firstUpperCaseText"
 
 export const CreateAccount = () => {
     const navigation = useNavigation()
@@ -146,7 +146,7 @@ export const CreateAccount = () => {
                     <View style={{ alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 3 }}>
                         <Text style={styles.logText}>Already have an account?</Text>
                         <TouchableOpacity style={{ alignItems: "center", justifyContent: "center" }} onPress={() => navigation.navigate("Login" as never)}>
-                            <Text style={[styles.logText, {color: '#0A78D6'}]}>Log in</Text>
+                            <Text style={[styles.logText, { color: "#0A78D6" }]}>Log in</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
