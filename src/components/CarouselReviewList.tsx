@@ -33,7 +33,12 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
             </View>
         )
     }
-    return dataList.length ? <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <NoData />
+    return (
+        <>
+            {dataList.length ? <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonCardReviewsCard />}
+            {!dataList.length && !isLoading ? <NoData /> : null}
+        </>
+    )
 }
 
 const styles = StyleSheet.create({
