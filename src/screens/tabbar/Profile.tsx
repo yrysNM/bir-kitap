@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
     closeIcon: {
         position: "absolute",
-        top: -42,
+        top: -22,
         right: 0,
         zIndex: 100,
     },
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
         gap: 34,
     },
     modalWrapper: {
-        paddingTop: 62,
+        paddingTop: 32,
         paddingHorizontal: 32,
         paddingBottom: 20,
         backgroundColor: "#fff",

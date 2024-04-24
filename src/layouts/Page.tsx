@@ -19,7 +19,7 @@ export const Page = ({ children }: { children: React.ReactNode }) => {
     }, [])
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: route.name === "EditProfile" ? "#005479" : "#F7F9F6", marginTop: StatusBar.currentHeight || 0 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: route.name === "EditProfile" ? "#005479" : "#F7F9F6", marginTop: (StatusBar.currentHeight || 0) + 10 }}>
             <ScrollView contentContainerStyle={{ flexGrow: 1, marginBottom: 20, paddingHorizontal: route.name === "ReaderNews" ? 0 : 16 }} refreshControl={<RefreshControl refreshing={isRefresh} onRefresh={onRefresh} />}>
                 {children}
             </ScrollView>

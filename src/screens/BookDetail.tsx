@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
     },
     btnReview: {
-        borderRadius: 14,
+        borderRadius: 12,
         backgroundColor: "#0A78D6",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
