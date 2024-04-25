@@ -12,8 +12,8 @@ import { logOut as logOutHelper } from "../../helpers/logOut"
 import { SafeAreaView, StatusBar } from "react-native"
 import { Loading } from "../../components/Loading"
 
-// const _webview_base_url = "http://192.168.1.5:5173/book-crossing/"
-const _webview_base_url = "https://birkitap.kz/book-crossing/?random=12"
+const _webview_base_url = "http://192.168.0.116:5173/book-crossing/"
+// const _webview_base_url = "https://birkitap.kz/book-crossing/?random=12"
 
 interface IUpload extends IResponse {
     data: { path: string }
