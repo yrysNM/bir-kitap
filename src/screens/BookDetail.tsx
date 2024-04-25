@@ -107,6 +107,7 @@ export const BookDetail = () => {
                 <CloudImage styleImg={styles.bookImg} url={bookInfo?.book.imageLink} />
                 <StarRate rateNumber={bookInfo?.customInfo.rating || 0} size={25} />
                 <Text style={styles.bookTitle}>{bookInfo?.book.title}</Text>
+                <Text style={[styles.bookAuthor, {color: "#212121", fontSize: 15}]}>{bookInfo?.book.genres.join(", ")}</Text>
                 <Text style={styles.bookAuthor}>{bookInfo?.book.author}</Text>
 
                 <View style={styles.statisticWrapper}>
