@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { NewsApi, newsInfo } from "../api/newsApi"
 import { CloudImage } from "../components/CloudImage"
 import CloseImage from "../../assets/images/close.png"
-import { NoData } from "../components/NoData"
+import Skeleton from "../components/Skeleton"
 
 const ReaderNews = () => {
     const { id } = useRoute<RouteProp<RootStackParamList, "ReaderNews">>().params
@@ -54,7 +54,11 @@ const ReaderNews = () => {
                         </View>
                     </>
                 ) : (
-                    <NoData />
+                    <View style={{justifyContent: "center", alignItems: "center"}}>
+                        <Skeleton width={1} height={270} varient="box" styleProps={{ width: "90%", borderRadius: 8 }} />
+
+                        <Skeleton width={1} height={500} varient="box" styleProps={{ width: "100%", borderTopEndRadius: 43, borderTopStartRadius: 43, marginTop: 20, }} />
+                    </View>
                 )}
             </View>
         </Page>
@@ -77,13 +81,12 @@ const styles = StyleSheet.create({
         marginTop: 230,
         paddingVertical: 29,
         paddingHorizontal: 16,
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         width: "100%",
         height: "100%",
         borderRadius: 43,
         alignItems: "center",
     },
-
     newsInfo: {
         flexDirection: "row",
         alignItems: "center",

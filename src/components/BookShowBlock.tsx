@@ -43,7 +43,7 @@ export const BookShowBlock = ({ bookType, children, navigationUrl }: propsInfo) 
 
 const styles = StyleSheet.create({
     listWrapper: {
-        marginTop: 28,
+        marginTop: 15,
         width: "100%",
         gap: 15,
         flexDirection: "column",
