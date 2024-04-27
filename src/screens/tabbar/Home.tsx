@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { BookShowBlock } from "../../components/BookShowBlock"
 import { CarouselREviewList } from "../../components/CarouselReviewList"
 import { UserAPI } from "../../api/userApi"
-import { setUserInfo } from "../../redux/features/mainSlice"
+import { setLoading, setUserInfo } from "../../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
 import { CloudImage } from "../../components/CloudImage"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
@@ -18,7 +18,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../navigation/MainNavigation"
 import { SplitText } from "../../helpers/splitText"
 import { SkeletonHomeNewsCard } from "../../components/SkeletonCards"
-import { NoData } from "../../components/NoData"
 import { PostAPI, postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
 
@@ -45,28 +44,26 @@ export const Home = () => {
     }, [isRefresh])
 
     const loadData = async () => {
-        const newsPromise = fetchNewsData({})
-        const bookPromise = fetchBookData({ start: 0, length: 10 })
-        const reviewPromise = fetchReViewData({ start: 0, length: 5 })
-        const postsPromise = fetchPostsData({ start: 0, length: 5 })
-        const userPromise = fetchUserData({})
-
         try {
-            const firstResolved = await Promise.race([newsPromise, bookPromise, reviewPromise, postsPromise, userPromise])
-
-            if (firstResolved.result_code === 0) {
-                if (firstResolved === (await newsPromise)) {
-                    setNews(firstResolved.data)
-                } else if (firstResolved === (await bookPromise)) {
-                    setBookDataList(firstResolved.data)
-                } else if (firstResolved === (await reviewPromise)) {
-                    setReviewDataList(firstResolved.data)
-                } else if (firstResolved === (await postsPromise)) {
-                    setPosts(firstResolved.data)
-                } else if (firstResolved === (await userPromise)) {
-                    dispatch(setUserInfo(firstResolved.data))
-                }
+            dispatch(setLoading(true))
+            const [newsRes, bookRes, reviewRes, postsRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData({ start: 0, length: 10 }), fetchReViewData({ start: 0, length: 5 }), fetchPostsData({ start: 0, length: 5 }), fetchUserData({})])
+            
+            if (newsRes.result_code === 0) {
+                setNews(newsRes.data)
             }
+            if (bookRes.result_code === 0) {
+                setBookDataList(bookRes.data)
+            }
+            if (reviewRes.result_code === 0) {
+                setReviewDataList(reviewRes.data)
+            }
+            if (postsRes.result_code === 0) {
+                setPosts(postsRes.data)
+            }
+            if (userRes.result_code === 0) {
+                dispatch(setUserInfo(userRes.data))
+            }
+            dispatch(setLoading(false))
         } catch (error) {
             console.error("Error occurred while fetching data:", error)
         }
@@ -85,7 +82,6 @@ export const Home = () => {
         <Page>
             <View style={styles.newsWrapper}>
                 {news.length ? <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeNewsCard />}
-                {!news.length && !isLoading ? <NoData /> : null}
             </View>
 
             <BookShowBlock bookType="Books" navigationUrl="BookMore/books">

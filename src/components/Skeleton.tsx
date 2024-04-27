@@ -37,7 +37,7 @@ const Skeleton: FC<ISkeletonProps> = ({ width, height, varient, styleProps, styl
         anim.start()
 
         return () => anim.stop()
-    }, [])
+    }, [opacity])
 
     return <Animated.View style={[styles.skeleton, { opacity: opacity.current, height, width, borderRadius }, styleProps, stylePropsText]} />
 }
