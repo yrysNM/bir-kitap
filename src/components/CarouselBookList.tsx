@@ -9,7 +9,6 @@ import { CloudImage } from "./CloudImage"
 import { SplitText } from "../helpers/splitText"
 import { SkeletonHomeBooksCard } from "./SkeletonCards"
 import { useAppSelector } from "../hook/useStore"
-import { NoData } from "./NoData"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookDetail">>
 
@@ -37,7 +36,6 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
     return (
         <>
             {dataList.length ? <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={160} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeBooksCard />}
-            {!dataList.length && !isLoading ? <NoData /> : null}
         </>
     )
 }
