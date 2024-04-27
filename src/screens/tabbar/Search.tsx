@@ -64,7 +64,9 @@ export const Search = () => {
 
     return (
         <Page>
-            <SearchInput onEnterSearch={(e) => setSearch(e)} onClickFilter={() => setVisibleModal(true)} placeholder="Search books" />
+            <View style={{ marginTop: 20 }}>
+                <SearchInput onEnterSearch={(e) => setSearch(e)} onClickFilter={() => setVisibleModal(true)} placeholder="Search books" />
+            </View>
             <View style={{ marginTop: 18 }}>
                 <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "object" ? setSelectCategories(e) : null)} isMultiple={true} />
             </View>

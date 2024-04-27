@@ -1,4 +1,4 @@
-import { SafeAreaView, StatusBar } from "react-native"
+import { SafeAreaView } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React, { useEffect, useRef, useState } from "react"
 import { WebView, WebViewMessageEvent } from "react-native-webview"
@@ -104,7 +104,7 @@ export const BookTrackerWebView = () => {
     return (
         <>
             {isLoading && <Loading />}
-            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
                 <WebView
                     ref={webViewEl}
                     key={webviewKey}
