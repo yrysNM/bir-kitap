@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet } from "react-native"
 import { postInfo } from "../api/postApi"
 import { CloudImage } from "./CloudImage"
+import Skeleton from "./Skeleton"
 
 export const PostCard = ({ postInfo }: { postInfo: postInfo }) => {
-    return (
+    return postInfo ? (
         <View style={styles.postBlock}>
             <CloudImage url={postInfo.attachments[0]} styleImg={styles.image} />
             <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
@@ -16,6 +17,11 @@ export const PostCard = ({ postInfo }: { postInfo: postInfo }) => {
             <View>
                 <Text style={styles.readerText}>{postInfo.content || "-"}</Text>
             </View>
+        </View>
+    ) : (
+        <View style={{ justifyContent: "center", alignItems: "center",  marginRight: 20, }}>
+            <Skeleton width={1} height={250} varient="box" styleProps={{ width: "100%", borderRadius: 8 }} />
+
         </View>
     )
 }

@@ -20,7 +20,7 @@ export const TabNavigator = () => {
             const dataRoot = e.data.state.routes[indexRoute]
             if (dataRoot.name === "Root") {
                 Animated.timing(translationTabBar, {
-                    toValue: 8 + ((dataRoot.state?.index || 0) * Dimensions.get("window").width) / 5,
+                    toValue: 8 + ((dataRoot.state?.index || 0) * Dimensions.get("screen").width) / 5,
                     duration: 500,
                     useNativeDriver: true,
                 }).start()

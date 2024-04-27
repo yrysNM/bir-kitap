@@ -1,18 +1,22 @@
-import { Text, View, StyleSheet, TouchableOpacity, Easing, Dimensions } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, Easing, Dimensions, Image } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
 import List from "@ant-design/react-native/lib/list"
-import Icon from "@ant-design/react-native/lib/icon"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "@ant-design/react-native/lib/toast"
 import Popover from "@ant-design/react-native/lib/popover"
+import Modal from "@ant-design/react-native/lib/modal"
 import { useEffect, useRef, useState } from "react"
 import { UserAPI } from "../api/userApi"
 import Button from "@ant-design/react-native/lib/button"
-import { useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { FirstUpperCaseText } from "../helpers/firstUpperCaseText"
 import { CloudImage } from "../components/CloudImage"
+import ArrowBackImg from "../../assets/images/arrow-back.png"
+import EditImg from "../../assets/images/edit.png"
+import { setUserInfo } from "../redux/features/mainSlice"
+import { Loading } from "../components/Loading"
 
 const Item = Popover.Item
 
@@ -26,7 +30,10 @@ interface IEdit {
 export const EditProfile = () => {
     const popoverRef = useRef<Popover | null>(null)
     const navigation = useNavigation()
+    const dispatch = useAppDispatch()
     const [dateOfBirth, setDateOfBirth] = useState<Date>()
+    const [avatarList, setAvatarList] = useState<string[]>([])
+    const [showAvatarModal, setShowAvatarModal] = useState<boolean>(false)
     const [edit, setEdit] = useState<IEdit>({
         email: "",
         fullname: "",
@@ -34,123 +41,213 @@ export const EditProfile = () => {
         avatar: "public/avatar/logo3.png",
     })
 
-    const { fetchData } = UserAPI("profile/edit")
-    const { userInfo } = useAppSelector((state) => state.mainSlice)
+    const { fetchData: fetchUserEditData } = UserAPI("profile/edit")
+    const { fetchData: fetchAvatarListData } = UserAPI("avatar/list")
+    const { userInfo, isLoading } = useAppSelector((state) => state.mainSlice)
 
     const onEdit = async () => {
-        await fetchData({
+        await fetchUserEditData({
             fullName: edit.fullname,
             birth: Number(new Date(dateOfBirth || "").getTime()),
             gender: edit.gender,
             avatar: edit.avatar,
         }).then((res) => {
             if (res && res.result_code === 0) {
+                dispatch(
+                    setUserInfo({
+                        ...userInfo,
+                        fullName: edit.fullname,
+                        avatar: edit.avatar,
+                        gender: edit.gender,
+                        birth: new Date(dateOfBirth || ""),
+                    }),
+                )
                 Toast.success("Updated")
             }
         })
     }
 
     useEffect(() => {
+        loadData()
+    }, [])
+
+    const loadData = async () => {
         if (userInfo) {
             setEdit({
                 email: userInfo.email,
                 fullname: userInfo.fullName,
                 gender: userInfo.gender,
-                avatar: "public/avatar/logo3.png",
+                avatar: userInfo.avatar || "",
             })
         }
 
         setDateOfBirth(new Date(userInfo.birth))
-    }, [userInfo])
+
+        await fetchAvatarListData({}).then((res) => {
+            if (res.result_code === 0) {
+                setAvatarList(JSON.parse(JSON.stringify(res.data)))
+            }
+        })
+    }
 
     const onSelectGender = (gender: string) => {
         setEdit({ ...edit, gender })
     }
 
     return (
-        <View style={{ backgroundColor: "#0A78D6" }}>
-            <TouchableOpacity onPressIn={() => navigation.goBack()} style={styles.headerCommon}>
-                <Icon style={styles.icon} name="left" />
-                <Text style={styles.titleCommon}>Edit Profile</Text>
-            </TouchableOpacity>
+        <>
+            <View style={{ backgroundColor: "#0A78D6" }}>
+                <TouchableOpacity onPressIn={() => navigation.goBack()} style={styles.headerCommon}>
+                    <Image source={ArrowBackImg} style={styles.icon_back} />
+                    <Text style={styles.titleCommon}>Edit Profile</Text>
+                </TouchableOpacity>
 
-            <View style={{ marginTop: 46, gap: 12, justifyContent: "center", alignItems: "center" }}>
-                <CloudImage url={edit.avatar} styleImg={styles.userImg} />
-                <Text style={styles.profileText}>Profile photo</Text>
-            </View>
-            <View style={styles.userInputWrapper}>
-                <InputStyle inputTitle="E-mail">
-                    <InputItem type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
-                </InputStyle>
-                <InputStyle inputTitle="Full name">
-                    <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
-                </InputStyle>
+                <View style={{ marginTop: 46, gap: 12, justifyContent: "center", alignItems: "center", position: "relative" }}>
+                    <CloudImage url={edit.avatar} styleImg={styles.userImg} />
+                    <Text style={styles.profileText}>Profile photo</Text>
+                    <TouchableOpacity onPress={() => setShowAvatarModal(true)} style={styles.editBlock}>
+                        <Image source={EditImg} style={styles.editIcon} />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.userInputWrapper}>
+                    <InputStyle inputTitle="E-mail">
+                        <InputItem disabled type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
+                    </InputStyle>
+                    <InputStyle inputTitle="Full name">
+                        <InputItem type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
+                    </InputStyle>
 
-                <InputStyle inputTitle="Date of Birth">
-                    <View style={styles.datePickerInput}>
-                        <DatePicker style={{ borderWidth: 0 }} minDate={new Date(1970, 7, 6)} maxDate={new Date()} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
-                            <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
-                                Select Date
-                            </List.Item>
-                        </DatePicker>
-                    </View>
-                </InputStyle>
-
-                <InputStyle inputTitle="Gender">
-                    <Popover
-                        ref={popoverRef}
-                        placement="top"
-                        useNativeDriver
-                        duration={200}
-                        easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
-                        overlay={null}
-                        renderOverlayComponent={(_, closePopover) => {
-                            return (
-                                <View style={{ width: 200 }}>
-                                    <Item key={"Male"} value="male">
-                                        <Text
-                                            onPress={() => {
-                                                onSelectGender("male")
-                                                closePopover()
-                                            }}>
-                                            Male
-                                        </Text>
-                                    </Item>
-                                    <Item key={"Female"} value="female">
-                                        <Text
-                                            onPress={() => {
-                                                onSelectGender("female")
-                                                closePopover()
-                                            }}>
-                                            Female
-                                        </Text>
-                                    </Item>
-                                </View>
-                            )
-                        }}>
-                        <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 70, marginLeft: -1 }]}>
-                            <Text style={{ color: edit.gender ? "#000" : "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : "Gender"}</Text>
+                    <InputStyle inputTitle="Date of Birth">
+                        <View style={styles.datePickerInput}>
+                            <DatePicker style={{ borderWidth: 0 }} minDate={new Date(1970, 7, 6)} maxDate={new Date()} mode="date" defaultDate={new Date()} format="YYYY-MM-DD" value={dateOfBirth} onChange={(e) => setDateOfBirth(e)}>
+                                <List.Item style={{ marginLeft: -5 }} arrow="horizontal">
+                                    Select Date
+                                </List.Item>
+                            </DatePicker>
                         </View>
-                    </Popover>
-                </InputStyle>
+                    </InputStyle>
 
-                <Button style={styles.footerBtn} onPress={() => onEdit()}>
-                    <Text style={styles.footerBtnText}>Save</Text>
-                </Button>
+                    <InputStyle inputTitle="Gender">
+                        <Popover
+                            ref={popoverRef}
+                            placement="top"
+                            useNativeDriver
+                            duration={200}
+                            easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
+                            overlay={null}
+                            renderOverlayComponent={(_, closePopover) => {
+                                return (
+                                    <View style={{ width: 200 }}>
+                                        <Item key={"Male"} value="male">
+                                            <Text
+                                                onPress={() => {
+                                                    onSelectGender("male")
+                                                    closePopover()
+                                                }}>
+                                                Male
+                                            </Text>
+                                        </Item>
+                                        <Item key={"Female"} value="female">
+                                            <Text
+                                                onPress={() => {
+                                                    onSelectGender("female")
+                                                    closePopover()
+                                                }}>
+                                                Female
+                                            </Text>
+                                        </Item>
+                                    </View>
+                                )
+                            }}>
+                            <View style={[styles.input, { height: 44, width: Dimensions.get("window").width - 70, marginLeft: -1 }]}>
+                                <Text style={{ color: edit.gender ? "#000" : "#808080" }}>{edit.gender ? FirstUpperCaseText(edit.gender) : "Gender"}</Text>
+                            </View>
+                        </Popover>
+                    </InputStyle>
+
+                    <Button style={styles.footerBtn} onPress={() => onEdit()}>
+                        <Text style={styles.footerBtnText}>Save</Text>
+                    </Button>
+                </View>
+                <Modal animationType="fade" transparent={false} visible={showAvatarModal} onClose={() => setShowAvatarModal(false)} maskClosable style={styles.modalWrapper}>
+                    <View style={styles.avatarListWrapper}>
+                        {avatarList.map((item, i) => (
+                            <TouchableOpacity key={i} style={[styles.avatarBlock, { backgroundColor: item === edit.avatar ? "#0a78d6" : "#fff" }]} onPress={() => setEdit({ ...edit, avatar: item })}>
+                                <CloudImage url={item} styleImg={styles.avatarImg} />
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </Modal>
             </View>
-        </View>
+            {isLoading && <Loading />}
+        </>
     )
 }
 
 const styles = StyleSheet.create({
-    icon: {
-        color: "#fff",
-        fontSize: 20,
-        borderRadius: 10,
+    avatarListWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 10,
+        flexWrap: "wrap",
+    },
+    avatarBlock: {
+        paddingVertical: 5,
+        paddingHorizontal: 5,
+        borderRadius: 100,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    avatarImg: {
+        width: 80,
+        height: 80,
+        objectFit: "cover",
+        borderRadius: 100,
+    },
+    modalWrapper: {
+        paddingTop: 32,
+        marginHorizontal: 32,
+        borderRadius: 12,
+        paddingBottom: 20,
+        backgroundColor: "#fff",
+        position: "absolute",
+        bottom: -Dimensions.get("screen").height / 2,
+    },
+    icon_back: {
+        width: 24,
+        height: 24,
+        objectFit: "contain",
+        tintColor: "#fff",
+    },
+    editBlock: {
+        position: "absolute",
+        bottom: 50,
+        left: Dimensions.get("screen").width / 2 + 30,
+        zIndex: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        justifyContent: "center",
+        alignContent: "center",
+        backgroundColor: "#fff",
+        borderRadius: 100,
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 1,
+            height: 0,
+        },
+        shadowRadius: 100,
+        elevation: 6,
+        shadowOpacity: 1,
+    },
+    editIcon: {
+        width: 20,
+        objectFit: "contain",
+        height: 20,
     },
     titleCommon: {
         fontWeight: "600",
-        fontSize: 20,
+        fontSize: 24,
         color: "#fff",
         marginBottom: 3,
     },
@@ -223,7 +320,7 @@ const styles = StyleSheet.create({
     },
 
     footerBtn: {
-        borderRadius: 20,
+        borderRadius: 12,
         width: "100%",
         height: 54,
         backgroundColor: "#0A78D6",

@@ -108,7 +108,7 @@ export const Profile = () => {
 
                 <View style={styles.contentWrapper}>
                     {tab === "survey" ? (
-                        <View style={{ marginTop: -10 }}>
+                        <View style={{ marginTop: -10, marginBottom: 20, }}>
                             {bookType.map((item) => (
                                 <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
                                     <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     },
     closeIcon: {
         position: "absolute",
-        top: -42,
+        top: -22,
         right: 0,
         zIndex: 100,
     },
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
         gap: 34,
     },
     modalWrapper: {
-        paddingTop: 62,
+        paddingTop: 32,
         paddingHorizontal: 32,
         paddingBottom: 20,
         backgroundColor: "#fff",

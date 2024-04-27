@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     btnWrapper: {
-        borderRadius: 20,
+        borderRadius: 12,
         textAlign: "center",
     },
     btnText: {

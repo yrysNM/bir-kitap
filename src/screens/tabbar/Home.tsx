@@ -19,6 +19,8 @@ import { RootStackParamList } from "../../navigation/MainNavigation"
 import { SplitText } from "../../helpers/splitText"
 import { SkeletonHomeNewsCard } from "../../components/SkeletonCards"
 import { NoData } from "../../components/NoData"
+import { PostAPI, postInfo } from "../../api/postApi"
+import { PostCard } from "../../components/PostCard"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -27,9 +29,11 @@ export const Home = () => {
     const { fetchData: fetchReViewData } = ReviewApi("list")
     const { fetchData: fetchUserData } = UserAPI("info")
     const { fetchData: fetchNewsData } = NewsApi("list")
+    const { fetchData: fetchPostsData } = PostAPI("list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
+    const [posts, setPosts] = useState<postInfo[]>([])
     const { isRefresh, isLoading } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const navigation = useNavigation<NavigateType>()
@@ -41,48 +45,42 @@ export const Home = () => {
     }, [isRefresh])
 
     const loadData = async () => {
-        await fetchNewsData({}).then((res) => {
-            if (res.result_code === 0) {
-                setNews(res.data)
-            }
-        })
+        const newsPromise = fetchNewsData({})
+        const bookPromise = fetchBookData({ start: 0, length: 10 })
+        const reviewPromise = fetchReViewData({ start: 0, length: 5 })
+        const postsPromise = fetchPostsData({ start: 0, length: 5 })
+        const userPromise = fetchUserData({})
 
-        await fetchBookData({
-            start: 0,
-            length: 10,
-        }).then((res) => {
-            if (res.result_code === 0) {
-                setBookDataList(res.data)
-            }
-        })
+        try {
+            const firstResolved = await Promise.race([newsPromise, bookPromise, reviewPromise, postsPromise, userPromise])
 
-        fetchReViewData({
-            start: 0,
-            length: 5,
-        }).then((res) => {
-            if (res.result_code === 0) {
-                setReviewDataList(res.data)
+            if (firstResolved.result_code === 0) {
+                if (firstResolved === (await newsPromise)) {
+                    setNews(firstResolved.data)
+                } else if (firstResolved === (await bookPromise)) {
+                    setBookDataList(firstResolved.data)
+                } else if (firstResolved === (await reviewPromise)) {
+                    setReviewDataList(firstResolved.data)
+                } else if (firstResolved === (await postsPromise)) {
+                    setPosts(firstResolved.data)
+                } else if (firstResolved === (await userPromise)) {
+                    dispatch(setUserInfo(firstResolved.data))
+                }
             }
-        })
-
-        fetchUserData({}).then((res) => {
-            if (res.result_code === 0) {
-                dispatch(setUserInfo(res.data))
-            }
-        })
+        } catch (error) {
+            console.error("Error occurred while fetching data:", error)
+        }
     }
-
     const _renderNews = ({ item }: { item: newsInfo }) => {
         return isLoading && !news.length ? (
             <SkeletonHomeNewsCard />
         ) : (
-            <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} delayPressIn={5} style={styles.newsBlock}>
+            <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} delayPressIn={15} style={styles.newsBlock}>
                 <CloudImage styleImg={styles.newsImg} url={item.imageLink} />
                 <Text style={styles.newsTitle}>{SplitText(item.content, 25)}</Text>
             </TouchableOpacity>
         )
     }
-
     return (
         <Page>
             <View style={styles.newsWrapper}>
@@ -96,6 +94,24 @@ export const Home = () => {
 
             <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
                 <CarouselREviewList dataList={reviewDataList} />
+            </BookShowBlock>
+
+            <BookShowBlock bookType="Posts" navigationUrl="">
+                <Carousel
+                    data={posts}
+                    renderItem={({ item }: { item: postInfo }) => (
+                        <View style={{ marginRight: 20 }}>
+                            <PostCard postInfo={item} />
+                        </View>
+                    )}
+                    sliderWidth={Dimensions.get("window").width}
+                    itemWidth={220}
+                    layout={"default"}
+                    vertical={false}
+                    inactiveSlideOpacity={1}
+                    inactiveSlideScale={1}
+                    activeSlideAlignment={"start"}
+                />
             </BookShowBlock>
         </Page>
     )

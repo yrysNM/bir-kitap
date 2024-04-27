@@ -1,10 +1,12 @@
 import { StyleSheet, Text, View } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { RecommendationAPI } from "../api/recommendationApi"
 import { CloudImage } from "./CloudImage"
 import { UserAPI } from "../api/userApi"
 import { IUserInfo } from "../api/authApi"
+import { SearchInput } from "../components/SearchInput"
+import { NoData } from "./NoData"
 
 interface IRecommendationUser extends IUserInfo {
     id: string
@@ -13,6 +15,7 @@ interface IRecommendationUser extends IUserInfo {
 
 const Follow = () => {
     const [users, setUsers] = useState<IRecommendationUser[]>([])
+    const [search, setSearch] = useState<string | null>(null)
 
     const { fetchData } = RecommendationAPI("users")
     const { fetchData: fetchDataUserFollow } = UserAPI("follow")
@@ -32,41 +35,52 @@ const Follow = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            try {
-                const res = await fetchData({})
-                if (res.result_code === 0) {
-                    setUsers(JSON.parse(JSON.stringify(res.data)))
-                }
-            } catch (error) {
-                alert(JSON.stringify(error))
+            const res = await fetchData({})
+            if (res.result_code === 0) {
+                setUsers(JSON.parse(JSON.stringify(res.data)))
             }
         }
         fetchUsers()
     }, [])
 
-    return (
-        <View style={styles.followWrapper}>
-            {users &&
-                users.map((item) => (
-                    <View style={styles.followBlock} key={item.id}>
-                        <View style={styles.followContent}>
-                            <View>
-                                <CloudImage url={item.avatar} styleImg={styles.followImage} />
-                            </View>
-                            <View>
-                                <Text style={styles.followUser}>{item.fullName}</Text>
-                                <Text style={{ ...styles.followUser, color: "#6D7885" }}>{item.email}</Text>
-                            </View>
-                        </View>
+    const searchList = useMemo(() => {
+        if (search && search.length > 0) {
+            return users.filter((user) => user.fullName.toLowerCase().includes(search.toLowerCase()))
+        }
 
-                        <View style={styles.followBtnBlock}>
-                            <Button style={!item.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(item.id, item.followed)}>
-                                <Text style={!item.followed ? styles.followBtnText : styles.unFollowBtnText}>{!item.followed ? "Follow" : "Unfollow"}</Text>
-                            </Button>
+        return users
+    }, [search, users])
+
+    return (
+        <>
+            <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search books" />
+
+            <View style={styles.followWrapper}>
+                {searchList ? (
+                    searchList.map((item) => (
+                        <View style={styles.followBlock} key={item.id}>
+                            <View style={styles.followContent}>
+                                <View>
+                                    <CloudImage url={item.avatar} styleImg={styles.followImage} />
+                                </View>
+                                <View>
+                                    <Text style={styles.followUser}>{item.fullName}</Text>
+                                    <Text style={{ ...styles.followUser, color: "#6D7885" }}>{item.email}</Text>
+                                </View>
+                            </View>
+
+                            <View style={styles.followBtnBlock}>
+                                <Button style={!item.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(item.id, item.followed)}>
+                                    <Text style={!item.followed ? styles.followBtnText : styles.unFollowBtnText}>{!item.followed ? "Follow" : "Unfollow"}</Text>
+                                </Button>
+                            </View>
                         </View>
-                    </View>
-                ))}
-        </View>
+                    ))
+                ) : (
+                    <NoData />
+                )}
+            </View>
+        </>
     )
 }
 
@@ -118,7 +132,7 @@ const styles = StyleSheet.create({
 
     followBtn: {
         borderWidth: 0,
-        borderRadius: 10,
+        borderRadius: 8,
         width: "100%",
         height: 34,
         backgroundColor: "#0A78D6",
@@ -138,7 +152,7 @@ const styles = StyleSheet.create({
         color: "#fff",
     },
     unFollowBtn: {
-        borderRadius: 10,
+        borderRadius: 8,
         borderWidth: 0.5,
         borderColor: "#6D7885",
         width: "100%",

@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     footerBtn: {
-        borderRadius: 20,
+        borderRadius: 12,
         width: "100%",
         height: 54,
         backgroundColor: "#0A78D6",
