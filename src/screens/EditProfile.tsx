@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, Easing, Dimensions, Image } from "react-native"
+import { Text, View, StyleSheet, TouchableOpacity, Easing, Dimensions, Image, ScrollView } from "react-native"
 import { InputStyle } from "../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import DatePicker from "@ant-design/react-native/lib/date-picker"
@@ -95,7 +95,7 @@ export const EditProfile = () => {
     }
 
     return (
-        <>
+        <ScrollView>
             <View style={{ backgroundColor: "#0A78D6" }}>
                 <TouchableOpacity onPressIn={() => navigation.goBack()} style={styles.headerCommon}>
                     <Image source={ArrowBackImg} style={styles.icon_back} />
@@ -180,7 +180,7 @@ export const EditProfile = () => {
                 </Modal>
             </View>
             {isLoading && <Loading />}
-        </>
+        </ScrollView>
     )
 }
 
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
         marginBottom: 3,
     },
     headerCommon: {
-        marginTop: 34,
+        marginTop: 20,
         marginLeft: 16,
         flexDirection: "row",
         gap: 10,

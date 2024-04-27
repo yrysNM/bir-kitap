@@ -179,7 +179,7 @@ export const CreatePostAndBook = () => {
 
     return (
         <Page>
-            <View style={{ flex: 1, height: "auto", marginBottom: 5 }}>
+            <View style={{ flex: 1, height: "auto", marginBottom: 5, marginTop: 20 }}>
                 <Tabs tabs={tabs} swipeable={false} renderTabBar={(tabProps) => tabHeader(tabProps)}>
                     {/* Create book */}
                     <View>

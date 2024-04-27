@@ -115,7 +115,7 @@ export const Home = () => {
 
 const styles = StyleSheet.create({
     newsWrapper: {
-        marginBottom: 4,
+        marginVertical: 5,
     },
     newsBlock: {
         marginVertical: 2,

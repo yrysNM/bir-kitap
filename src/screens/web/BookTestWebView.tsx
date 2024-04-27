@@ -9,7 +9,7 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { base64toFiile } from "../../helpers/base64toFile"
 import useApi from "../../hook/useApi"
 import { logOut as logOutHelper } from "../../helpers/logOut"
-import { SafeAreaView, StatusBar } from "react-native"
+import { SafeAreaView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Loading } from "../../components/Loading"
 
@@ -114,7 +114,7 @@ export const BookTestWebView = () => {
     return (
         <>
             {isLoading && <Loading />}
-            <SafeAreaView style={{ flex: 1, paddingTop: StatusBar.currentHeight, backgroundColor: "#F7F9F6" }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
                 <WebView
                     ref={webViewEl}
                     key={webviewKey}

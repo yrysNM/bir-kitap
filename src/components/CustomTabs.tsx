@@ -63,6 +63,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         marginTop: 5,
         height: 47,
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 1,
+            height: 1,
+        },
+        shadowRadius: 30,
+        elevation: 1,
+        shadowOpacity: 1,
     },
     tabBlock: {
         flex: 1,
