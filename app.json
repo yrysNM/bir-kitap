@@ -42,7 +42,7 @@
             "package": "mobile.birkitap",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
+                "backgroundColor": "#F7F9F6"
             },
             "versionCode": 2,
             "googleServicesFile": "./google-services.json"
