@@ -1,10 +1,10 @@
-import { Page } from "../layouts/Page"
+import { Page } from "../../layouts/Page"
 import { View } from "react-native"
-import { Header } from "../components/Header"
+import { Header } from "../../components/Header"
 import { useEffect, useState } from "react"
-import { NewsApi, newsInfo } from "../api/newsApi"
-import { NoData } from "../components/NoData"
-import NewsBlock from "../components/NewsBlock"
+import { NewsApi, newsInfo } from "../../api/newsApi"
+import { NoData } from "../../components/NoData"
+import NewsBlock from "../../components/NewsBlock"
 
 const Readers = () => {
     const { fetchData } = NewsApi("list")

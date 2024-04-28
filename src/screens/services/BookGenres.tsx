@@ -1,11 +1,11 @@
 import { View } from "react-native"
-import { Page } from "../layouts/Page"
-import { CarouselBookList } from "../components/CarouselBookList"
+import { Page } from "../../layouts/Page"
+import { CarouselBookList } from "../../components/CarouselBookList"
 import { useEffect, useState } from "react"
-import { BookApi, bookInfo } from "../api/bookApi"
-import { NoData } from "../components/NoData"
-import { BookShowBlock } from "../components/BookShowBlock"
-import { Header } from "../components/Header"
+import { BookApi, bookInfo } from "../../api/bookApi"
+import { NoData } from "../../components/NoData"
+import { BookShowBlock } from "../../components/BookShowBlock"
+import { Header } from "../../components/Header"
 
 type bookGenreInfo = {
     [key: string]: bookInfo[]

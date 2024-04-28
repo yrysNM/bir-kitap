@@ -1,10 +1,10 @@
 import { View, StyleSheet } from "react-native"
-import { Header } from "../components/Header"
-import { Page } from "../layouts/Page"
-import { bookReviewInfo, ReviewApi } from "../api/reviewApi"
+import { Header } from "../../components/Header"
+import { Page } from "../../layouts/Page"
+import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
 import { useEffect, useState } from "react"
-import { NoData } from "../components/NoData"
-import { ReviewCard } from "../components/ReviewCard"
+import { NoData } from "../../components/NoData"
+import { ReviewCard } from "../../components/ReviewCard"
 
 export const Reviews = () => {
     const { fetchData: fetchReviewData } = ReviewApi("list")

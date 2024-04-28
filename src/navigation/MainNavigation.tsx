@@ -11,17 +11,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { setHasLogin } from "../redux/features/mainSlice"
 import { TabNavigator } from "./TabBarNavigator"
 import { BookDetail } from "../screens/BookDetail"
-import { BookGenres } from "../screens/BookGenres"
+import { BookGenres } from "../screens/services/BookGenres"
 import { NotReady } from "../screens/NotReady"
 import { BookMore } from "../screens/BookMore"
 import { BookTrackerWebView } from "../screens/web/BookTrackerWebView"
-import { Reviews } from "../screens/Reviews"
-import { Recommendations } from "../screens/Recommendations"
-import { Collections } from "../screens/Collections"
-import Readers from "../screens/Readers"
+import { Reviews } from "../screens/services/Reviews"
+import { Recommendations } from "../screens/services/Recommendations"
+import { Collections } from "../screens/services/Collections"
+import Readers from "../screens/services/Readers"
 import ReaderNews from "../screens/ReaderNews"
 import { BookTestWebView } from "../screens/web/BookTestWebView"
-import ReadersUser from "../screens/ReadersUser"
+import ReadersUser from "../screens/services/ReadersUser"
+import { Clubs } from "../screens/services/Clubs"
 
 export type RootStackParamList = {
     Root: undefined
@@ -47,6 +48,7 @@ export type RootStackParamList = {
     }
     BookTestWebView: undefined
     ReadersUser: undefined
+    Clubs: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -93,6 +95,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="Reviews" component={Reviews} />
                     <Stack.Screen name="Recommendations" component={Recommendations} />
                     <Stack.Screen name="Collections" component={Collections} />
+                    <Stack.Screen name="Clubs" component={Clubs} />
                 </>
             ) : (
                 <>

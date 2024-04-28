@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { Header } from "../components/Header"
-import { Page } from "../layouts/Page"
-import { BookApi, bookInfo } from "../api/bookApi"
+import { Header } from "../../components/Header"
+import { Page } from "../../layouts/Page"
+import { BookApi, bookInfo } from "../../api/bookApi"
 import { View, StyleSheet } from "react-native"
-import { CarouselBookTypeFilter } from "../components/CarouselBookTypeFilter"
-import { NoData } from "../components/NoData"
-import { BookCard } from "../components/BookCard"
+import { CarouselBookTypeFilter } from "../../components/CarouselBookTypeFilter"
+import { NoData } from "../../components/NoData"
+import { BookCard } from "../../components/BookCard"
 
 export const Collections = () => {
     const [collectionList, setCollectionList] = useState<{ [key: string]: bookInfo[] }>({})
