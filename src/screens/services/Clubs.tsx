@@ -6,6 +6,7 @@ import { CustomTabs } from "../../components/CustomTabs"
 import ClubImg from "../../../assets/images/category/club.png"
 import { Header } from "../../components/Header"
 import { NoData } from "../../components/NoData"
+import AddClubImg from "../../../assets/images/add-club.png"
 
 export const Clubs = () => {
     const [tab, setTab] = useState<string>("clubs")
@@ -47,18 +48,30 @@ export const Clubs = () => {
                             </View>
                         </View>
                     ) : (
-                        <View>
-                            {/* TODO add create club */}
+                        <View style={styles.myCluWrapper}>
                             <NoData />
                         </View>
                     )}
                 </View>
             </View>
+            {tab === "my_clubs" && (
+                <View style={styles.addClubWrapper}>
+                    <Image source={AddClubImg} style={{ width: 50, height: 50, objectFit: "contain" }} />
+                </View>
+            )}
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    myCluWrapper: {
+        marginVertical: 10,
+    },
+    addClubWrapper: {
+        position: "absolute",
+        right: 16,
+        bottom: 50,
+    },
     clubs: {
         marginTop: 15,
     },
