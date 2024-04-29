@@ -41,7 +41,7 @@ export const TabNavigator = () => {
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarHideOnKeyboard: true,
-                    tabBarStyle: { ...styles.tabbar, backgroundColor: "#fff" },
+                    tabBarStyle: { ...styles.tabbar, backgroundColor: "#fff", paddingHorizontal: 8, justifyContent: "center" },
                 }}
                 tabBar={CustomTabbar}>
                 <Tab.Screen name="Home" component={Home} />

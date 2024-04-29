@@ -23,6 +23,7 @@ import ReaderNews from "../screens/ReaderNews"
 import { BookTestWebView } from "../screens/web/BookTestWebView"
 import ReadersUser from "../screens/services/ReadersUser"
 import { Clubs } from "../screens/services/Clubs"
+import { ReviewDetail } from "../screens/ReviewDetail"
 
 export type RootStackParamList = {
     Root: undefined
@@ -44,6 +45,9 @@ export type RootStackParamList = {
     Collections: undefined
     Readers: undefined
     ReaderNews: {
+        id: string
+    }
+    ReviewDetail: {
         id: string
     }
     BookTestWebView: undefined
@@ -96,6 +100,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="Recommendations" component={Recommendations} />
                     <Stack.Screen name="Collections" component={Collections} />
                     <Stack.Screen name="Clubs" component={Clubs} />
+                    <Stack.Screen name="ReviewDetail" component={ReviewDetail} />
                 </>
             ) : (
                 <>
