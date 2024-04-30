@@ -1,12 +1,20 @@
-import { View, StyleSheet, Text, Image } from "react-native"
+import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native"
 import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
 import UserCustomProfileImg from "../../assets/images/custom-user-profile.jpg"
 import { bookReviewInfo } from "../api/reviewApi"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
 
 export const ReviewCard = ({ reviewInfo }: { reviewInfo: bookReviewInfo }) => {
+    const navigation = useNavigation<NavigateType>()
+
     return (
-        <View style={styles.reviewWrapper}>
+        <TouchableOpacity style={styles.reviewWrapper} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo.id || "" })}>
             <CloudImage url={reviewInfo?.book?.imageLink} styleImg={styles.bookReviewImg} />
             <View style={styles.reviewBookInfo}>
                 <View style={styles.reviewUserInfo}>
@@ -21,7 +29,7 @@ export const ReviewCard = ({ reviewInfo }: { reviewInfo: bookReviewInfo }) => {
                 </View>
                 <Text style={styles.reviewBookMessage}>{reviewInfo.message}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
