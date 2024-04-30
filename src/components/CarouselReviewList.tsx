@@ -23,7 +23,7 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
         return isLoading ? (
             <SkeletonCardReviewsCard />
         ) : (
-            <TouchableOpacity onPress={() => navigation.navigate("ReviewDetail", { id: item.id || "" })} style={styles.reviewWrapper}>
+            <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: item.id || "" })} style={styles.reviewWrapper}>
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>

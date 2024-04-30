@@ -14,7 +14,7 @@ export const ReviewCard = ({ reviewInfo }: { reviewInfo: bookReviewInfo }) => {
     const navigation = useNavigation<NavigateType>()
 
     return (
-        <TouchableOpacity style={styles.reviewWrapper} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo.id || "" })}>
+        <TouchableOpacity style={styles.reviewWrapper} delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo.id || "" })}>
             <CloudImage url={reviewInfo?.book?.imageLink} styleImg={styles.bookReviewImg} />
             <View style={styles.reviewBookInfo}>
                 <View style={styles.reviewUserInfo}>
