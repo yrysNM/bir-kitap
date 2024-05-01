@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
     },
     tabbarBlock: {
-        flex: 1,
+        width: 78,
+        // flex: 1,
         paddingVertical: 12,
         flexDirection: "column",
         gap: 5,
