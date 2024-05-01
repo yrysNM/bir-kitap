@@ -10,15 +10,16 @@ import dayjs from "dayjs"
 import { API_URL } from "@env"
 import Skeleton from "./Skeleton"
 import { useAppSelector } from "../hook/useStore"
+import { SplitText } from "../helpers/splitText"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
 
 type propsInfo = {
-    isReviewCard: boolean
-    reviewInfo: bookReviewInfo
+    isReviewCard?: boolean
+    reviewInfo?: bookReviewInfo
 }
 
-export const ReviewCard = ({ reviewInfo, isReviewCard }: propsInfo) => {
+export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
     const navigation = useNavigation<NavigateType>()
     const {
         userInfo: { fullName },
@@ -35,10 +36,6 @@ export const ReviewCard = ({ reviewInfo, isReviewCard }: propsInfo) => {
     const ReChildComponent = () => {
         return reviewInfo ? (
             <>
-                <View style={styles.headerReview}>
-                    <CloudImage url={reviewInfo?.avatar} styleImg={styles.userAvatar} />
-                    <Text style={[styles.userNameText, { color: fullName === reviewInfo.userName ? "#0A78D6" : "#6D7885" }]}>{reviewInfo?.userName}</Text>
-                </View>
                 <ImageBackground style={styles.bookWrapper} imageStyle={{ borderRadius: 12, objectFit: "cover" }} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30}>
                     <CloudImage styleImg={styles.bookImage} url={reviewInfo?.book.imageLink || ""} />
                     <View style={styles.bookInfo}>
@@ -53,7 +50,13 @@ export const ReviewCard = ({ reviewInfo, isReviewCard }: propsInfo) => {
                         </View>
                     </View>
                 </ImageBackground>
-                <Text style={[styles.bookDescrText, { marginTop: 10, marginLeft: 5 }]}>{dayjs(reviewInfo.createtime).format("DD MMMM YYYY [y].")}</Text>
+                <View style={[styles.headerReview, { justifyContent: "space-between", marginTop: 5 }]}>
+                    <View style={styles.headerReview}>
+                        <CloudImage url={reviewInfo?.avatar} styleImg={styles.userAvatar} />
+                        <Text style={[styles.userNameText, { color: fullName === reviewInfo.userName ? "#0A78D6" : "#6D7885" }]}>{reviewInfo?.userName}</Text>
+                    </View>
+                    <Text style={styles.bookDescrText}>{dayjs(reviewInfo.createtime).format("DD MMMM YYYY [y].")}</Text>
+                </View>
 
                 <View style={styles.reviewTitleBlock}>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -64,20 +67,25 @@ export const ReviewCard = ({ reviewInfo, isReviewCard }: propsInfo) => {
                 </View>
 
                 <View>
-                    <Text style={[styles.bookDescrText, { lineHeight: 20 }]}>{reviewInfo.book.description}</Text>
+                    <Text style={[styles.bookDescrText, { lineHeight: 20 }]}>{isReviewCard ? SplitText(reviewInfo.book.description || "", 90) : reviewInfo.book.description}</Text>
                 </View>
             </>
         ) : (
             <View>
-                <View style={styles.headerReview}>
-                    <Skeleton width={30} height={30} varient="circle" />
-                    <Skeleton width={80} height={20} varient="box" styleProps={{ borderRadius: 12 }} />
-                </View>
-                <View style={{ marginTop: 20 }}>
-                    <Skeleton width={1} height={200} varient="box" styleProps={{ borderRadius: 12, width: "100%" }} />
+                <View style={{ marginTop: 10 }}>
+                    <Skeleton width={1} height={150} varient="box" styleProps={{ borderRadius: 12, width: "100%" }} />
                 </View>
                 <View style={{ marginTop: 10 }}>
-                    <Skeleton width={80} height={20} varient="box" styleProps={{ borderRadius: 12 }} />
+                    <View style={[styles.headerReview, { justifyContent: "space-between", marginTop: 5 }]}>
+                        <View style={styles.headerReview}>
+                            <Skeleton width={30} height={30} varient="circle" />
+                            <Skeleton width={80} height={20} varient="box" styleProps={{ borderRadius: 12 }} />
+                        </View>
+                        <View>
+                            <Skeleton width={80} height={20} varient="box" styleProps={{ borderRadius: 12 }} />
+                        </View>
+                    </View>
+
                     <View style={styles.reviewTitleBlock}>
                         <Skeleton width={80} height={20} varient="box" styleProps={{ borderRadius: 12 }} />
                         <Skeleton width={100} height={20} varient="box" styleProps={{ borderRadius: 12 }} />
@@ -91,7 +99,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard }: propsInfo) => {
     }
 
     return isReviewCard ? (
-        <TouchableOpacity style={styles.reviewWrapper} delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo.id || "" })}>
+        <TouchableOpacity style={styles.reviewWrapper} delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo?.id || "" })}>
             <ReChildComponent />
         </TouchableOpacity>
     ) : (
@@ -110,8 +118,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "flex-start",
         gap: 10,
-        marginTop: 10,
-        marginBottom: 20,
+        marginTop: 15,
+        marginBottom: 10,
     },
     rateNumberText: {
         fontSize: 14,
@@ -154,7 +162,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 5,
         alignItems: "center",
-        marginTop: 20,
     },
     userAvatar: {
         width: 30,
@@ -169,24 +176,21 @@ const styles = StyleSheet.create({
     },
 
     reviewWrapper: {
+        width: "100%",
         borderRadius: 9,
         backgroundColor: "#FFFFFF",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
-            width: 0,
-            height: 0,
+            width: 1,
+            height: 1,
         },
-        shadowRadius: 6,
-        elevation: 6,
+        shadowRadius: 9,
+        elevation: 1,
         shadowOpacity: 1,
         marginTop: 1,
-        marginHorizontal: 5,
         marginBottom: 10,
         paddingVertical: 10,
         paddingHorizontal: 19,
-        flexDirection: "row",
-        gap: 14,
-        alignItems: "flex-start",
     },
 
     bookReviewImg: {
