@@ -12,7 +12,7 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
 
-export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
+export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
     const {
         userInfo: { fullName },
         isLoading,

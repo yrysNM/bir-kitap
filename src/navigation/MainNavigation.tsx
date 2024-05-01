@@ -24,6 +24,7 @@ import { BookTestWebView } from "../screens/web/BookTestWebView"
 import ReadersUser from "../screens/services/ReadersUser"
 import { Clubs } from "../screens/services/Clubs"
 import { ReviewDetail } from "../screens/ReviewDetail"
+import { PostDetail } from "../screens/PostDetail"
 
 export type RootStackParamList = {
     Root: undefined
@@ -53,6 +54,7 @@ export type RootStackParamList = {
     BookTestWebView: undefined
     ReadersUser: undefined
     Clubs: undefined
+    PostDetail: { id: string }
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -101,6 +103,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="Collections" component={Collections} />
                     <Stack.Screen name="Clubs" component={Clubs} />
                     <Stack.Screen name="ReviewDetail" component={ReviewDetail} />
+                    <Stack.Screen name="PostDetail" component={PostDetail} />
                 </>
             ) : (
                 <>

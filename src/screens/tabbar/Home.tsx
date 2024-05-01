@@ -7,7 +7,7 @@ import { CarouselBookList } from "../../components/CarouselBookList"
 import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
 import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { BookShowBlock } from "../../components/BookShowBlock"
-import { CarouselREviewList } from "../../components/CarouselReviewList"
+import { CarouselReviewList } from "../../components/CarouselReviewList"
 import { UserAPI } from "../../api/userApi"
 import { setLoading, setUserInfo } from "../../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
@@ -93,7 +93,7 @@ export const Home = () => {
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
-                    <CarouselREviewList dataList={reviewDataList} />
+                    <CarouselReviewList dataList={reviewDataList} />
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Posts" navigationUrl="">
