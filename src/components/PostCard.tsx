@@ -1,11 +1,19 @@
-import { View, Text, StyleSheet } from "react-native"
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native"
 import { postInfo } from "../api/postApi"
 import { CloudImage } from "./CloudImage"
 import Skeleton from "./Skeleton"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "PostDetail">>
 
 export const PostCard = ({ postInfo }: { postInfo: postInfo }) => {
+    const navigation = useNavigation<NavigateType>()
+
     return postInfo ? (
-        <View style={styles.postBlock}>
+        <TouchableOpacity style={styles.postBlock} onPress={() => navigation.navigate("PostDetail", { id: postInfo.id || "" })} delayPressIn={10}>
             <CloudImage url={postInfo.attachments[0]} styleImg={styles.image} />
             <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
                 <View style={styles.readerTitle}>
@@ -17,11 +25,10 @@ export const PostCard = ({ postInfo }: { postInfo: postInfo }) => {
             <View>
                 <Text style={styles.readerText}>{postInfo.content || "-"}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     ) : (
-        <View style={{ justifyContent: "center", alignItems: "center",  marginRight: 20, }}>
+        <View style={{ justifyContent: "center", alignItems: "center", marginRight: 20 }}>
             <Skeleton width={1} height={250} varient="box" styleProps={{ width: "100%", borderRadius: 8 }} />
-
         </View>
     )
 }

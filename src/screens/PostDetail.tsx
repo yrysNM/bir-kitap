@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, Dimensions } from "react-native"
 import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
 import Carousel from "react-native-snap-carousel"
@@ -14,7 +14,7 @@ export const PostDetail = () => {
     return (
         <Page>
             <Header isGoBack title="" />
-            <View style={styles.postWrapper}>{attachements.length !== 1 ? <Carousel renderItem={_renderItem} itemWidth={170} dataList={attachements} layout={"default"} currentIndex={attachements.length === 2 ? 0 : 1} loop /> : null}</View>
+            <View style={styles.postWrapper}>{attachements.length !== 1 ? <Carousel sliderWidth={Dimensions.get("window").width} renderItem={_renderItem} itemWidth={170} dataList={attachements} layout={"default"} currentIndex={attachements.length === 2 ? 0 : 1} loop /> : null}</View>
             <View>
                 <Text>Test book</Text>
             </View>
