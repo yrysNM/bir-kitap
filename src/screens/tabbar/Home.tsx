@@ -1,10 +1,10 @@
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity } from "react-native"
 import { Page } from "../../layouts/Page"
-import { BookApi, bookInfo } from "../../api/bookApi"
+import { bookInfo } from "../../api/bookApi"
 import { useEffect, useState } from "react"
 import { NewsApi, newsInfo } from "../../api/newsApi"
 import { CarouselBookList } from "../../components/CarouselBookList"
-import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
+import { bookReviewInfo } from "../../api/reviewApi"
 import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { BookShowBlock } from "../../components/BookShowBlock"
 import { CarouselReviewList } from "../../components/CarouselReviewList"
@@ -17,19 +17,21 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../navigation/MainNavigation"
 import { SplitText } from "../../helpers/splitText"
-import { SkeletonHomeNewsCard } from "../../components/SkeletonCards"
-import { PostAPI, postInfo } from "../../api/postApi"
+import { SkeletonHomeBooksCard, SkeletonHomeNewsCard } from "../../components/SkeletonCards"
+import { postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
 import { Loading } from "../../components/Loading"
+import { RecommendationAPI } from "../../api/recommendationApi"
+import { NoData } from "../../components/NoData"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
 export const Home = () => {
-    const { fetchData: fetchBookData } = BookApi("list")
-    const { fetchData: fetchReViewData } = ReviewApi("list")
+    const { fetchData: fetchBookData } = RecommendationAPI("books")
+    const { fetchData: fetchReViewData } = RecommendationAPI("reviews")
     const { fetchData: fetchUserData } = UserAPI("info")
     const { fetchData: fetchNewsData } = NewsApi("list")
-    const { fetchData: fetchPostsData } = PostAPI("list")
+    const { fetchData: fetchPostsData } = RecommendationAPI("posts")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
@@ -49,19 +51,19 @@ export const Home = () => {
         try {
             dispatch(setLoading(false))
             setIsLoading(true)
-            const [newsRes, bookRes, reviewRes, postsRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData({ start: 0, length: 10 }), fetchReViewData({ start: 0, length: 5 }), fetchPostsData({ start: 0, length: 5 }), fetchUserData({})])
+            const [newsRes, bookRes, reviewRes, postsRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData({ start: 0, length: 10 }), fetchReViewData({ start: 0, length: 10 }), fetchPostsData({ start: 0, length: 10 }), fetchUserData({})])
 
             if (newsRes.result_code === 0) {
                 setNews(newsRes.data)
             }
             if (bookRes.result_code === 0) {
-                setBookDataList(bookRes.data)
+                setBookDataList(JSON.parse(JSON.stringify(bookRes.data)))
             }
             if (reviewRes.result_code === 0) {
-                setReviewDataList(reviewRes.data)
+                setReviewDataList(JSON.parse(JSON.stringify(reviewRes.data)))
             }
             if (postsRes.result_code === 0) {
-                setPosts(postsRes.data)
+                setPosts(JSON.parse(JSON.stringify(postsRes.data)))
             }
             if (userRes.result_code === 0) {
                 dispatch(setUserInfo(userRes.data))
@@ -97,21 +99,26 @@ export const Home = () => {
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Posts" navigationUrl="">
-                    <Carousel
-                        data={posts}
-                        renderItem={({ item }: { item: postInfo }) => (
-                            <View style={{ marginRight: 20 }}>
-                                <PostCard postInfo={item} />
-                            </View>
-                        )}
-                        sliderWidth={Dimensions.get("window").width}
-                        itemWidth={220}
-                        layout={"default"}
-                        vertical={false}
-                        inactiveSlideOpacity={1}
-                        inactiveSlideScale={1}
-                        activeSlideAlignment={"start"}
-                    />
+                    {!isLoading ? (
+                        <Carousel
+                            data={posts}
+                            renderItem={({ item }: { item: postInfo }) => (
+                                <View style={{ marginRight: 20 }}>
+                                    <PostCard postInfo={item} />
+                                </View>
+                            )}
+                            sliderWidth={Dimensions.get("window").width}
+                            itemWidth={220}
+                            layout={"default"}
+                            vertical={false}
+                            inactiveSlideOpacity={1}
+                            inactiveSlideScale={1}
+                            activeSlideAlignment={"start"}
+                        />
+                    ) : (
+                        <SkeletonHomeBooksCard />
+                    )}
+                    {posts && !isLoading && <NoData />}
                 </BookShowBlock>
             </Page>
             {isLoading && <Loading />}

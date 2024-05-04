@@ -9,6 +9,7 @@ import { CompositeNavigationProp, useNavigation } from "@react-navigation/native
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../navigation/MainNavigation"
+import { SplitText } from "../helpers/splitText"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
 
@@ -30,11 +31,11 @@ export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                         <CloudImage styleImg={styles.reviewUserProfileImg} url={item.avatar || ""} />
                         <View style={{ flexShrink: 1 }}>
                             <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
-                            <Text style={styles.reviewUserNic}>Book Lover</Text>
+                            <Text style={styles.reviewUserNic}>{SplitText(item.book.title, 15)}</Text>
                         </View>
                     </View>
                     <StarRate rateNumber={item.rating} />
-                    <Text style={styles.reviewBookMessage}>{item.message}</Text>
+                    <Text style={styles.reviewBookMessage}>{SplitText(item.message, 85)}</Text>
                 </View>
             </TouchableOpacity>
         )

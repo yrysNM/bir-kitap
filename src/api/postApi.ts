@@ -8,6 +8,9 @@ export type postInfo = {
     userId?: string
     updatetime?: number
     id?: string
+    clubId?: string
+    club?: boolean
+    isClub?: boolean
 }
 
 interface IPost extends IResponse {

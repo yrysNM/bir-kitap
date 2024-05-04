@@ -37,6 +37,7 @@ const _postInfo = {
     title: "",
     attachments: [],
     content: "",
+    isClub: false,
 }
 
 export const CreatePostAndBook = () => {
@@ -261,9 +262,14 @@ export const CreatePostAndBook = () => {
                                             </View>
                                         ))}
                                     </Carousel>
-                                </View>
+                                </View>Z
                             </View>
 
+                            <InputStyle inputTitle="Club">
+                                <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
+                                    <Text>{textWrapper(bookInfo.genres.join(", "))}</Text>
+                                </TouchableOpacity>
+                            </InputStyle>
                             <InputStyle inputTitle="Description">
                                 <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
                             </InputStyle>
