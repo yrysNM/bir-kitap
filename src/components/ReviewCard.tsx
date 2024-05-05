@@ -11,6 +11,7 @@ import { API_URL } from "@env"
 import Skeleton from "./Skeleton"
 import { useAppSelector } from "../hook/useStore"
 import { SplitText } from "../helpers/splitText"
+// import { useState } from "react"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
 
@@ -24,6 +25,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
     const {
         userInfo: { fullName },
     } = useAppSelector((state) => state.mainSlice)
+    // const [blackPercentage, setBlackPercentage] = useState<string | null>(null)
 
     const imageUrl = (url: string) => {
         if (url.indexOf("https") !== -1) {
@@ -33,10 +35,35 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
         }
     }
 
+    // const calculateImageBlackPercent = () => {
+    //     if (!reviewInfo?.book.imageLink) return
+    //     else if (!imageUrl(reviewInfo.book.imageLink)) return
+    //     console.log(imageUrl(reviewInfo.book.imageLink))
+
+    //     getPixelRGBA(imageUrl(reviewInfo.book.imageLink), 50, 50)
+    //         .then((color: number[]) => {
+    //             let blackCount = 0
+    //             const totalPixels = color.length / 4
+
+    //             for (let i = 0; i < color.length; i += 4) {
+    //                 const intensity = (color[i] + color[i + 1] + color[i + 2]) / 3
+    //                 if (intensity < 30) {
+    //                     blackCount++
+    //                 }
+    //             }
+
+    //             const percentage = (blackCount / totalPixels) * 100
+    //             setBlackPercentage(percentage.toFixed(2))
+    //         })
+    //         .catch((err: unknown) => {
+    //             console.error("Error getting pixels:", err)
+    //         })
+    // }
+
     const ReChildComponent = () => {
         return reviewInfo ? (
             <>
-                <ImageBackground style={styles.bookWrapper} imageStyle={{ borderRadius: 12, objectFit: "cover" }} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30}>
+                <ImageBackground style={styles.bookWrapper} imageStyle={{ borderRadius: 12, objectFit: "cover" }} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30} tintColor="#fff">
                     <CloudImage styleImg={styles.bookImage} url={reviewInfo?.book.imageLink || ""} />
                     <View style={styles.bookInfo}>
                         <View>
@@ -59,11 +86,13 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
                 </View>
 
                 <View style={styles.reviewTitleBlock}>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <Icon name="star" color="#0A78D6" size-={15} />
-                        <Text style={styles.reviewTitle}>{reviewInfo.rating}</Text>
-                    </View>
-                    <Text style={styles.reviewTitle}>{reviewInfo.message.trim()}</Text>
+                    <Text style={styles.reviewTitle}>
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 10, height: 21 }}>
+                            <Icon name="star" color="#0A78D6" size={20} style={{ paddingTop: 2 }} />
+                            <Text style={styles.reviewTitle}>{reviewInfo.rating}</Text>
+                        </View>
+                        <Text>{reviewInfo.message.trim()}</Text>
+                    </Text>
                 </View>
 
                 <View>
@@ -113,6 +142,8 @@ const styles = StyleSheet.create({
         lineHeight: 25,
         fontWeight: "500",
         color: "#212121",
+        display: "flex",
+        flexShrink: 1,
     },
     reviewTitleBlock: {
         flexDirection: "row",
@@ -131,6 +162,8 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         lineHeight: 20,
         color: "#212121",
+        flexShrink: 1,
+        flexWrap: "wrap",
     },
     bookDescrText: {
         fontSize: 14,
@@ -141,6 +174,7 @@ const styles = StyleSheet.create({
     bookInfo: {
         flexDirection: "column",
         justifyContent: "space-between",
+        flexShrink: 1,
         gap: 10,
     },
     bookWrapper: {
@@ -151,6 +185,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 20,
+        borderRadius: 12,
     },
     bookImage: {
         width: 100,

@@ -118,7 +118,11 @@ export const Home = () => {
                     ) : (
                         <SkeletonHomeBooksCard />
                     )}
-                    {posts && !isLoading && <NoData />}
+                    {!posts.length && !isLoading && (
+                        <View style={{ width: 100, marginBottom: 20 }}>
+                            <NoData />
+                        </View>
+                    )}
                 </BookShowBlock>
             </Page>
             {isLoading && <Loading />}

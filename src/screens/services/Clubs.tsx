@@ -1,15 +1,25 @@
-import { Image, Text, View, StyleSheet } from "react-native"
+import { Image, Text, View, StyleSheet, PanResponder, Dimensions, TouchableOpacity } from "react-native"
 import { CloudImage } from "../../components/CloudImage"
 import { Page } from "../../layouts/Page"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CustomTabs } from "../../components/CustomTabs"
 import ClubImg from "../../../assets/images/category/club.png"
 import { Header } from "../../components/Header"
 import { NoData } from "../../components/NoData"
 import AddClubImg from "../../../assets/images/add-club.png"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import Modal from "@ant-design/react-native/lib/modal"
+import { InputStyle } from "../../components/InputStyle"
+import InputItem from "@ant-design/react-native/lib/input-item"
+import Switch from "@ant-design/react-native/lib/switch"
+import Button from "@ant-design/react-native/lib/button"
+import { ClubAPI } from "../../api/clubApi"
+import Toast from "@ant-design/react-native/lib/toast"
 
 export const Clubs = () => {
-    const [tab, setTab] = useState<string>("clubs")
+    const { fetchData: fetchCreateClubData } = ClubAPI("create")
+    const screenWidth = Dimensions.get("window").width
+    const screenHeight = Dimensions.get("window").height
     const tabs = [
         {
             label: "Clubs",
@@ -17,6 +27,56 @@ export const Clubs = () => {
         },
         { label: "My clubs", value: "my_clubs" },
     ]
+    const [tab, setTab] = useState<string>("clubs")
+    const [position, setPosition] = useState<{ x: number; y: number }>({
+        x: screenWidth - 80,
+        y: screenHeight - 70,
+    })
+    const [clubInfo, setClubInfo] = useState<{ title: string; isPrivate: boolean }>({ title: "", isPrivate: false })
+    const [showAddClubModal, setShowAddClubModal] = useState<boolean>(false)
+
+    useEffect(() => {
+        AsyncStorage.getItem("clubAddElementPosition").then((value) => {
+            console.log(value)
+        })
+    }, [])
+
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => false,
+        onStartShouldSetPanResponderCapture: () => false,
+        onMoveShouldSetPanResponderCapture: () => false,
+        onPanResponderMove: (event, gesture) => {
+            const newX = position.x + gesture.dx
+            const newY = position.y + gesture.dy
+
+            if (newX >= 0 && newX <= screenWidth - 50 && newY >= 0 && newY <= screenHeight - 50) {
+                setPosition({ x: newX, y: newY })
+            }
+        },
+        onPanResponderRelease: () => {
+            savePosition()
+        },
+    })
+
+    const savePosition = async () => {
+        try {
+            await AsyncStorage.setItem("clubAddElementPosition", JSON.stringify(position))
+        } catch (error) {
+            console.error("Error saving position:", error)
+        }
+    }
+
+    const onCreateClub = () => {
+        fetchCreateClubData(clubInfo).then((res) => {
+            if (res.result_code === 0) {
+                Toast.success("Successfuly created post")
+                setClubInfo({ title: "", isPrivate: false })
+                setShowAddClubModal(false)
+            }
+        })
+    }
+
+    console.log(position)
 
     return (
         <Page>
@@ -55,15 +115,64 @@ export const Clubs = () => {
                 </View>
             </View>
             {tab === "my_clubs" && (
-                <View style={styles.addClubWrapper}>
+                <TouchableOpacity onPress={() => setShowAddClubModal(true)} style={[styles.addClubWrapper, { left: position.x, top: position.y }]} {...panResponder.panHandlers}>
                     <Image source={AddClubImg} style={{ width: 50, height: 50, objectFit: "contain" }} />
-                </View>
+                </TouchableOpacity>
             )}
+            <Modal popup animationType="slide-up" visible={showAddClubModal} onClose={() => setShowAddClubModal(false)} style={styles.modalWrapper} maskClosable>
+                <View>
+                    <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Add Club</Text>
+                    <InputStyle inputTitle="Title">
+                        <InputItem last type="text" style={styles.input} value={clubInfo.title} onChange={(e) => setClubInfo({ ...clubInfo, title: e })} />
+                    </InputStyle>
+                    <InputStyle inputTitle="Is private club">
+                        <Switch checked={clubInfo.isPrivate} />
+                    </InputStyle>
+
+                    <Button type="primary" style={styles.createBtn} onPress={() => onCreateClub()}>
+                        Create a club
+                    </Button>
+                </View>
+            </Modal>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    createBtn: {
+        width: "100%",
+        borderRadius: 13,
+        backgroundColor: "#0A78D6",
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowRadius: 2,
+        shadowOpacity: 1,
+        borderWidth: 0,
+    },
+    input: {
+        height: 42,
+        width: "100%",
+        borderWidth: 0.5,
+        borderColor: "#000",
+        borderStyle: "solid",
+        borderRadius: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 10,
+        marginLeft: -15,
+        marginRight: -15,
+    },
+    modalWrapper: {
+        paddingTop: 15,
+        paddingHorizontal: 32,
+        paddingBottom: 20,
+        backgroundColor: "#fff",
+        borderTopRightRadius: 50,
+        borderTopLeftRadius: 50,
+    },
     myCluWrapper: {
         marginVertical: 10,
     },

@@ -18,7 +18,7 @@ export const PostCard = ({ postInfo }: { postInfo: postInfo }) => {
             <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
                 <View style={styles.readerTitle}>
                     <View style={styles.readerTitleBlock}>
-                        <Text style={{ color: "white", fontSize: 8 }}>{postInfo.title || "-"}</Text>
+                        <Text style={{ color: "#fff", fontSize: 16, lineHeight: 20 }}>{postInfo.title || "-"}</Text>
                     </View>
                 </View>
             </View>
@@ -74,9 +74,12 @@ const styles = StyleSheet.create({
     },
 
     readerText: {
-        fontSize: 8,
+        fontSize: 12,
+        lineHeight: 16,
         fontWeight: "600",
+        color: "#6D7885",
         marginTop: 7,
         marginBottom: 10,
+        marginLeft: 5,
     },
 })

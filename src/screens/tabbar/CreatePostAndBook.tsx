@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Page } from "../../layouts/Page"
 import { Text, StyleSheet, View, TouchableOpacity, Dimensions, Image } from "react-native"
 import Tabs from "@ant-design/react-native/lib/tabs"
@@ -17,11 +17,14 @@ import { base64toFiile } from "../../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
 import { PostAPI, postInfo } from "../../api/postApi"
 import Carousel from "@ant-design/react-native/lib/carousel"
+import Switch from "@ant-design/react-native/lib/switch"
 import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
 import { SelectGenres } from "../../components/SelectGenres"
 import { useAppDispatch } from "../../hook/useStore"
 import { setLoading } from "../../redux/features/mainSlice"
 import { CustomTabs } from "../../components/CustomTabs"
+import { ClubAPI, clubInfo } from "../../api/clubApi"
+import { NoData } from "../../components/NoData"
 
 const _bookInfo = {
     title: "",
@@ -38,12 +41,14 @@ const _postInfo = {
     attachments: [],
     content: "",
     isClub: false,
+    clubId: "",
 }
 
 export const CreatePostAndBook = () => {
     const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const { fetchData: fetchGenreData } = GenreAPI("list")
+    const { fetchData: fetchMyClubData } = ClubAPI("my/list")
     const { fetchData: fetchCreateBookData } = BookApi("create")
     const { fetchData: fetchCreatePostData } = PostAPI("create")
     const { fetchData: fetchUploadBookImgData } = BookApi("upload")
@@ -52,6 +57,8 @@ export const CreatePostAndBook = () => {
         { title: "Create post", label: "Create post ", value: "create_post" },
     ]
     const [genreList, setGenreList] = useState<genreInfo[]>([])
+    const [clubList, setClubList] = useState<clubInfo[]>([])
+    const [showModalClub, setShowModalClub] = useState<boolean>(false)
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
     const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
     const [postInfo, setPostInfo] = useState<postInfo>(_postInfo)
@@ -59,13 +66,18 @@ export const CreatePostAndBook = () => {
     const [year, setYear] = useState<string>("")
     const [pages, setPages] = useState<string>("")
 
-    useEffect(() => {
-        fetchGenreData({}).then((res) => {
-            if (res.result_code === 0) {
-                setGenreList(res.data)
-            }
-        })
-    }, [])
+    const onChangeSwitchClub = async (e: boolean) => {
+        if (e) {
+            await fetchMyClubData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setClubList(res.data)
+                }
+            })
+        }
+
+        setShowModalClub(e)
+        setPostInfo({ ...postInfo, isClub: e })
+    }
 
     const handleFileUpload = async () => {
         dispatch(setLoading(true))
@@ -134,7 +146,10 @@ export const CreatePostAndBook = () => {
     }
 
     const onCreatePost = () => {
-        fetchCreatePostData(postInfo).then((res) => {
+        fetchCreatePostData({
+            ...postInfo,
+            isClub: Number(postInfo.isClub),
+        }).then((res) => {
             if (res.result_code === 0) {
                 Toast.success("Successfuly created post")
                 setPostInfo(_postInfo)
@@ -158,6 +173,17 @@ export const CreatePostAndBook = () => {
         } else {
             return text
         }
+    }
+
+    const openModalGenres = async () => {
+        if (!genreList.length) {
+            await fetchGenreData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setGenreList(res.data)
+                }
+            })
+        }
+        setShowModalGenre(true)
     }
 
     const tabHeader = (tabProps: TabBarPropsType) => {
@@ -224,7 +250,7 @@ export const CreatePostAndBook = () => {
                                 </View>
                             </View>
                             <InputStyle inputTitle="Genre">
-                                <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
+                                <TouchableOpacity onPress={() => openModalGenres()} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
                                     <Text>{textWrapper(bookInfo.genres.join(", "))}</Text>
                                 </TouchableOpacity>
                             </InputStyle>
@@ -262,13 +288,17 @@ export const CreatePostAndBook = () => {
                                             </View>
                                         ))}
                                     </Carousel>
-                                </View>Z
+                                </View>
                             </View>
-
                             <InputStyle inputTitle="Club">
-                                <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
-                                    <Text>{textWrapper(bookInfo.genres.join(", "))}</Text>
-                                </TouchableOpacity>
+                                <View style={{ width: "100%" }}>
+                                    <Switch checked={postInfo.isClub} onChange={onChangeSwitchClub} />
+                                    {postInfo.isClub && (
+                                        <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0, marginTop: 10 }}>
+                                            <Text>{postInfo.clubId && postInfo.clubId.length ? clubList.find((item) => item.id === postInfo.clubId)?.title : "Select club!"}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
                             </InputStyle>
                             <InputStyle inputTitle="Description">
                                 <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
@@ -290,6 +320,20 @@ export const CreatePostAndBook = () => {
                     dataList={genreList}
                     selectedGenres={bookInfo.genres}
                 />
+            </Modal>
+            <Modal popup animationType="slide-up" visible={showModalClub} onClose={() => setShowModalClub(false)} style={styles.modalWrapper} maskClosable>
+                <View>
+                    <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Clubs</Text>
+                    {clubList.length ? (
+                        clubList.map((club) => (
+                            <View key={club.id}>
+                                <Text>{club.title}</Text>
+                            </View>
+                        ))
+                    ) : (
+                        <NoData />
+                    )}
+                </View>
             </Modal>
         </Page>
     )
@@ -377,7 +421,7 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderRadius: 14,
         paddingLeft: 14,
-        paddingTop: 25,
+        paddingTop: 13,
     },
     createBtn: {
         width: "100%",

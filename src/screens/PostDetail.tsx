@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { PostAPI, postInfo } from "../api/postApi"
 import { useRoute, RouteProp } from "@react-navigation/native"
 import { RootStackParamList } from "../navigation/MainNavigation"
+import dayjs from "dayjs"
 
 export const PostDetail = () => {
     const { fetchData } = PostAPI("get")
@@ -28,6 +29,20 @@ export const PostDetail = () => {
         })
     }, [])
 
+    const timeText = (time: number) => {
+        if (time < 10) {
+            return `0${time}`
+        } else {
+            return time
+        }
+    }
+
+    const createTimeText = (createTime?: number) => {
+        const hour = dayjs(createTime).get("hour")
+        const minnute = dayjs(createTime).get("minute")
+        return `${timeText(hour)}:${timeText(minnute)}`
+    }
+
     const _renderItemPostImage = ({ item }: { item: string }) => {
         return (
             <View style={styles.imageWrapper}>
@@ -38,41 +53,54 @@ export const PostDetail = () => {
     return (
         <Page>
             <Header isGoBack title="" />
-            <View style={styles.postWrapper}>
-                <View style={styles.postImagesBlock}>
-                    {postInfo.attachments.length !== 1 ? (
-                        <Carousel data={postInfo.attachments} renderItem={_renderItemPostImage} sliderWidth={Dimensions.get("window").width} itemWidth={180} loop activeSlideAlignment={"center"} />
-                    ) : (
-                        <View style={[styles.imageWrapper, { paddingBottom: 10 }]}>
-                            <CloudImage url={postInfo.attachments[0]} styleImg={styles.postImages} />
-                        </View>
-                    )}
-                </View>
-                {postInfo.title.length && postInfo.content.length && (
-                    <View style={{ justifyContent: "center", alignItems: "flex-end", width: 150 }}>
-                        <View style={styles.postInfoTitleBlock}>
-                            <Text style={styles.postTitleText}>{postInfo.title}</Text>
-                        </View>
-                        <Text style={styles.postDescrText}>{postInfo.content}</Text>
+            <View style={styles.postImagesBlock}>
+                {postInfo.attachments.length !== 1 ? (
+                    <Carousel data={postInfo.attachments} renderItem={_renderItemPostImage} sliderWidth={Dimensions.get("window").width} itemWidth={180} loop activeSlideAlignment={"center"} />
+                ) : (
+                    <View style={[styles.imageWrapper, { paddingBottom: 10 }]}>
+                        <CloudImage url={postInfo.attachments[0]} styleImg={styles.postImages} />
                     </View>
                 )}
+            </View>
+            <View style={styles.postWrapper}>
+                {postInfo.title.length && postInfo.content.length ? (
+                    <View style={{ justifyContent: "center" }}>
+                        <Text style={styles.postTitleText}>{postInfo.title}</Text>
+                        <Text style={styles.postDescrText}>{postInfo.content}</Text>
+                    </View>
+                ) : null}
+                <View style={styles.postInfoTimeBlock}>
+                    <Text style={styles.timeText}>{dayjs(postInfo.createtime).format("DD MMMM YYYY [y].")}</Text>
+                    <Text style={styles.timeText}>{createTimeText(postInfo.createtime)}</Text>
+                </View>
             </View>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    timeText: {
+        fontSize: 14,
+        fontWeight: "400",
+        lineHeight: 16,
+        color: "#6D7885",
+    },
+    postInfoTimeBlock: {
+        position: "absolute",
+        bottom: 5,
+        right: 12,
+        flexDirection: "row",
+        gap: 5,
+        width: "100%",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
     postDescrText: {
         fontSize: 16,
         lineHeight: 24,
-        color: "",
-        marginTop: 10,
-    },
-    postInfoTitleBlock: {
-        backgroundColor: "#0A78D6",
-        borderRadius: 10,
-        paddingVertical: 5,
-        paddingHorizontal: 15,
+        color: "#212121",
+        marginTop: 5,
+        marginLeft: 2,
     },
     postTitleText: {
         fontSize: 24,
@@ -84,6 +112,8 @@ const styles = StyleSheet.create({
     postWrapper: {
         paddingVertical: 12,
         paddingHorizontal: 12,
+        paddingTop: 12,
+        paddingBottom: 30,
         backgroundColor: "#fff",
         borderRadius: 12,
         shadowColor: "rgba(19, 12, 12, 0.3)",
