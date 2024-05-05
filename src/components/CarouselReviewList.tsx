@@ -1,22 +1,29 @@
-import { View, Dimensions, Text, StyleSheet } from "react-native"
+import { View, TouchableOpacity, Dimensions, Text, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
 import { bookReviewInfo } from "../api/reviewApi"
 import { CloudImage } from "./CloudImage"
 import { StarRate } from "./StarRate"
 import { useAppSelector } from "../hook/useStore"
 import { SkeletonCardReviewsCard } from "./SkeletonCards"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
 
-export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
+
+export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
     const {
         userInfo: { fullName },
         isLoading,
     } = useAppSelector((state) => state.mainSlice)
+    const navigation = useNavigation<NavigateType>()
 
     const _renderReviewItem = ({ item }: { item: bookReviewInfo }) => {
         return isLoading ? (
             <SkeletonCardReviewsCard />
         ) : (
-            <View style={styles.reviewWrapper}>
+            <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: item.id || "" })} style={styles.reviewWrapper}>
                 <CloudImage url={item?.book?.imageLink} styleImg={styles.bookReviewImg} />
                 <View style={styles.reviewBookInfo}>
                     <View style={styles.reviewUserInfo}>
@@ -29,13 +36,11 @@ export const CarouselREviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                     <StarRate rateNumber={item.rating} />
                     <Text style={styles.reviewBookMessage}>{item.message}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
     return (
-        <>
-            {dataList.length  ? <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonCardReviewsCard />}
-        </>
+        <>{dataList.length ? <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonCardReviewsCard />}</>
     )
 }
 

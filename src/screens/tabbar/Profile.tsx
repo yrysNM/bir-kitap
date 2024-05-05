@@ -108,7 +108,7 @@ export const Profile = () => {
 
                 <View style={styles.contentWrapper}>
                     {tab === "survey" ? (
-                        <View style={{ marginTop: -10, marginBottom: 20, }}>
+                        <View style={{ marginTop: -10, marginBottom: 20 }}>
                             {bookType.map((item) => (
                                 <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
                                     <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>

@@ -9,7 +9,7 @@ import ReadersImg from "../../../assets/images/category/readers.png"
 import ReviewsImg from "../../../assets/images/category/reviews.png"
 import RecommendImg from "../../../assets/images/category/recomend.png"
 import CollectionImg from "../../../assets/images/category/collection.png"
-import NewsImg from "../../../assets/images/category/news.png"
+import ClubImg from "../../../assets/images/category/club.png"
 import GenresImg from "../../../assets/images/category/genres.png"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
@@ -25,9 +25,9 @@ export const Services = () => {
             url: "BookGenres",
         },
         {
-            title: "News",
-            icon: NewsImg,
-            url: "Readers",
+            title: "Clubs",
+            icon: ClubImg,
+            url: "Clubs",
         },
         {
             title: "Collections",

@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F9FAF8",
         borderStyle: "dotted",
         borderWidth: 1,
-        borderColor: "rgba(0, 0, 0, 0.5)",
+        borderColor: "#212121",
     },
     uploadIcon: {
         fontSize: 57,
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
         padding: 5,
         fontSize: 25,
         borderWidth: 1,
-        borderColor: " rgba(255, 255, 255, 0.5)",
+        borderColor: "#6D7885",
         borderStyle: "solid",
         backgroundColor: "#000",
         zIndex: 10,

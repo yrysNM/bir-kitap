@@ -1,7 +1,7 @@
 import { View } from "react-native"
-import { Page } from "../layouts/Page"
-import { Header } from "../components/Header"
-import Follow from "../components/Follow"
+import { Page } from "../../layouts/Page"
+import { Header } from "../../components/Header"
+import Follow from "../../components/Follow"
 
 const ReadersUser = () => {
     return (

@@ -7,7 +7,7 @@ import { CarouselBookList } from "../../components/CarouselBookList"
 import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
 import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { BookShowBlock } from "../../components/BookShowBlock"
-import { CarouselREviewList } from "../../components/CarouselReviewList"
+import { CarouselReviewList } from "../../components/CarouselReviewList"
 import { UserAPI } from "../../api/userApi"
 import { setLoading, setUserInfo } from "../../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
@@ -20,6 +20,7 @@ import { SplitText } from "../../helpers/splitText"
 import { SkeletonHomeNewsCard } from "../../components/SkeletonCards"
 import { PostAPI, postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
+import { Loading } from "../../components/Loading"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -33,7 +34,8 @@ export const Home = () => {
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [posts, setPosts] = useState<postInfo[]>([])
-    const { isRefresh, isLoading } = useAppSelector((state) => state.mainSlice)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const { isRefresh } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const navigation = useNavigation<NavigateType>()
 
@@ -45,9 +47,10 @@ export const Home = () => {
 
     const loadData = async () => {
         try {
-            dispatch(setLoading(true))
+            dispatch(setLoading(false))
+            setIsLoading(true)
             const [newsRes, bookRes, reviewRes, postsRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData({ start: 0, length: 10 }), fetchReViewData({ start: 0, length: 5 }), fetchPostsData({ start: 0, length: 5 }), fetchUserData({})])
-            
+
             if (newsRes.result_code === 0) {
                 setNews(newsRes.data)
             }
@@ -63,7 +66,7 @@ export const Home = () => {
             if (userRes.result_code === 0) {
                 dispatch(setUserInfo(userRes.data))
             }
-            dispatch(setLoading(false))
+            setIsLoading(false)
         } catch (error) {
             console.error("Error occurred while fetching data:", error)
         }
@@ -79,43 +82,47 @@ export const Home = () => {
         )
     }
     return (
-        <Page>
-            <View style={styles.newsWrapper}>
-                {news.length ? <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeNewsCard />}
-            </View>
+        <>
+            <Page>
+                <View style={styles.newsWrapper}>
+                    {news.length ? <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeNewsCard />}
+                </View>
 
-            <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
-                <CarouselBookList dataList={bookDataList} />
-            </BookShowBlock>
+                <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
+                    <CarouselBookList dataList={bookDataList} />
+                </BookShowBlock>
 
-            <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
-                <CarouselREviewList dataList={reviewDataList} />
-            </BookShowBlock>
+                <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
+                    <CarouselReviewList dataList={reviewDataList} />
+                </BookShowBlock>
 
-            <BookShowBlock bookType="Posts" navigationUrl="">
-                <Carousel
-                    data={posts}
-                    renderItem={({ item }: { item: postInfo }) => (
-                        <View style={{ marginRight: 20 }}>
-                            <PostCard postInfo={item} />
-                        </View>
-                    )}
-                    sliderWidth={Dimensions.get("window").width}
-                    itemWidth={220}
-                    layout={"default"}
-                    vertical={false}
-                    inactiveSlideOpacity={1}
-                    inactiveSlideScale={1}
-                    activeSlideAlignment={"start"}
-                />
-            </BookShowBlock>
-        </Page>
+                <BookShowBlock bookType="Posts" navigationUrl="">
+                    <Carousel
+                        data={posts}
+                        renderItem={({ item }: { item: postInfo }) => (
+                            <View style={{ marginRight: 20 }}>
+                                <PostCard postInfo={item} />
+                            </View>
+                        )}
+                        sliderWidth={Dimensions.get("window").width}
+                        itemWidth={220}
+                        layout={"default"}
+                        vertical={false}
+                        inactiveSlideOpacity={1}
+                        inactiveSlideScale={1}
+                        activeSlideAlignment={"start"}
+                    />
+                </BookShowBlock>
+            </Page>
+            {isLoading && <Loading />}
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     newsWrapper: {
-        marginVertical: 5,
+        marginTop: 20,
+        marginBottom: 5,
     },
     newsBlock: {
         marginVertical: 2,

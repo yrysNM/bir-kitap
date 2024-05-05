@@ -34,14 +34,14 @@ export const TabNavigator = () => {
 
     return (
         <>
-            <Animated.View style={[styles.tabIconBlock, { transform: [{ translateX: translationTabBar }] }]}></Animated.View>
+            <Animated.View style={[styles.tabIconBlock, { transform: [{ translateX: translationTabBar }], width: Dimensions.get("screen").width / 5 - 16 }]}></Animated.View>
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
                     headerShown: false,
                     tabBarShowLabel: false,
                     tabBarHideOnKeyboard: true,
-                    tabBarStyle: { ...styles.tabbar, backgroundColor: "#fff" },
+                    tabBarStyle: { ...styles.tabbar },
                 }}
                 tabBar={CustomTabbar}>
                 <Tab.Screen name="Home" component={Home} />
@@ -57,7 +57,8 @@ export const TabNavigator = () => {
 const styles = StyleSheet.create({
     tabbar: {
         height: 74,
-        alignItems: "center",
+        backgroundColor: "#fff",
+        paddingHorizontal: 8,
     },
     tabIconBlock: {
         width: 64,
