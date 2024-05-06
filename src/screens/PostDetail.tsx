@@ -50,15 +50,27 @@ export const PostDetail = () => {
             </View>
         )
     }
+
     return (
         <Page>
             <Header isGoBack title="" />
             <View style={styles.postImagesBlock}>
                 {postInfo.attachments.length !== 1 ? (
-                    <Carousel data={postInfo.attachments} renderItem={_renderItemPostImage} sliderWidth={Dimensions.get("window").width} itemWidth={180} loop activeSlideAlignment={"center"} />
+                    <Carousel
+                        data={postInfo.attachments}
+                        renderItem={_renderItemPostImage}
+                        sliderWidth={Dimensions.get("window").width}
+                        itemWidth={180}
+                        activeSlideAlignment={"center"}
+                        vertical={false}
+                        loop
+                        loopClonesPerSide={postInfo.attachments.length}
+                        initialScrollIndex={1}
+                        useScrollView={true}
+                    />
                 ) : (
                     <View style={[styles.imageWrapper, { paddingBottom: 10 }]}>
-                        <CloudImage url={postInfo.attachments[0]} styleImg={styles.postImages} />
+                        <CloudImage url={postInfo.attachments[0] || ""} styleImg={styles.postImages} />
                     </View>
                 )}
             </View>
