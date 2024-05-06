@@ -14,6 +14,7 @@ import { NoData } from "../components/NoData"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { useAppSelector } from "../hook/useStore"
 import ArrowBack from "../../assets/images/arrow-back.png"
+import CarouselGeners from "../components/CarouselGeners"
 
 type bookReviewInfo = {
     id?: string
@@ -107,7 +108,7 @@ export const BookDetail = () => {
                 <CloudImage styleImg={styles.bookImg} url={bookInfo?.book.imageLink} />
                 <StarRate rateNumber={bookInfo?.customInfo.rating || 0} size={25} />
                 <Text style={styles.bookTitle}>{bookInfo?.book.title}</Text>
-                <Text style={[styles.bookAuthor, {color: "#212121", fontSize: 15}]}>{bookInfo?.book.genres.join(", ")}</Text>
+                <CarouselGeners bookInfo={bookInfo && bookInfo}/>
                 <Text style={styles.bookAuthor}>{bookInfo?.book.author}</Text>
 
                 <View style={styles.statisticWrapper}>
@@ -358,4 +359,18 @@ const styles = StyleSheet.create({
         marginTop: 13,
         marginBottom: 12,
     },
+
+    borderSubtitle: {
+        borderWidth: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 40,
+        width: 'auto'
+    },
+
+    borderFlex: {
+        flexDirection: 'row',
+        gap: 10,
+        overflowX: 'scroll'
+    }
 })
