@@ -23,6 +23,7 @@ import { PostCard } from "../../components/PostCard"
 import { Loading } from "../../components/Loading"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { NoData } from "../../components/NoData"
+import i18next, { t } from "i18next"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -83,6 +84,10 @@ export const Home = () => {
             </TouchableOpacity>
         )
     }
+
+    const changeLng = (item: string) => {
+        i18next.changeLanguage(item)
+    }
     return (
         <>
             <Page>
@@ -124,6 +129,12 @@ export const Home = () => {
                         </View>
                     )}
                 </BookShowBlock>
+
+                <Text>{t("Welcome")}</Text>
+
+                <TouchableOpacity onPress={() => changeLng("ru")}>
+                    <Text>123123</Text>
+                </TouchableOpacity>
             </Page>
             {isLoading && <Loading />}
         </>
