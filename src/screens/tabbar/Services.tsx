@@ -76,7 +76,7 @@ export const Services = () => {
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "cover" }} />
                         </View>
-                        <Text style={styles.categoryText}>Book Tracker</Text>
+                        <Text style={styles.categoryText}>Book tracker</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookCrossingWebView" as never)}>
                         <View style={styles.categoryBlock}>
@@ -88,7 +88,7 @@ export const Services = () => {
                         <View style={styles.categoryBlock}>
                             <Image source={BookTestImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
                         </View>
-                        <Text style={styles.categoryText}>Book Test</Text>
+                        <Text style={styles.categoryText}>Book test</Text>
                     </TouchableOpacity>
                 </View>
             </View>

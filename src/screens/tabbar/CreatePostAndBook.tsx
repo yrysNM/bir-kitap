@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Page } from "../../layouts/Page"
 import { Text, StyleSheet, View, TouchableOpacity, Dimensions, Image } from "react-native"
 import Tabs from "@ant-design/react-native/lib/tabs"
@@ -17,11 +17,17 @@ import { base64toFiile } from "../../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
 import { PostAPI, postInfo } from "../../api/postApi"
 import Carousel from "@ant-design/react-native/lib/carousel"
+import Switch from "@ant-design/react-native/lib/switch"
 import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
 import { SelectGenres } from "../../components/SelectGenres"
 import { useAppDispatch } from "../../hook/useStore"
 import { setLoading } from "../../redux/features/mainSlice"
 import { CustomTabs } from "../../components/CustomTabs"
+import { ClubAPI, clubInfo } from "../../api/clubApi"
+import { NoData } from "../../components/NoData"
+import { CloudImage } from "../../components/CloudImage"
+import ClubImg from "../../../assets/images/category/club.png"
+import { SplitText } from "../../helpers/splitText"
 
 const _bookInfo = {
     title: "",
@@ -37,12 +43,15 @@ const _postInfo = {
     title: "",
     attachments: [],
     content: "",
+    isClub: false,
+    clubId: "",
 }
 
 export const CreatePostAndBook = () => {
     const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const { fetchData: fetchGenreData } = GenreAPI("list")
+    const { fetchData: fetchMyClubData } = ClubAPI("my/list")
     const { fetchData: fetchCreateBookData } = BookApi("create")
     const { fetchData: fetchCreatePostData } = PostAPI("create")
     const { fetchData: fetchUploadBookImgData } = BookApi("upload")
@@ -51,6 +60,8 @@ export const CreatePostAndBook = () => {
         { title: "Create post", label: "Create post ", value: "create_post" },
     ]
     const [genreList, setGenreList] = useState<genreInfo[]>([])
+    const [clubList, setClubList] = useState<clubInfo[]>([])
+    const [showModalClub, setShowModalClub] = useState<boolean>(false)
     const [showModalGenre, setShowModalGenre] = useState<boolean>(false)
     const [bookInfo, setBookInfo] = useState<bookInfo>(_bookInfo)
     const [postInfo, setPostInfo] = useState<postInfo>(_postInfo)
@@ -58,13 +69,18 @@ export const CreatePostAndBook = () => {
     const [year, setYear] = useState<string>("")
     const [pages, setPages] = useState<string>("")
 
-    useEffect(() => {
-        fetchGenreData({}).then((res) => {
-            if (res.result_code === 0) {
-                setGenreList(res.data)
-            }
-        })
-    }, [])
+    const onChangeSwitchClub = async (e: boolean) => {
+        if (e) {
+            await fetchMyClubData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setClubList(res.data)
+                }
+            })
+        }
+
+        setShowModalClub(e)
+        setPostInfo({ ...postInfo, isClub: e })
+    }
 
     const handleFileUpload = async () => {
         dispatch(setLoading(true))
@@ -133,7 +149,10 @@ export const CreatePostAndBook = () => {
     }
 
     const onCreatePost = () => {
-        fetchCreatePostData(postInfo).then((res) => {
+        fetchCreatePostData({
+            ...postInfo,
+            isClub: Number(postInfo.isClub),
+        }).then((res) => {
             if (res.result_code === 0) {
                 Toast.success("Successfuly created post")
                 setPostInfo(_postInfo)
@@ -159,6 +178,17 @@ export const CreatePostAndBook = () => {
         }
     }
 
+    const openModalGenres = async () => {
+        if (!genreList.length) {
+            await fetchGenreData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setGenreList(res.data)
+                }
+            })
+        }
+        setShowModalGenre(true)
+    }
+
     const tabHeader = (tabProps: TabBarPropsType) => {
         const { goToTab, onTabClick } = tabProps
 
@@ -175,6 +205,14 @@ export const CreatePostAndBook = () => {
                 }}
             />
         )
+    }
+
+    const onSelectClub = (clubId: string) => {
+        if (postInfo.clubId === clubId) {
+            setPostInfo({ ...postInfo, clubId: "" })
+        } else {
+            setPostInfo({ ...postInfo, clubId })
+        }
     }
 
     return (
@@ -223,7 +261,7 @@ export const CreatePostAndBook = () => {
                                 </View>
                             </View>
                             <InputStyle inputTitle="Genre">
-                                <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
+                                <TouchableOpacity onPress={() => openModalGenres()} style={{ ...styles.input, marginLeft: 0, marginRight: 0 }}>
                                     <Text>{textWrapper(bookInfo.genres.join(", "))}</Text>
                                 </TouchableOpacity>
                             </InputStyle>
@@ -263,7 +301,16 @@ export const CreatePostAndBook = () => {
                                     </Carousel>
                                 </View>
                             </View>
-
+                            <InputStyle inputTitle="Club">
+                                <View style={{ width: "100%" }}>
+                                    <Switch checked={postInfo.isClub} onChange={onChangeSwitchClub} />
+                                    {postInfo.isClub && (
+                                        <TouchableOpacity onPress={() => setShowModalClub(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0, marginTop: 10 }}>
+                                            <Text style={{ opacity: postInfo.clubId?.length ? 1 : 0.5 }}>{postInfo.clubId && postInfo.clubId.length ? clubList.find((item) => item.id === postInfo.clubId)?.title : "Select club!"}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                </View>
+                            </InputStyle>
                             <InputStyle inputTitle="Description">
                                 <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
                             </InputStyle>
@@ -285,11 +332,98 @@ export const CreatePostAndBook = () => {
                     selectedGenres={bookInfo.genres}
                 />
             </Modal>
+            <Modal popup animationType="slide-up" visible={showModalClub} onClose={() => setShowModalClub(false)} style={styles.modalWrapper} maskClosable>
+                <View>
+                    <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Clubs</Text>
+                    {clubList.length ? (
+                        clubList.map((club, i) => (
+                            <TouchableOpacity onPress={() => onSelectClub(club.id || "")} key={club.id} style={[styles.clibBlockBorder, { borderBottomWidth: clubList.length - 1 === i ? 0 : 1 }]}>
+                                <View style={styles.clubBlock}>
+                                    <CloudImage url={club.avatar} styleImg={styles.clubImg} />
+                                    <View style={styles.clubInfo}>
+                                        <Text style={styles.clubTitleText}>{SplitText(club.title, 20)}</Text>
+
+                                        <View>
+                                            <Text style={styles.clubAdminText}>
+                                                <Text>Last Post: </Text>
+                                                <Text style={{ color: "#212121", fontWeight: "500" }}>16 min ago</Text>
+                                            </Text>
+                                            <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
+                                                <View style={styles.clubBottomEditBlock}>
+                                                    <Image source={ClubImg} tintColor="#6D7885" style={{ width: 15, height: 25, objectFit: "contain" }} />
+                                                    <Text style={styles.clubUsersText}>150</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={[styles.selectBlock, { borderColor: postInfo.clubId === club.id ? "#0A78D6" : "#212121" }]}>{postInfo.clubId === club.id && <Icon name="check" color="#0A78D6" />}</View>
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    ) : (
+                        <NoData />
+                    )}
+                </View>
+            </Modal>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    selectBlock: {
+        justifyContent: "center",
+        alignItems: "center",
+        width: 30,
+        height: 30,
+        borderRadius: 100,
+        borderColor: "#212121",
+        borderStyle: "solid",
+        borderWidth: 1,
+    },
+    clubBottomEditBlock: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 5,
+    },
+    clubAdminText: {
+        fontSize: 10,
+        fontWeight: "400",
+        lineHeight: 16,
+        color: "#6D7885",
+    },
+    clubTitleText: {
+        fontSize: 16,
+        fontWeight: "600",
+        lineHeight: 20,
+    },
+    clubUsersText: {
+        fontSize: 10,
+        fontWeight: "400",
+        lineHeight: 15,
+        color: "#6D7885",
+    },
+    clubBlock: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 10,
+        paddingVertical: 10,
+    },
+    clibBlockBorder: {
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#0000001f",
+        borderBottomStyle: "solid",
+    },
+    clubImg: {
+        width: 110,
+        height: 100,
+        borderRadius: 12,
+        objectFit: "cover",
+    },
+    clubInfo: {
+        gap: 5,
+        flex: 1,
+    },
     modalWrapper: {
         paddingTop: 15,
         paddingHorizontal: 32,
@@ -371,7 +505,7 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderRadius: 14,
         paddingLeft: 14,
-        paddingTop: 25,
+        paddingTop: 13,
     },
     createBtn: {
         width: "100%",

@@ -20,7 +20,7 @@ const initialState: IState = {
         fullName: "",
         phone: "",
         password: "",
-        birth: new Date(),
+        birth: 0,
         gender: "",
         avatar: "",
     },

@@ -22,22 +22,18 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
         ) : (
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })} delayPressIn={5}>
                 <CloudImage styleImg={styles.bookImg} url={item.imageLink} />
-                <View style={{ flex: 1, justifyContent: "space-between" }}>
+                <View style={{ flex: 1, justifyContent: "center" }}>
                     <Text style={styles.text}>{SplitText(item.title, 20)}</Text>
                     <View style={styles.textInfo}>
                         <Text style={styles.descr}>{SplitText(item.author, 15)}</Text>
-                        <Text style={styles.descr}>{item.year}</Text>
+                        {item.year !== 0 && <Text style={styles.descr}>{item.year}</Text>}
                     </View>
                 </View>
             </TouchableOpacity>
         )
     }
 
-    return (
-        <>
-            {dataList.length ? <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={160} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeBooksCard />}
-        </>
-    )
+    return <>{dataList.length ? <Carousel data={dataList} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={160} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeBooksCard />}</>
 }
 
 const styles = StyleSheet.create({

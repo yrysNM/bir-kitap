@@ -1,27 +1,34 @@
-import { View, Text, StyleSheet } from "react-native"
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native"
 import { postInfo } from "../api/postApi"
 import { CloudImage } from "./CloudImage"
 import Skeleton from "./Skeleton"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "PostDetail">>
 
 export const PostCard = ({ postInfo }: { postInfo: postInfo }) => {
+    const navigation = useNavigation<NavigateType>()
+
     return postInfo ? (
-        <View style={styles.postBlock}>
+        <TouchableOpacity style={styles.postBlock} onPress={() => navigation.navigate("PostDetail", { id: postInfo.id || "" })} delayPressIn={10}>
             <CloudImage url={postInfo.attachments[0]} styleImg={styles.image} />
             <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
                 <View style={styles.readerTitle}>
                     <View style={styles.readerTitleBlock}>
-                        <Text style={{ color: "white", fontSize: 8 }}>{postInfo.title || "-"}</Text>
+                        <Text style={{ color: "#fff", fontSize: 16, lineHeight: 20 }}>{postInfo.title || "-"}</Text>
                     </View>
                 </View>
             </View>
             <View>
                 <Text style={styles.readerText}>{postInfo.content || "-"}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     ) : (
-        <View style={{ justifyContent: "center", alignItems: "center",  marginRight: 20, }}>
+        <View style={{ justifyContent: "center", alignItems: "center", marginRight: 20 }}>
             <Skeleton width={1} height={250} varient="box" styleProps={{ width: "100%", borderRadius: 8 }} />
-
         </View>
     )
 }
@@ -67,9 +74,12 @@ const styles = StyleSheet.create({
     },
 
     readerText: {
-        fontSize: 8,
+        fontSize: 12,
+        lineHeight: 16,
         fontWeight: "600",
+        color: "#6D7885",
         marginTop: 7,
         marginBottom: 10,
+        marginLeft: 5,
     },
 })

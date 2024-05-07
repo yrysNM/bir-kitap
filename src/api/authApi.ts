@@ -15,7 +15,7 @@ export interface IUserInfo {
     fullName: string
     phone: string
     password: string
-    birth: Date
+    birth: number
     gender: string
     avatar?: string
 }

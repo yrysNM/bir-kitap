@@ -15,6 +15,5 @@ module.exports = function (api) {
                 },
             ],
         ],
-        dangerouslyAddModulePathsToTranspile: ["deprecated-react-native-listview"],
     }
 }
