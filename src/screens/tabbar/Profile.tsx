@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity, Switch } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Easing, FlatList } from "react-native"
 import { useAppSelector } from "../../hook/useStore"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { UserAPI } from "../../api/userApi"
 import { bookReviewInfo } from "../../api/reviewApi"
 import { Page } from "../../layouts/Page"
@@ -17,6 +17,12 @@ import { CloudImage } from "../../components/CloudImage"
 import { CustomTabs } from "../../components/CustomTabs"
 import { postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
+import Popover from "@ant-design/react-native/lib/popover"
+import i18next from "i18next"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useTranslation } from "react-i18next"
+
+const Item = Popover.Item
 
 interface IProfile {
     readBooksCount: number
@@ -42,6 +48,8 @@ const _infoTemp = {
     posts: [],
 }
 export const Profile = () => {
+    const { i18n } = useTranslation()
+    const popoverRef = useRef<Popover | null>(null)
     const navigation = useNavigation()
     const {
         userInfo: { fullName, avatar },
@@ -51,6 +59,10 @@ export const Profile = () => {
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
     const [tab, setTab] = useState<string>("survey")
+    const languages = [
+        { label: "English", value: "en" },
+        { label: "Қазақша", value: "kk" },
+    ]
     const statusList = [
         { value: "reading", label: "Reading" },
         { value: "selected", label: "Read Later" },
@@ -71,6 +83,15 @@ export const Profile = () => {
 
     const onChangeTab = (type: string) => {
         setTab(type)
+    }
+
+    const onChangeLang = async (lang: string) => {
+        try {
+            await AsyncStorage.setItem("lang", lang)
+            i18next.changeLanguage(lang)
+        } catch {
+            console.log("err in saving data")
+        }
     }
 
     const bookType = Object.keys(info.books)
@@ -137,21 +158,49 @@ export const Profile = () => {
                         <Icon name="edit" color="#212121" />
                         <Text style={styles.infoText}>Edit Profile</Text>
                     </TouchableOpacity>
-                    <View style={[styles.modalWrapperBlock, { justifyContent: "space-between" }]}>
+                    <Popover
+                        ref={popoverRef}
+                        placement="top"
+                        useNativeDriver
+                        duration={200}
+                        easing={(show) => (show ? Easing.in(Easing.ease) : Easing.step0)}
+                        overlay={null}
+                        renderOverlayComponent={(_, closePopover) => {
+                            return (
+                                <View style={{ width: 200 }}>
+                                    <FlatList
+                                        data={languages}
+                                        renderItem={({ item }) => (
+                                            <Item key={item.value} value={item.value}>
+                                                <Text
+                                                    onPress={() => {
+                                                        onChangeLang(item.value)
+                                                        closePopover()
+                                                    }}>
+                                                    {item.label}
+                                                </Text>
+                                            </Item>
+                                        )}
+                                    />
+                                </View>
+                            )
+                        }}>
                         <View style={styles.modalWrapperBlock}>
-                            <Icon name="profile" color="#212121" />
-                            <Text style={styles.infoText}>Switch to author</Text>
+                            <Icon name="global" color="#212121" />
+                            <Text style={[styles.infoText]}>Language ({languages.find((lang) => lang.value === i18n.language)?.label})</Text>
                         </View>
-                        <Switch />
-                    </View>
+                    </Popover>
                     {/* <View style={styles.modalWrapperBlock}>
                         <Icon name="key" />
                         <Text style={[styles.infoText]}>Change Password</Text>
-                    </View>
-                    <View style={styles.modalWrapperBlock}>
-                        <Icon name="global" />
-                        <Text style={[styles.infoText]}>Language</Text>
-                    </View>
+                        </View>
+                        <View style={[styles.modalWrapperBlock, { justifyContent: "space-between" }]}>
+                            <View style={styles.modalWrapperBlock}>
+                                <Icon name="profile" color="#212121" />
+                                <Text style={styles.infoText}>Switch to author</Text>
+                            </View>
+                            <Switch />
+                        </View>
                     <View style={styles.modalWrapperBlock}>
                         <Icon name="info-circle" />
                         <Text style={[styles.infoText]}>Language</Text>

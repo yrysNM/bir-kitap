@@ -59,7 +59,7 @@ export const EditProfile = () => {
                         fullName: edit.fullname,
                         avatar: edit.avatar,
                         gender: edit.gender,
-                        birth: new Date(dateOfBirth || ""),
+                        birth: Number(new Date(dateOfBirth || "").getTime()),
                     }),
                 )
                 Toast.success("Updated")

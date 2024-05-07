@@ -7,11 +7,26 @@ import { Provider as ProviderRedux } from "react-redux"
 import store from "./src/redux/store"
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { Loading } from "./src/components/Loading"
+import { I18nextProvider } from "react-i18next"
+import i18next from "./src/locales/i18n"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function App() {
     const [fontLoaded, setFontLoaded] = useState<boolean>(true)
 
     useEffect(() => {
+        const loadLanguage = async () => {
+            try {
+                const storedLanguage = await AsyncStorage.getItem("lang")
+                if (storedLanguage) {
+                    i18next.changeLanguage(storedLanguage)
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        loadLanguage()
+
         _loadAssets().then(() => {
             setFontLoaded(false)
         })
@@ -30,9 +45,11 @@ export default function App() {
     return (
         <ProviderRedux store={store}>
             <Provider locale={enUS}>
-                <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#F7F9F6" } }}>
-                    <MainNavigation />
-                </NavigationContainer>
+                <I18nextProvider i18n={i18next}>
+                    <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "#F7F9F6" } }}>
+                        <MainNavigation />
+                    </NavigationContainer>
+                </I18nextProvider>
             </Provider>
         </ProviderRedux>
     )
