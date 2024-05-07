@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList, Dimensions, PanResponder } from "react-native"
+import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from "react-native"
 import { CloudImage } from "../../components/CloudImage"
 import { Page } from "../../layouts/Page"
 import { useEffect, useState } from "react"
@@ -27,7 +27,6 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import Icon from "@ant-design/react-native/lib/icon"
 import * as Clipboard from "expo-clipboard"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
 dayjs.extend(relativeTime)
 
@@ -43,12 +42,6 @@ export const Clubs = () => {
     const navigation = useNavigation<NavigateType>()
     const { isLoading } = useAppSelector((state) => state.mainSlice)
 
-    const screenWidth = Dimensions.get("window").width
-    const screenHeight = Dimensions.get("window").height
-    const [position, setPosition] = useState<{ x: number; y: number }>({
-        x: 0,
-        y: 0,
-    })
     const tabs = [
         {
             label: "Clubs",
@@ -93,38 +86,6 @@ export const Clubs = () => {
                 setIsRefresh(false)
             }
         })
-    }
-
-    useEffect(() => {
-        AsyncStorage.getItem("clubAddElementPosition").then((value) => {
-            console.log(value)
-        })
-    }, [])
-
-    /**
-     * @TODO add move add club btn
-     */
-    const panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: () => false,
-        onPanResponderMove: (event, gesture) => {
-            const newX = position.x + gesture.dx
-            const newY = position.y + gesture.dy
-
-            if (newX >= 0 && newX <= screenWidth - 50 && newY >= 0 && newY <= screenHeight - 50) {
-                setPosition({ x: newX, y: newY })
-            }
-        },
-        onPanResponderRelease: () => {
-            savePosition()
-        },
-    })
-
-    const savePosition = async () => {
-        try {
-            await AsyncStorage.setItem("clubAddElementPosition", JSON.stringify(position))
-        } catch (error) {
-            console.error("Error saving position:", error)
-        }
     }
 
     const onDeleteClub = () => {
@@ -291,11 +252,9 @@ export const Clubs = () => {
                 </View>
             </View>
             {tab === "my_clubs" && (
-                <View style={[styles.addClubWrapper, { left: position.x, top: position.y }]} {...panResponder.panHandlers}>
-                    <Text onPress={() => setShowAddClubModal({ id: "add", isOpen: true })}>
-                        <Image source={AddClubImg} style={{ width: 50, height: 50, objectFit: "contain" }} />
-                    </Text>
-                </View>
+                <TouchableOpacity onPress={() => setShowAddClubModal({ id: "add", isOpen: true })} style={styles.addClubWrapper}>
+                    <Image source={AddClubImg} style={{ width: 50, height: 50, objectFit: "contain" }} />
+                </TouchableOpacity>
             )}
             <Modal popup animationType="slide-up" visible={showAddClubModal.isOpen} onClose={() => onCloseModal(false)} style={styles.modalWrapper} maskClosable>
                 <View>
@@ -442,9 +401,10 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     addClubWrapper: {
-        position: "absolute",
-        right: 16,
-        bottom: 50,
+        marginTop: 10,
+        width: "100%",
+        alignItems: "flex-end",
+        justifyContent: "flex-end",
         zIndex: 1,
     },
     clubs: {
