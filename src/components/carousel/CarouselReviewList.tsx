@@ -1,15 +1,15 @@
 import { View, TouchableOpacity, Dimensions, Text, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
-import { bookReviewInfo } from "../api/reviewApi"
-import { CloudImage } from "./CloudImage"
-import { StarRate } from "./StarRate"
-import { useAppSelector } from "../hook/useStore"
-import { SkeletonCardReviewsCard } from "./SkeletonCards"
+import { bookReviewInfo } from "../../api/reviewApi"
+import { CloudImage } from "../CloudImage"
+import { StarRate } from "../StarRate"
+import { useAppSelector } from "../../hook/useStore"
+import { SkeletonCardReviewsCard } from "../SkeletonCards"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RootStackParamList } from "../navigation/MainNavigation"
-import { SplitText } from "../helpers/splitText"
+import { RootStackParamList } from "../../navigation/MainNavigation"
+import { SplitText } from "../../helpers/splitText"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
 

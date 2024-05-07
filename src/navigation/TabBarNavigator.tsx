@@ -5,7 +5,7 @@ import { Services } from "../screens/tabbar/Services"
 import { CreatePostAndBook } from "../screens/tabbar/CreatePostAndBook"
 import { Search } from "../screens/tabbar/Search"
 import { Profile } from "../screens/tabbar/Profile"
-import { CustomTabbar } from "../components/CustomTabbar"
+import { CustomTabbar } from "../components/customs/CustomTabbar"
 import { useNavigation } from "@react-navigation/native"
 import { useRef, useEffect } from "react"
 

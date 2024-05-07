@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Dimensions, Text, TouchableOpacity, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
-import { useAppSelector } from "../hook/useStore"
+import { useAppSelector } from "../../hook/useStore"
 
 type info = {
     title: string

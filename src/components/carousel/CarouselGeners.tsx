@@ -1,5 +1,5 @@
 import Carousel from "react-native-snap-carousel"
-import { bookInfo } from "../api/bookApi"
+import { bookInfo } from "../../api/bookApi"
 import { View } from "@ant-design/react-native"
 import { Dimensions, StyleSheet, Text } from "react-native"
 
@@ -41,7 +41,7 @@ const CarouselGeners = ({ bookInfo }: IProps) => {
 
     const _renderItem = () => {
         return (
-            <View style={{flexDirection: 'row', gap: 10}}>
+            <View style={{ flexDirection: "row", gap: 10 }}>
                 {bookInfo?.book.genres.map((item) => (
                     <View style={styles.borderSubtitle} key={item}>
                         <Text style={[styles.bookAuthor, { color: "#212121", fontSize: 15 }]}>{item}</Text>
@@ -55,7 +55,9 @@ const CarouselGeners = ({ bookInfo }: IProps) => {
         <>
             {bookInfo && bookInfo?.book?.genres?.length > 2 ? (
                 <Carousel data={bookInfo.book.genres} renderItem={_renderItemMore} sliderWidth={Dimensions.get("window").width} itemWidth={200} layout={"default"} vertical={false} inactiveSlideOpacity={5} inactiveSlideScale={1} activeSlideAlignment={"start"} />
-            ) : _renderItem()}
+            ) : (
+                _renderItem()
+            )}
         </>
     )
 }

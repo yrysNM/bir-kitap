@@ -2,7 +2,7 @@ import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList, Dimensions }
 import { CloudImage } from "../../components/CloudImage"
 import { Page } from "../../layouts/Page"
 import { useEffect, useState } from "react"
-import { CustomTabs } from "../../components/CustomTabs"
+import { CustomTabs } from "../../components/customs/CustomTabs"
 import ClubImg from "../../../assets/images/category/club.png"
 import { Header } from "../../components/Header"
 import { NoData } from "../../components/NoData"

@@ -1,14 +1,14 @@
 import { Dimensions, Text, StyleSheet, TouchableOpacity, View } from "react-native"
 import Carousel from "react-native-snap-carousel"
-import { bookInfo } from "../api/bookApi"
+import { bookInfo } from "../../api/bookApi"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RootStackParamList } from "../navigation/MainNavigation"
-import { CloudImage } from "./CloudImage"
-import { SplitText } from "../helpers/splitText"
-import { SkeletonHomeBooksCard } from "./SkeletonCards"
-import { useAppSelector } from "../hook/useStore"
+import { RootStackParamList } from "../../navigation/MainNavigation"
+import { CloudImage } from "../CloudImage"
+import { SplitText } from "../../helpers/splitText"
+import { SkeletonHomeBooksCard } from "../SkeletonCards"
+import { useAppSelector } from "../../hook/useStore"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookDetail">>
 
