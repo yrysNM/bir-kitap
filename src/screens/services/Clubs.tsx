@@ -1,4 +1,4 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from "react-native"
+import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList, Dimensions, PanResponder } from "react-native"
 import { CloudImage } from "../../components/CloudImage"
 import { Page } from "../../layouts/Page"
 import { useEffect, useState } from "react"
@@ -19,6 +19,19 @@ import TrashImg from "../../../assets/images/trash.png"
 import { useAppSelector } from "../../hook/useStore"
 import { Loading } from "../../components/Loading"
 import LockImg from "../../../assets/images/lock.png"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../../navigation/MainNavigation"
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+import Icon from "@ant-design/react-native/lib/icon"
+import * as Clipboard from "expo-clipboard"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
+dayjs.extend(relativeTime)
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ClubDetail">>
 
 export const Clubs = () => {
     const { fetchData: fetchMyClubData } = ClubAPI("my/list")
@@ -26,13 +39,16 @@ export const Clubs = () => {
     const { fetchData: fetchCreateClubData } = ClubAPI("create")
     const { fetchData: fetchUpdateClubData } = ClubAPI("update")
     const { fetchData: fetchDeleteClubData } = ClubAPI("delete")
+    const { fetchData: fetchRefreshInviteCodeData } = ClubAPI("refresh/invitecode")
+    const navigation = useNavigation<NavigateType>()
     const { isLoading } = useAppSelector((state) => state.mainSlice)
-    // const screenWidth = Dimensions.get("window").width
-    // const screenHeight = Dimensions.get("window").height
-    // const [position, setPosition] = useState<{ x: number; y: number }>({
-    //     x: screenWidth - 80,
-    //     y: screenHeight - 80,
-    // })
+
+    const screenWidth = Dimensions.get("window").width
+    const screenHeight = Dimensions.get("window").height
+    const [position, setPosition] = useState<{ x: number; y: number }>({
+        x: 0,
+        y: 0,
+    })
     const tabs = [
         {
             label: "Clubs",
@@ -40,6 +56,7 @@ export const Clubs = () => {
         },
         { label: "My clubs", value: "my_clubs" },
     ]
+    const [isRefresh, setIsRefresh] = useState<boolean>(false)
     const [tab, setTab] = useState<string>("clubs")
     const [clubInfo, setClubInfo] = useState<{ title: string; isPrivate: boolean }>({ title: "", isPrivate: false })
     const [myClubList, setMyClubList] = useState<clubInfo[]>([])
@@ -73,43 +90,42 @@ export const Clubs = () => {
         fetchMyClubData({}).then((res) => {
             if (res.result_code === 0) {
                 setMyClubList(res.data)
+                setIsRefresh(false)
             }
         })
     }
 
-    // useEffect(() => {
-    //     AsyncStorage.getItem("clubAddElementPosition").then((value) => {
-    //         console.log(value)
-    //     })
-    // }, [])
+    useEffect(() => {
+        AsyncStorage.getItem("clubAddElementPosition").then((value) => {
+            console.log(value)
+        })
+    }, [])
 
     /**
      * @TODO add move add club btn
      */
-    // const panResponder = PanResponder.create({
-    //     onStartShouldSetPanResponder: () => true,
-    //     onStartShouldSetPanResponderCapture: () => false,
-    //     onMoveShouldSetPanResponderCapture: () => false,
-    //     onPanResponderMove: (event, gesture) => {
-    //         const newX = position.x + gesture.dx
-    //         const newY = position.y + gesture.dy
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => false,
+        onPanResponderMove: (event, gesture) => {
+            const newX = position.x + gesture.dx
+            const newY = position.y + gesture.dy
 
-    //         if (newX >= 0 && newX <= screenWidth - 50 && newY >= 0 && newY <= screenHeight - 50) {
-    //             setPosition({ x: newX, y: newY })
-    //         }
-    //     },
-    //     onPanResponderRelease: () => {
-    //         savePosition()
-    //     },
-    // })
+            if (newX >= 0 && newX <= screenWidth - 50 && newY >= 0 && newY <= screenHeight - 50) {
+                setPosition({ x: newX, y: newY })
+            }
+        },
+        onPanResponderRelease: () => {
+            savePosition()
+        },
+    })
 
-    // const savePosition = async () => {
-    //     try {
-    //         await AsyncStorage.setItem("clubAddElementPosition", JSON.stringify(position))
-    //     } catch (error) {
-    //         console.error("Error saving position:", error)
-    //     }
-    // }
+    const savePosition = async () => {
+        try {
+            await AsyncStorage.setItem("clubAddElementPosition", JSON.stringify(position))
+        } catch (error) {
+            console.error("Error saving position:", error)
+        }
+    }
 
     const onDeleteClub = () => {
         if (!showWarningModal.id) return
@@ -168,31 +184,61 @@ export const Clubs = () => {
         }
         if (!isDeleteModal) {
             setShowAddClubModal(_infoTemp)
+            setClubInfo({ title: "", isPrivate: false })
         } else {
             setShowWarningModal(_infoTemp)
         }
     }
 
+    const onRefreshInviteCode = () => {
+        fetchRefreshInviteCodeData({
+            clubId: showAddClubModal.id,
+        }).then((res) => {
+            if (res.result_code === 0) {
+                loadData()
+            }
+        })
+    }
+
+    const inviteCodeValue = () => {
+        return clubList.find((item) => item.id === showAddClubModal.id)?.inviteCode
+    }
+
+    const copyToClipboard = async () => {
+        await Clipboard.setStringAsync(inviteCodeValue() || "")
+        Toast.success("Copied")
+    }
+
+    const isLastClubIndex = (index: number) => {
+        return clubList.length - 1 === index
+    }
+
+    const isLastMyClubIndex = (index: number) => {
+        return myClubList.length - 1 === index
+    }
+
     const ClubItem = ({ item }: { item: clubInfo }) => {
         return (
-            <View style={styles.clubBlock}>
-                <CloudImage url="https://static.vecteezy.com/system/resources/thumbnails/033/662/051/small_2x/cartoon-lofi-young-manga-style-girl-while-listening-to-music-in-the-rain-ai-generative-photo.jpg" styleImg={styles.clubImg} />
+            <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ClubDetail", { id: item.id || "" })} style={styles.clubBlock}>
+                <CloudImage url={item.avatar} styleImg={styles.clubImg} />
                 <View style={styles.clubInfo}>
-                    <Text style={styles.clubAdminText}>
+                    {/* <Text style={styles.clubAdminText}>
                         <Text style={{ color: "#212121", fontWeight: "500" }}>Admin: </Text>
                         <Text style={{}}>Alibi</Text>
-                    </Text>
+                    </Text> */}
                     <Text style={styles.clubTitleText}>{item.title}</Text>
 
                     <View>
-                        <Text style={styles.clubAdminText}>
-                            <Text>Last Post: </Text>
-                            <Text style={{ color: "#212121", fontWeight: "500" }}>16 min ago</Text>
-                        </Text>
+                        {item.lastPostTime !== 0 && (
+                            <Text style={styles.clubAdminText}>
+                                <Text>Last Post: </Text>
+                                <Text style={{ color: "#212121", fontWeight: "500" }}>{dayjs().to(dayjs(item.lastPostTime))}</Text>
+                            </Text>
+                        )}
                         <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
                             <View style={styles.clubBottomEditBlock}>
                                 <Image source={ClubImg} tintColor="#6D7885" style={{ width: 15, height: 25, objectFit: "contain" }} />
-                                <Text style={styles.clubUsersText}>150</Text>
+                                <Text style={styles.clubUsersText}>{item.followersCount}</Text>
                             </View>
                             {tab === "my_clubs" && (
                                 <View style={[styles.clubBottomEditBlock, { gap: 15 }]}>
@@ -212,10 +258,12 @@ export const Clubs = () => {
                         </View>
                     </View>
                 </View>
-                <TouchableOpacity style={[styles.iconWrapper, { position: "absolute", left: 5, top: 5 }]}>
-                    <Image style={styles.clubEditIcon} source={LockImg} />
-                </TouchableOpacity>
-            </View>
+                {tab === "clubs" && item.private && !item.join && (
+                    <TouchableOpacity style={[styles.iconWrapper, { position: "absolute", left: 5, top: 5 }]}>
+                        <Image style={styles.clubEditIcon} source={LockImg} />
+                    </TouchableOpacity>
+                )}
+            </TouchableOpacity>
         )
     }
 
@@ -226,37 +274,28 @@ export const Clubs = () => {
                 <CustomTabs valueList={tabs} onClickTab={(e) => setTab(e)} />
 
                 <View style={styles.clubWrapper}>
-                    {tab === "clubs" ? (
+                    {clubList.length || myClubList.length ? (
                         <FlatList
-                            data={clubList}
+                            refreshing={isRefresh}
+                            onRefresh={() => loadData()}
+                            data={tab === "clubs" ? clubList : myClubList}
                             renderItem={({ item, index }) => (
-                                <View style={[styles.clibBlockBorder, { borderBottomWidth: clubList.length - 1 === index ? 0 : 0.5 }]}>
+                                <View style={[styles.clibBlockBorder, { borderBottomWidth: (tab === "clubs" && isLastClubIndex(index)) || tab === "my_clubs" || isLastMyClubIndex(index) ? 0 : 0.5 }]}>
                                     <ClubItem item={item} />
                                 </View>
                             )}
                         />
                     ) : (
-                        <View style={styles.myCluWrapper}>
-                            {myClubList.length ? (
-                                <FlatList
-                                    data={myClubList}
-                                    renderItem={({ item, index }) => (
-                                        <View style={[styles.clibBlockBorder, { borderBottomWidth: myClubList.length - 1 === index ? 0 : 0.5 }]}>
-                                            <ClubItem item={item} />
-                                        </View>
-                                    )}
-                                />
-                            ) : (
-                                <NoData />
-                            )}
-                        </View>
+                        <NoData />
                     )}
                 </View>
             </View>
             {tab === "my_clubs" && (
-                <TouchableOpacity onPress={() => setShowAddClubModal({ id: "add", isOpen: true })} style={styles.addClubWrapper}>
-                    <Image source={AddClubImg} style={{ width: 50, height: 50, objectFit: "contain" }} />
-                </TouchableOpacity>
+                <View style={[styles.addClubWrapper, { left: position.x, top: position.y }]} {...panResponder.panHandlers}>
+                    <Text onPress={() => setShowAddClubModal({ id: "add", isOpen: true })}>
+                        <Image source={AddClubImg} style={{ width: 50, height: 50, objectFit: "contain" }} />
+                    </Text>
+                </View>
             )}
             <Modal popup animationType="slide-up" visible={showAddClubModal.isOpen} onClose={() => onCloseModal(false)} style={styles.modalWrapper} maskClosable>
                 <View>
@@ -266,6 +305,15 @@ export const Clubs = () => {
                     </InputStyle>
                     <InputStyle inputTitle="Is private club">
                         <Switch checked={clubInfo.isPrivate} onChange={(e) => setClubInfo({ ...clubInfo, isPrivate: e })} />
+                    </InputStyle>
+                    <InputStyle inputTitle="Invite code">
+                        <InputItem last type="text" style={styles.input} value={inviteCodeValue()} disabled />
+                        <TouchableOpacity onPress={() => copyToClipboard()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 50, paddingVertical: 5, paddingHorizontal: 5 }]}>
+                            <Icon name="copy" size={18} color="#0A78D6" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => onRefreshInviteCode()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 10, paddingVertical: 5, paddingHorizontal: 5 }]}>
+                            <Icon name="reload" size={18} color="#0A78D6" />
+                        </TouchableOpacity>
                     </InputStyle>
 
                     <Button type="primary" style={styles.createBtn} onPress={() => onSubmitClub()}>
@@ -397,6 +445,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         right: 16,
         bottom: 50,
+        zIndex: 1,
     },
     clubs: {
         marginTop: 15,
@@ -427,8 +476,8 @@ const styles = StyleSheet.create({
         borderBottomStyle: "solid",
     },
     clubImg: {
-        width: 100,
-        height: "100%",
+        width: 110,
+        height: 100,
         borderRadius: 12,
         objectFit: "cover",
     },

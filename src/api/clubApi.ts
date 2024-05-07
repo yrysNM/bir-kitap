@@ -6,6 +6,11 @@ export type clubInfo = {
     createtime?: number
     ownerId?: string
     private: boolean
+    avatar: string
+    followersCount: number
+    lastPostTime: number
+    join?: boolean
+    inviteCode?: string
 }
 
 interface IClub extends IResponse {

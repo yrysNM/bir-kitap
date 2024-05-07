@@ -25,6 +25,9 @@ import { setLoading } from "../../redux/features/mainSlice"
 import { CustomTabs } from "../../components/CustomTabs"
 import { ClubAPI, clubInfo } from "../../api/clubApi"
 import { NoData } from "../../components/NoData"
+import { CloudImage } from "../../components/CloudImage"
+import ClubImg from "../../../assets/images/category/club.png"
+import { SplitText } from "../../helpers/splitText"
 
 const _bookInfo = {
     title: "",
@@ -204,6 +207,14 @@ export const CreatePostAndBook = () => {
         )
     }
 
+    const onSelectClub = (clubId: string) => {
+        if (postInfo.clubId === clubId) {
+            setPostInfo({ ...postInfo, clubId: "" })
+        } else {
+            setPostInfo({ ...postInfo, clubId })
+        }
+    }
+
     return (
         <Page>
             <View style={{ flex: 1, height: "auto", marginBottom: 5, marginTop: 20 }}>
@@ -294,8 +305,8 @@ export const CreatePostAndBook = () => {
                                 <View style={{ width: "100%" }}>
                                     <Switch checked={postInfo.isClub} onChange={onChangeSwitchClub} />
                                     {postInfo.isClub && (
-                                        <TouchableOpacity onPress={() => setShowModalGenre(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0, marginTop: 10 }}>
-                                            <Text>{postInfo.clubId && postInfo.clubId.length ? clubList.find((item) => item.id === postInfo.clubId)?.title : "Select club!"}</Text>
+                                        <TouchableOpacity onPress={() => setShowModalClub(true)} style={{ ...styles.input, marginLeft: 0, marginRight: 0, marginTop: 10 }}>
+                                            <Text style={{ opacity: postInfo.clubId?.length ? 1 : 0.5 }}>{postInfo.clubId && postInfo.clubId.length ? clubList.find((item) => item.id === postInfo.clubId)?.title : "Select club!"}</Text>
                                         </TouchableOpacity>
                                     )}
                                 </View>
@@ -325,10 +336,29 @@ export const CreatePostAndBook = () => {
                 <View>
                     <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Clubs</Text>
                     {clubList.length ? (
-                        clubList.map((club) => (
-                            <View key={club.id}>
-                                <Text>{club.title}</Text>
-                            </View>
+                        clubList.map((club, i) => (
+                            <TouchableOpacity onPress={() => onSelectClub(club.id || "")} key={club.id} style={[styles.clibBlockBorder, { borderBottomWidth: clubList.length - 1 === i ? 0 : 1 }]}>
+                                <View style={styles.clubBlock}>
+                                    <CloudImage url={club.avatar} styleImg={styles.clubImg} />
+                                    <View style={styles.clubInfo}>
+                                        <Text style={styles.clubTitleText}>{SplitText(club.title, 20)}</Text>
+
+                                        <View>
+                                            <Text style={styles.clubAdminText}>
+                                                <Text>Last Post: </Text>
+                                                <Text style={{ color: "#212121", fontWeight: "500" }}>16 min ago</Text>
+                                            </Text>
+                                            <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
+                                                <View style={styles.clubBottomEditBlock}>
+                                                    <Image source={ClubImg} tintColor="#6D7885" style={{ width: 15, height: 25, objectFit: "contain" }} />
+                                                    <Text style={styles.clubUsersText}>150</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={[styles.selectBlock, { borderColor: postInfo.clubId === club.id ? "#0A78D6" : "#212121" }]}>{postInfo.clubId === club.id && <Icon name="check" color="#0A78D6" />}</View>
+                                </View>
+                            </TouchableOpacity>
                         ))
                     ) : (
                         <NoData />
@@ -340,6 +370,60 @@ export const CreatePostAndBook = () => {
 }
 
 const styles = StyleSheet.create({
+    selectBlock: {
+        justifyContent: "center",
+        alignItems: "center",
+        width: 30,
+        height: 30,
+        borderRadius: 100,
+        borderColor: "#212121",
+        borderStyle: "solid",
+        borderWidth: 1,
+    },
+    clubBottomEditBlock: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 5,
+    },
+    clubAdminText: {
+        fontSize: 10,
+        fontWeight: "400",
+        lineHeight: 16,
+        color: "#6D7885",
+    },
+    clubTitleText: {
+        fontSize: 16,
+        fontWeight: "600",
+        lineHeight: 20,
+    },
+    clubUsersText: {
+        fontSize: 10,
+        fontWeight: "400",
+        lineHeight: 15,
+        color: "#6D7885",
+    },
+    clubBlock: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 10,
+        paddingVertical: 10,
+    },
+    clibBlockBorder: {
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#0000001f",
+        borderBottomStyle: "solid",
+    },
+    clubImg: {
+        width: 110,
+        height: 100,
+        borderRadius: 12,
+        objectFit: "cover",
+    },
+    clubInfo: {
+        gap: 5,
+        flex: 1,
+    },
     modalWrapper: {
         paddingTop: 15,
         paddingHorizontal: 32,

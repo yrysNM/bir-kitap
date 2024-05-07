@@ -24,7 +24,7 @@ export const CreateAccount = () => {
     const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false)
     const [dateBirth, setDateBirth] = useState<Date | undefined>(undefined)
     const [info, setInfo] = useState<IUserInfo>({
-        birth: new Date(),
+        birth: 0,
         email: "",
         fullName: "",
         password: "",
