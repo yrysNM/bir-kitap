@@ -24,6 +24,8 @@ import { Loading } from "../../components/Loading"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { NoData } from "../../components/NoData"
 import { useTranslation } from "react-i18next"
+import { ClubAPI, clubInfo } from "../../api/clubApi"
+import { CarouselClubs } from "../../components/carousel/CarouselClubs"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -33,10 +35,13 @@ export const Home = () => {
     const { fetchData: fetchUserData } = UserAPI("info")
     const { fetchData: fetchNewsData } = NewsApi("list")
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
+    const { fetchData: fetchClubData } = ClubAPI("list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [posts, setPosts] = useState<postInfo[]>([])
+    const [clubList, setClubList] = useState<clubInfo[]>([])
+
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
@@ -50,10 +55,15 @@ export const Home = () => {
     }, [isRefresh])
 
     const loadData = async () => {
+        const info = {
+            start: 0,
+            length: 10,
+        }
+
         try {
             dispatch(setLoading(false))
             setIsLoading(true)
-            const [newsRes, bookRes, reviewRes, postsRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData({ start: 0, length: 10 }), fetchReViewData({ start: 0, length: 10 }), fetchPostsData({ start: 0, length: 10 }), fetchUserData({})])
+            const [newsRes, bookRes, reviewRes, postsRes, clubRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData(info), fetchReViewData(info), fetchPostsData(info), fetchClubData(info), fetchUserData({})])
 
             if (newsRes.result_code === 0) {
                 setNews(newsRes.data)
@@ -66,6 +76,9 @@ export const Home = () => {
             }
             if (postsRes.result_code === 0) {
                 setPosts(JSON.parse(JSON.stringify(postsRes.data)))
+            }
+            if (clubRes.result_code === 0) {
+                setClubList(JSON.parse(JSON.stringify(clubRes.data)))
             }
             if (userRes.result_code === 0) {
                 dispatch(setUserInfo(userRes.data))
@@ -126,6 +139,10 @@ export const Home = () => {
                             <NoData />
                         </View>
                     )}
+                </BookShowBlock>
+
+                <BookShowBlock bookType="Clubs" navigationUrl="Clubs">
+                    <CarouselClubs dataList={clubList} />
                 </BookShowBlock>
             </Page>
             {isLoading && <Loading />}

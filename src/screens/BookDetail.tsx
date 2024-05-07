@@ -8,13 +8,13 @@ import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
-import { RecommendationAPI } from "../api/recommendationApi"
-import { CarouselBookList } from "../components/carousel/CarouselBookList"
 import { NoData } from "../components/NoData"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { useAppSelector } from "../hook/useStore"
 import ArrowBack from "../../assets/images/arrow-back.png"
 import Carousel from "react-native-snap-carousel"
+import { CarouselClubs } from "../components/carousel/CarouselClubs"
+import { ClubAPI, clubInfo } from "../api/clubApi"
 
 type bookReviewInfo = {
     id?: string
@@ -51,11 +51,11 @@ export const BookDetail = () => {
         userInfo: { fullName },
     } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchCreateReviewData } = BookApi("review/create")
-    const { fetchData: fetchRecommendationBookData } = RecommendationAPI("books")
+    const { fetchData: fetchClubsData } = ClubAPI("list")
     const { id } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
     const { fetchData: fetchGetBookData } = BookApi(`get`)
     const [bookInfo, setBookInfo] = useState<IBookInfo | null>(null)
-    const [dataList, setDataList] = useState<bookInfo[]>([])
+    const [dataList, setDataList] = useState<clubInfo[]>([])
     const [reviewInfo, setReviewInfo] = useState<{ title: string; message: string; rating: number }>(_reviewTemp)
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const BookDetail = () => {
     }
 
     const loadRecommendationBookData = () => {
-        fetchRecommendationBookData({
+        fetchClubsData({
             start: 0,
             length: 5,
         }).then((res) => {
@@ -123,7 +123,7 @@ export const BookDetail = () => {
                         <Carousel data={bookInfo?.book.genres} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={170} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"center"} loop useScrollView />
                     </View>
                 ) : (
-                    bookInfo?.book.genres.map((item, i) => <_renderItem key={i} item={item} />)
+                    <View style={{ gap: 5, alignItems: "center", flexDirection: "row", justifyContent: "center" }}>{bookInfo?.book.genres.map((item, i) => <_renderItem key={i} item={item} />)}</View>
                 )}
             </View>
             <View style={styles.bookWrapper}>
@@ -156,7 +156,7 @@ export const BookDetail = () => {
                     {bookInfo?.reviews.map((item) => (
                         <View key={item.id} style={{ flexDirection: "row", gap: 5, alignItems: "flex-end" }}>
                             <CloudImage styleImg={{ width: 32, height: 32, borderRadius: 100, backgroundColor: "#fff" }} url={item.avatar} />
-                            <View style={styles.reviewWrapper}>
+                            <View style={[styles.reviewWrapper, { flex: item.message.length > 70 ? 1 : 0 }]}>
                                 <View>
                                     <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
                                     <View>
@@ -185,8 +185,8 @@ export const BookDetail = () => {
                     </Button>
                 </View>
 
-                <BookShowBlock bookType="Recommendations" navigationUrl="Recommendations">
-                    <View>{dataList.length ? <CarouselBookList dataList={dataList} /> : <NoData />}</View>
+                <BookShowBlock bookType="Clubs" navigationUrl="Recommendations">
+                    <View>{dataList.length ? <CarouselClubs dataList={dataList} /> : <NoData />}</View>
                 </BookShowBlock>
             </View>
         </Page>
@@ -361,6 +361,7 @@ const styles = StyleSheet.create({
         color: "#212121",
     },
     reviewMessage: {
+        flexShrink: 1,
         fontSize: 10,
         fontWeight: "600",
         lineHeight: 15,
