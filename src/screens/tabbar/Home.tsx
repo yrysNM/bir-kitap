@@ -23,7 +23,7 @@ import { PostCard } from "../../components/PostCard"
 import { Loading } from "../../components/Loading"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { NoData } from "../../components/NoData"
-import i18next, { t } from "i18next"
+import { useTranslation } from "react-i18next"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -41,6 +41,7 @@ export const Home = () => {
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const navigation = useNavigation<NavigateType>()
+    const { t } = useTranslation()
 
     useEffect(() => {
         if (!isRefresh) {
@@ -85,9 +86,6 @@ export const Home = () => {
         )
     }
 
-    const changeLng = (item: string) => {
-        i18next.changeLanguage(item)
-    }
     return (
         <>
             <Page>
@@ -95,7 +93,7 @@ export const Home = () => {
                     {news.length ? <Carousel data={news} renderItem={_renderNews} sliderWidth={Dimensions.get("window").width} itemWidth={180} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonHomeNewsCard />}
                 </View>
 
-                <BookShowBlock bookType="Books" navigationUrl="BookMore/books">
+                <BookShowBlock bookType={t("l_Books")} navigationUrl="BookMore/books">
                     <CarouselBookList dataList={bookDataList} />
                 </BookShowBlock>
 
@@ -129,12 +127,6 @@ export const Home = () => {
                         </View>
                     )}
                 </BookShowBlock>
-
-                <Text>{t("Welcome")}</Text>
-
-                <TouchableOpacity onPress={() => changeLng("ru")}>
-                    <Text>123123</Text>
-                </TouchableOpacity>
             </Page>
             {isLoading && <Loading />}
         </>
