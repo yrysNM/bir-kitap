@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "500",
         lineHeight: 15,
-        color: "#808080",
+        color: "#6D7885",
     },
     services: {
         flexDirection: "column",

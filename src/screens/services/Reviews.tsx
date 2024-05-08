@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, FlatList } from "react-native"
 import { Header } from "../../components/Header"
 import { Page } from "../../layouts/Page"
 import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
@@ -12,22 +12,28 @@ export const Reviews = () => {
     const { fetchData: fetchReviewData } = ReviewApi("list")
     const { isLoading } = useAppSelector((state) => state.mainSlice)
     const [dataList, setDataList] = useState<bookReviewInfo[]>([])
+    const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
     useEffect(() => {
+        loadData()
+    }, [])
+
+    const loadData = () => {
         fetchReviewData({}).then((res) => {
             if (res.result_code === 0) {
                 setDataList(JSON.parse(JSON.stringify(res.data)))
+                setIsRefresh(false)
             }
         })
-    }, [])
+    }
 
     return (
-        <Page>
+        <Page isFlatList>
             <Header isCustomHeader={false} isGoBack title="Reviews" />
 
             <View style={styles.bookWrapper}>
                 {dataList.length ? (
-                    dataList.map((item) => <ReviewCard key={item.id} reviewInfo={item} />)
+                    <FlatList data={dataList} refreshing={isRefresh} onRefresh={() => loadData()} contentContainerStyle={{ flexGrow: 1, paddingBottom: 140 }} renderItem={({ item }) => <ReviewCard reviewInfo={item} />} />
                 ) : isLoading ? (
                     <>
                         <View style={styles.reviewWrapper}>

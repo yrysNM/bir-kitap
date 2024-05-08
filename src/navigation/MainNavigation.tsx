@@ -57,6 +57,7 @@ export type RootStackParamList = {
     Clubs: undefined
     PostDetail: { id: string }
     ClubDetail: { id: string }
+    Create: {id?: string}
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
