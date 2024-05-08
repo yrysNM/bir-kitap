@@ -50,9 +50,14 @@ export const Home = () => {
 
     useEffect(() => {
         if (!isRefresh) {
-            loadData()
+            loadDataRefresh()
         }
     }, [isRefresh])
+
+    useEffect(() => {
+        loadDataRefresh()
+        loadData()
+    }, [])
 
     const loadData = async () => {
         const info = {
@@ -63,23 +68,16 @@ export const Home = () => {
         try {
             dispatch(setLoading(false))
             setIsLoading(true)
-            const [newsRes, bookRes, reviewRes, postsRes, clubRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData(info), fetchReViewData(info), fetchPostsData(info), fetchClubData(info), fetchUserData({})])
+            const [bookRes, postsRes, userRes] = await Promise.all([fetchBookData(info), fetchPostsData(info), fetchUserData({})])
 
-            if (newsRes.result_code === 0) {
-                setNews(newsRes.data)
-            }
             if (bookRes.result_code === 0) {
                 setBookDataList(JSON.parse(JSON.stringify(bookRes.data)))
             }
-            if (reviewRes.result_code === 0) {
-                setReviewDataList(JSON.parse(JSON.stringify(reviewRes.data)))
-            }
+
             if (postsRes.result_code === 0) {
                 setPosts(JSON.parse(JSON.stringify(postsRes.data)))
             }
-            if (clubRes.result_code === 0) {
-                setClubList(JSON.parse(JSON.stringify(clubRes.data)))
-            }
+
             if (userRes.result_code === 0) {
                 dispatch(setUserInfo(userRes.data))
             }
@@ -88,6 +86,36 @@ export const Home = () => {
             console.error("Error occurred while fetching data:", error)
         }
     }
+
+    const loadDataRefresh = async () => {
+        const info = {
+            start: 0,
+            length: 10,
+        }
+
+        try {
+            dispatch(setLoading(false))
+            setIsLoading(true)
+            const [newsRes, clubRes, reviewRes] = await Promise.all([fetchNewsData({}), fetchClubData(info), fetchReViewData(info)])
+
+            if (newsRes.result_code === 0) {
+                setNews(newsRes.data)
+            }
+
+            if (reviewRes.result_code === 0) {
+                setReviewDataList(JSON.parse(JSON.stringify(reviewRes.data)))
+            }
+
+            if (clubRes.result_code === 0) {
+                setClubList(JSON.parse(JSON.stringify(clubRes.data)))
+            }
+
+            setIsLoading(false)
+        } catch (error) {
+            console.error("Error occurred while fetching data:", error)
+        }
+    }
+
     const _renderNews = ({ item }: { item: newsInfo }) => {
         return isLoading && !news.length ? (
             <SkeletonHomeNewsCard />

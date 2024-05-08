@@ -220,7 +220,7 @@ export const Clubs = () => {
                             onRefresh={() => loadData()}
                             data={tab === "clubs" ? clubList : myClubList}
                             renderItem={({ item, index }) => (
-                                <View style={[styles.clibBlockBorder, { borderBottomWidth: (tab === "clubs" && isLastClubIndex(index)) || tab === "my_clubs" || isLastMyClubIndex(index) ? 0 : 0.5 }]}>
+                                <View style={[styles.clibBlockBorder, { borderBottomWidth: (tab === "clubs" && isLastClubIndex(index)) || (tab === "my_clubs" && isLastMyClubIndex(index)) ? 0 : 0.5 }]}>
                                     <ClubItem item={item} />
                                 </View>
                             )}

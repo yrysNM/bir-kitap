@@ -53,6 +53,7 @@ export const Profile = () => {
     const navigation = useNavigation()
     const {
         userInfo: { fullName, avatar },
+        isRefresh,
     } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
@@ -74,12 +75,14 @@ export const Profile = () => {
         { value: "posts", label: "Posts" },
     ]
     useEffect(() => {
-        fetchUserProfileData({}).then((res) => {
-            if (res.result_code === 0) {
-                setInfo(JSON.parse(JSON.stringify(res.data)))
-            }
-        })
-    }, [])
+        if (!isRefresh) {
+            fetchUserProfileData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setInfo(JSON.parse(JSON.stringify(res.data)))
+                }
+            })
+        }
+    }, [isRefresh])
 
     const onChangeTab = (type: string) => {
         setTab(type)
@@ -109,19 +112,19 @@ export const Profile = () => {
                 <View style={styles.userStatistic}>
                     <View>
                         <Text style={styles.statisticNumber}>{info?.readBooksCount}</Text>
-                        <Text style={styles.statisticDescr}>read</Text>
+                        <Text style={styles.statisticDescr}>Read</Text>
                     </View>
                     <View>
                         <Text style={styles.statisticNumber}>{info?.reviewsCount}</Text>
-                        <Text style={styles.statisticDescr}>reviews</Text>
+                        <Text style={styles.statisticDescr}>Reviews</Text>
                     </View>
                     <View>
                         <Text style={styles.statisticNumber}>{info?.followersCount}</Text>
-                        <Text style={styles.statisticDescr}>followers</Text>
+                        <Text style={styles.statisticDescr}>Followers</Text>
                     </View>
                     <View>
                         <Text style={styles.statisticNumber}>{info?.followingCount}</Text>
-                        <Text style={styles.statisticDescr}>following</Text>
+                        <Text style={styles.statisticDescr}>Following</Text>
                     </View>
                 </View>
 

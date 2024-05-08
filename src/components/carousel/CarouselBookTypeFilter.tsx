@@ -23,7 +23,7 @@ export const CarouselBookTypeFilter = ({ dataList, handleBookType, isMultiple, t
             setBookTypeList([])
             handleBookType([])
         }
-    }, [isRefresh])
+    }, [isRefresh, type])
 
     const onMultipleSelectBookType = (bookType: string) => {
         if (isSelectBookType(bookType)) {

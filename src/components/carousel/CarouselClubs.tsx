@@ -17,13 +17,13 @@ export const CarouselClubs = ({ dataList }: { dataList: clubInfo[] }) => {
         <Carousel
             data={dataList}
             renderItem={({ item }: { item: clubInfo }) => (
-                <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ClubDetail", { id: item.id || "" })} style={{ marginBottom: 10 }}>
+                <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ClubDetail", { id: item.id || "" })} style={styles.clubWrapper}>
                     <CloudImage url={item.avatar} styleImg={styles.clubImg} />
                     <Text style={styles.clibTitleText}>{SplitText(item.title, 20)}</Text>
                 </TouchableOpacity>
             )}
             sliderWidth={Dimensions.get("window").width}
-            itemWidth={100}
+            itemWidth={120}
             layout={"default"}
             vertical={false}
             inactiveSlideOpacity={1}
@@ -34,6 +34,23 @@ export const CarouselClubs = ({ dataList }: { dataList: clubInfo[] }) => {
 }
 
 const styles = StyleSheet.create({
+    clubWrapper: {
+        width: 110,
+        marginBottom: 10,
+        paddingVertical: 10,
+        borderRadius: 9,
+        backgroundColor: "#FFFFFF",
+        shadowColor: "rgba(0, 0, 0, 0.25)",
+        shadowOffset: {
+            width: 1,
+            height: 1,
+        },
+        shadowRadius: 6,
+        elevation: 1,
+        shadowOpacity: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     clubImg: {
         width: 100,
         height: 100,
