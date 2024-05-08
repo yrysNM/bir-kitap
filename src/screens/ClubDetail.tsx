@@ -164,10 +164,12 @@ export const ClubDetail = () => {
             </View>
             {isPrivate() ? (
                 <BlurView intensity={50} style={styles.blurContainer}>
-                    <View style={{ zIndex: -1, gap: 20 }}>{clubPosts.length ? <FlatList data={clubPosts} renderItem={({ item }) => <PostCard postInfo={item} />} /> : <NoData />}</View>
+                    <View style={{ zIndex: -1, gap: 20 }}>
+                        <NoData />
+                    </View>
                 </BlurView>
             ) : (
-                <View style={{ marginTop: 10, gap: 20 }}>{clubPosts.length ? <FlatList data={clubPosts} renderItem={({ item }) => <PostCard postInfo={item} />} /> : <NoData />}</View>
+                <View style={{ marginTop: 10, gap: 20, flex: 1 }}>{clubPosts.length ? <FlatList contentContainerStyle={{ flexGrow: 1 }} data={clubPosts} renderItem={({ item }) => <PostCard postInfo={item} />} /> : <NoData />}</View>
             )}
             <Modal popup animationType="slide-up" visible={showInviteModal} onClose={() => onCloseModal(true)} style={styles.modalWrapper} maskClosable>
                 <View>
@@ -342,7 +344,6 @@ const styles = StyleSheet.create({
         borderWidth: 0,
     },
     clubWrapper: {
-        marginTop: 20,
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",

@@ -5,13 +5,16 @@ import { Services } from "../screens/tabbar/Services"
 import { CreatePostAndBook } from "../screens/tabbar/CreatePostAndBook"
 import { Search } from "../screens/tabbar/Search"
 import { Profile } from "../screens/tabbar/Profile"
-import { CustomTabbar } from "../components/CustomTabbar"
+import { CustomTabbar } from "../components/customs/CustomTabbar"
 import { useNavigation } from "@react-navigation/native"
 import { useRef, useEffect } from "react"
 
 const Tab = createBottomTabNavigator()
 export const TabNavigator = () => {
+    const tabWidth = Dimensions.get("screen").width / 5 - 16
     const translationTabBar = useRef(new Animated.Value(0)).current
+    const widthAnim = useRef(new Animated.Value(1)).current
+    const opacityAnim = useRef(new Animated.Value(1)).current
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -19,11 +22,36 @@ export const TabNavigator = () => {
             const indexRoute = e.data.state.index
             const dataRoot = e.data.state.routes[indexRoute]
             if (dataRoot.name === "Root") {
-                Animated.timing(translationTabBar, {
-                    toValue: 8 + ((dataRoot.state?.index || 0) * Dimensions.get("screen").width) / 5,
-                    duration: 400,
-                    useNativeDriver: true,
-                }).start()
+                Animated.parallel([
+                    Animated.timing(widthAnim, {
+                        toValue: 0,
+                        duration: 300,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(opacityAnim, {
+                        toValue: 0,
+                        duration: 300,
+                        useNativeDriver: true,
+                    }),
+                ]).start(() => {
+                    Animated.parallel([
+                        Animated.timing(widthAnim, {
+                            toValue: 1,
+                            duration: 600,
+                            useNativeDriver: true,
+                        }),
+                        Animated.timing(opacityAnim, {
+                            toValue: 1,
+                            duration: 600,
+                            useNativeDriver: true,
+                        }),
+                        Animated.timing(translationTabBar, {
+                            toValue: 8 + ((dataRoot.state?.index || 0) * Dimensions.get("screen").width) / 5,
+                            duration: 0,
+                            useNativeDriver: true,
+                        }),
+                    ]).start()
+                })
             }
         })
 
@@ -34,7 +62,7 @@ export const TabNavigator = () => {
 
     return (
         <>
-            <Animated.View style={[styles.tabIconBlock, { transform: [{ translateX: translationTabBar }], width: Dimensions.get("screen").width / 5 - 16 }]}></Animated.View>
+            <Animated.View style={[styles.tabIconBlock, { transform: [{ translateX: translationTabBar }, { scaleX: widthAnim }], opacity: opacityAnim, width: tabWidth }]}></Animated.View>
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
@@ -59,6 +87,7 @@ const styles = StyleSheet.create({
         height: 74,
         backgroundColor: "#fff",
         paddingHorizontal: 8,
+        zIndex: 10,
     },
     tabIconBlock: {
         width: 64,

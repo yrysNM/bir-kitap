@@ -1,16 +1,14 @@
-import { StyleSheet, View } from "react-native"
+import { FlatList, ScrollView, StyleSheet, View } from "react-native"
 import { Page } from "../../layouts/Page"
 import { useEffect, useState } from "react"
 import { Header } from "../../components/Header"
 import { bookInfo } from "../../api/bookApi"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { BookCard } from "../../components/BookCard"
-import { NoData } from "../../components/NoData"
 import { bookReviewInfo } from "../../api/reviewApi"
 import { postInfo } from "../../api/postApi"
 import { ReviewCard } from "../../components/ReviewCard"
-import { CarouselBookTypeFilter } from "../../components/CarouselBookTypeFilter"
-import { useAppSelector } from "../../hook/useStore"
+import { CarouselBookTypeFilter } from "../../components/carousel/CarouselBookTypeFilter"
 import { PostCard } from "../../components/PostCard"
 import Follow from "../../components/Follow"
 
@@ -18,7 +16,7 @@ export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
     const { fetchData: fetchReviewsData } = RecommendationAPI("reviews")
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
-    const { isRefresh } = useAppSelector((state) => state.mainSlice)
+    const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
     const [recommendationType, setRecommendationType] = useState<string>("Books")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
@@ -41,11 +39,9 @@ export const Recommendations = () => {
     ])
 
     useEffect(() => {
-        if (!isRefresh) {
-            setRecommendationType("Books")
-            onLoadData("Books")
-        }
-    }, [isRefresh])
+        setRecommendationType("Books")
+        onLoadData("Books")
+    }, [])
 
     const onLoadData = (e: string) => {
         if (e === "Books") {
@@ -67,10 +63,24 @@ export const Recommendations = () => {
                 }
             })
         }
+
+        setIsRefresh(false)
+    }
+
+    const dataList = () => {
+        if (recommendationType === "Books") {
+            return bookDataList
+        } else if (recommendationType === "Reviews") {
+            return reviewDataList
+        } else if (recommendationType === "Posts") {
+            return postDataList
+        } else {
+            return []
+        }
     }
 
     return (
-        <Page>
+        <Page isFlatList>
             <Header isCustomHeader={false} title="Recommendations" isGoBack />
             <View style={{ marginVertical: 18 }}>
                 <CarouselBookTypeFilter
@@ -82,19 +92,29 @@ export const Recommendations = () => {
                         }
                     }}
                     isMultiple={false}
-                    type={"Books"}
+                    type={recommendationType}
                 />
             </View>
 
-            {recommendationType === "Books" ? (
-                <View style={styles.bookWrapper}>{bookDataList.length ? bookDataList.map((book) => <BookCard key={book.id} bookInfo={book} />) : <NoData />}</View>
-            ) : recommendationType === "Reviews" ? (
-                <View style={styles.reviewWrapper}>{reviewDataList.length ? reviewDataList.map((review) => <ReviewCard key={review.id} reviewInfo={review} />) : <NoData />}</View>
-            ) : recommendationType === "Posts" ? (
-                <View style={{ marginTop: 10 }}>{postDataList.length ? postDataList.map((post) => <PostCard postInfo={post} key={post.id} />) : <NoData />}</View>
-            ) : recommendationType === "Users" ? (
-                <Follow />
-            ) : null}
+            {recommendationType === "Users" ? (
+                <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
+                    <Follow />
+                </ScrollView>
+            ) : (
+                <FlatList
+                    data={dataList() as []}
+                    refreshing={isRefresh}
+                    onRefresh={() => {
+                        setRecommendationType("Books")
+                        onLoadData("Books")
+                    }}
+                    key={recommendationType === "Books" ? 2 : 1}
+                    numColumns={recommendationType === "Books" ? 2 : 1}
+                    contentContainerStyle={[recommendationType === "Books" && styles.bookWrapper, recommendationType === "Reviews" && styles.reviewWrapper, { flexGrow: 1, marginTop: 10, paddingBottom: 140 }]}
+                    columnWrapperStyle={recommendationType === "Books" ? { gap: recommendationType === "Books" ? 25 : 0 } : null}
+                    renderItem={({ item }) => (recommendationType === "Books" ? <BookCard bookInfo={item} /> : recommendationType === "Reviews" ? <ReviewCard reviewInfo={item} /> : recommendationType === "Posts" ? <PostCard postInfo={item} /> : null)}
+                />
+            )}
 
             <View style={{ marginBottom: 5, flex: 1, height: "auto" }}></View>
         </Page>
@@ -103,16 +123,10 @@ export const Recommendations = () => {
 
 const styles = StyleSheet.create({
     bookWrapper: {
-        flexWrap: "wrap",
-        width: "100%",
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        // flex: 2,
-        // width: "100%",
         gap: 25,
-        marginBottom: 30,
-        zIndex: 100,
     },
     reviewWrapper: {
         flexDirection: "column",

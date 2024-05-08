@@ -49,7 +49,7 @@ export const CustomTabbar = ({ state, descriptors, navigation }: BottomTabBarPro
                         target: route.key,
                         canPreventDefault: true,
                     })
-
+                    // startAnimation()
                     if (!isFocused && !event.defaultPrevented) {
                         navigation.navigate(route.name, route.params)
                     }
@@ -62,10 +62,14 @@ export const CustomTabbar = ({ state, descriptors, navigation }: BottomTabBarPro
                     })
                 }
 
+                const iconListIndex = () => {
+                    return iconList.findIndex((item) => item.key === label)
+                }
+
                 return (
                     <TouchableOpacity key={index} style={styles.tabbarBlock} onPress={onPress} testID={options.tabBarTestID} onLongPress={onLongPress} accessibilityState={isFocused ? { selected: true } : {}} accessibilityLabel={options.tabBarAccessibilityLabel} accessibilityRole="button">
                         <View>
-                            <Icon name={iconList.find((item) => item.key === label)?.iconName as IconNames} style={styles.tabIcon} color={iconColor(isFocused)} />
+                            <Icon name={iconList[iconListIndex()]?.iconName as IconNames} style={styles.tabIcon} color={iconColor(isFocused)} />
                         </View>
                         <Text style={[{ color: iconColor(isFocused) }, styles.tabbarText]}>{label}</Text>
                     </TouchableOpacity>

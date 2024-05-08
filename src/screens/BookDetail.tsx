@@ -8,13 +8,13 @@ import { StarRate } from "../components/StarRate"
 import { CloudImage } from "../components/CloudImage"
 import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import Button from "@ant-design/react-native/lib/button"
-import { RecommendationAPI } from "../api/recommendationApi"
-import { CarouselBookList } from "../components/CarouselBookList"
 import { NoData } from "../components/NoData"
 import { BookShowBlock } from "../components/BookShowBlock"
 import { useAppSelector } from "../hook/useStore"
 import ArrowBack from "../../assets/images/arrow-back.png"
-import CarouselGeners from "../components/CarouselGeners"
+import Carousel from "react-native-snap-carousel"
+import { CarouselClubs } from "../components/carousel/CarouselClubs"
+import { ClubAPI, clubInfo } from "../api/clubApi"
 
 type bookReviewInfo = {
     id?: string
@@ -51,11 +51,11 @@ export const BookDetail = () => {
         userInfo: { fullName },
     } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchCreateReviewData } = BookApi("review/create")
-    const { fetchData: fetchRecommendationBookData } = RecommendationAPI("books")
+    const { fetchData: fetchClubsData } = ClubAPI("list")
     const { id } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
     const { fetchData: fetchGetBookData } = BookApi(`get`)
     const [bookInfo, setBookInfo] = useState<IBookInfo | null>(null)
-    const [dataList, setDataList] = useState<bookInfo[]>([])
+    const [dataList, setDataList] = useState<clubInfo[]>([])
     const [reviewInfo, setReviewInfo] = useState<{ title: string; message: string; rating: number }>(_reviewTemp)
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export const BookDetail = () => {
     }
 
     const loadRecommendationBookData = () => {
-        fetchRecommendationBookData({
+        fetchClubsData({
             start: 0,
             length: 5,
         }).then((res) => {
@@ -99,6 +99,14 @@ export const BookDetail = () => {
         })
     }
 
+    const _renderItem = ({ item }: { item: string }) => {
+        return (
+            <View style={styles.genreBlock}>
+                <Text style={styles.genreText}>{item}</Text>
+            </View>
+        )
+    }
+
     return (
         <Page>
             <TouchableOpacity onPress={() => navigate.goBack()}>
@@ -108,7 +116,17 @@ export const BookDetail = () => {
                 <CloudImage styleImg={styles.bookImg} url={bookInfo?.book.imageLink} />
                 <StarRate rateNumber={bookInfo?.customInfo.rating || 0} size={25} />
                 <Text style={styles.bookTitle}>{bookInfo?.book.title}</Text>
-                <CarouselGeners bookInfo={bookInfo && bookInfo}/>
+            </View>
+            <View style={{ marginVertical: 5 }}>
+                {bookInfo?.book.genres.length && bookInfo?.book.genres.length >= 3 ? (
+                    <View style={{ marginLeft: -16 }}>
+                        <Carousel data={bookInfo?.book.genres} renderItem={_renderItem} sliderWidth={Dimensions.get("window").width} itemWidth={170} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"center"} loop useScrollView />
+                    </View>
+                ) : (
+                    <View style={{ gap: 5, alignItems: "center", flexDirection: "row", justifyContent: "center" }}>{bookInfo?.book.genres.map((item, i) => <_renderItem key={i} item={item} />)}</View>
+                )}
+            </View>
+            <View style={styles.bookWrapper}>
                 <Text style={styles.bookAuthor}>{bookInfo?.book.author}</Text>
 
                 <View style={styles.statisticWrapper}>
@@ -134,6 +152,26 @@ export const BookDetail = () => {
             <View style={{ marginVertical: 30 }}>
                 <Text style={styles.descrText}>Reviews</Text>
 
+                <View style={{ marginTop: 10 }}>
+                    {bookInfo?.reviews.map((item) => (
+                        <View key={item.id} style={{ flexDirection: "row", gap: 5, alignItems: "flex-end" }}>
+                            <CloudImage styleImg={{ width: 32, height: 32, borderRadius: 100, backgroundColor: "#fff" }} url={item.avatar} />
+                            <View style={[styles.reviewWrapper, { flex: item.message.length > 70 ? 1 : 0 }]}>
+                                <View>
+                                    <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
+                                    <View>
+                                        <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
+                                            <StarRate rateNumber={item.rating} />
+                                            <Text style={styles.reviewNumberRate}>{item.rating.toFixed(1)}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <Text style={styles.reviewMessage}>{item.message}</Text>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+
                 <View style={{ marginTop: 17 }}>
                     <Text style={styles.rateText}>Rating {reviewInfo.rating}/5</Text>
                     <View style={{ marginTop: 10 }}>
@@ -146,24 +184,9 @@ export const BookDetail = () => {
                         Submit review
                     </Button>
                 </View>
-                {bookInfo?.reviews.map((review) => (
-                    <View key={review.id} style={styles.reviewWrapper}>
-                        <View style={styles.reviewProfileBlock}>
-                            <CloudImage styleImg={{ width: 32, height: 32 }} url={review.avatar} />
-                            <View>
-                                <Text style={[styles.reviewUserName, { color: review.userName === fullName ? "#005479" : "#000" }]}>{review.userName}</Text>
-                                <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-                                    <StarRate rateNumber={review.rating} />
-                                    <Text style={styles.reviewNumberRate}>{review.rating.toFixed(1)}</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <Text style={styles.reviewMessage}>{review.message}</Text>
-                    </View>
-                ))}
 
-                <BookShowBlock bookType="Recommendations" navigationUrl="Recommendations">
-                    <View>{dataList.length ? <CarouselBookList dataList={dataList} /> : <NoData />}</View>
+                <BookShowBlock bookType="Clubs" navigationUrl="Recommendations">
+                    <View>{dataList.length ? <CarouselClubs dataList={dataList} /> : <NoData />}</View>
                 </BookShowBlock>
             </View>
         </Page>
@@ -171,6 +194,30 @@ export const BookDetail = () => {
 }
 
 const styles = StyleSheet.create({
+    genreBlock: {
+        width: "auto",
+        backgroundColor: "#0A78D6",
+        paddingVertical: 8,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        marginRight: 10,
+        shadowRadius: 1,
+        shadowColor: "rgba(19, 12, 12, 0.3)",
+        shadowOffset: {
+            width: 1,
+            height: 1,
+        },
+        elevation: 1,
+        marginHorizontal: 3,
+        shadowOpacity: 0.3,
+    },
+    genreText: {
+        fontSize: 12,
+        fontWeight: "500",
+        lineHeight: 16,
+        color: "#fff",
+        textAlign: "center",
+    },
     listWrapper: {
         width: "100%",
         gap: 25,
@@ -178,7 +225,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     reviewWrapper: {
-        borderRadius: 12,
+        minWidth: 200,
+        borderBottomStartRadius: 0,
+        borderBottomEndRadius: 12,
+        borderTopStartRadius: 12,
+        borderTopEndRadius: 12,
         paddingVertical: 10,
         paddingHorizontal: 5,
         backgroundColor: "#fff",
@@ -229,6 +280,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         lineHeight: 23,
         color: "#212121",
+        textAlign: "center",
     },
     bookAuthor: {
         fontSize: 13,
@@ -240,16 +292,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "700",
         lineHeight: 20,
-        color: "#000000",
+        color: "#212121",
         textAlign: "left",
     },
     bookDescr: {
-        marginTop: 11,
-        marginLeft: 10,
-        fontSize: 9,
+        marginTop: 10,
+        fontSize: 12,
         fontWeight: "500",
         lineHeight: 15,
-        color: "#000000",
+        color: "#212121",
     },
     statisticWrapper: {
         marginTop: 21,
@@ -310,6 +361,7 @@ const styles = StyleSheet.create({
         color: "#212121",
     },
     reviewMessage: {
+        flexShrink: 1,
         fontSize: 10,
         fontWeight: "600",
         lineHeight: 15,
@@ -365,12 +417,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 40,
-        width: 'auto'
+        width: "auto",
     },
 
     borderFlex: {
-        flexDirection: 'row',
+        flexDirection: "row",
         gap: 10,
-        overflowX: 'scroll'
-    }
+        overflowX: "scroll",
+    },
 })

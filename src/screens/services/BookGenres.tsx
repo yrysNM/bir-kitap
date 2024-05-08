@@ -1,6 +1,6 @@
 import { View } from "react-native"
 import { Page } from "../../layouts/Page"
-import { CarouselBookList } from "../../components/CarouselBookList"
+import { CarouselBookList } from "../../components/carousel/CarouselBookList"
 import { useEffect, useState } from "react"
 import { BookApi, bookInfo } from "../../api/bookApi"
 import { NoData } from "../../components/NoData"

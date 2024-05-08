@@ -63,7 +63,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
     const ReChildComponent = () => {
         return reviewInfo ? (
             <>
-                <ImageBackground style={styles.bookWrapper} imageStyle={{ borderRadius: 12, objectFit: "cover" }} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30} tintColor="#fff">
+                <ImageBackground style={[styles.bookWrapper, { paddingHorizontal: isReviewCard ? 0 : 20 }]} imageStyle={{ borderRadius: 12, objectFit: "cover" }} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30} tintColor="#fff">
                     <CloudImage styleImg={styles.bookImage} url={reviewInfo?.book.imageLink || ""} />
                     <View style={styles.bookInfo}>
                         <View>
@@ -128,7 +128,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
     }
 
     return isReviewCard ? (
-        <TouchableOpacity style={styles.reviewWrapper} delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo?.id || "" })}>
+        <TouchableOpacity style={[styles.reviewWrapper]} delayPressIn={10} onPress={() => navigation.navigate("ReviewDetail", { id: reviewInfo?.id || "" })}>
             <ReChildComponent />
         </TouchableOpacity>
     ) : (

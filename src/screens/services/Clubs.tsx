@@ -1,9 +1,7 @@
 import { Image, Text, View, StyleSheet, TouchableOpacity, FlatList, Dimensions } from "react-native"
-import { CloudImage } from "../../components/CloudImage"
 import { Page } from "../../layouts/Page"
 import { useEffect, useState } from "react"
-import { CustomTabs } from "../../components/CustomTabs"
-import ClubImg from "../../../assets/images/category/club.png"
+import { CustomTabs } from "../../components/customs/CustomTabs"
 import { Header } from "../../components/Header"
 import { NoData } from "../../components/NoData"
 import AddClubImg from "../../../assets/images/add-club.png"
@@ -27,6 +25,7 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import Icon from "@ant-design/react-native/lib/icon"
 import * as Clipboard from "expo-clipboard"
+import { ClubCard } from "../../components/ClubCard"
 
 dayjs.extend(relativeTime)
 
@@ -180,51 +179,31 @@ export const Clubs = () => {
 
     const ClubItem = ({ item }: { item: clubInfo }) => {
         return (
-            <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ClubDetail", { id: item.id || "" })} style={styles.clubBlock}>
-                <CloudImage url={item.avatar} styleImg={styles.clubImg} />
-                <View style={styles.clubInfo}>
-                    {/* <Text style={styles.clubAdminText}>
-                        <Text style={{ color: "#212121", fontWeight: "500" }}>Admin: </Text>
-                        <Text style={{}}>Alibi</Text>
-                    </Text> */}
-                    <Text style={styles.clubTitleText}>{item.title}</Text>
-
-                    <View>
-                        {item.lastPostTime !== 0 && (
-                            <Text style={styles.clubAdminText}>
-                                <Text>Last Post: </Text>
-                                <Text style={{ color: "#212121", fontWeight: "500" }}>{dayjs().to(dayjs(item.lastPostTime))}</Text>
-                            </Text>
-                        )}
-                        <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "space-between" }}>
-                            <View style={styles.clubBottomEditBlock}>
-                                <Image source={ClubImg} tintColor="#6D7885" style={{ width: 15, height: 25, objectFit: "contain" }} />
-                                <Text style={styles.clubUsersText}>{item.followersCount}</Text>
-                            </View>
-                            {tab === "my_clubs" && (
-                                <View style={[styles.clubBottomEditBlock, { gap: 15 }]}>
-                                    <TouchableOpacity
-                                        style={styles.iconWrapper}
-                                        onPress={() => {
-                                            setClubInfo({ title: item.title, isPrivate: item.private })
-                                            setShowAddClubModal({ id: item.id || "", isOpen: true })
-                                        }}>
-                                        <Image style={styles.clubEditIcon} source={EditImg} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.iconWrapper} onPress={() => setShowWarningModal({ isOpen: true, id: item.id || "" })}>
-                                        <Image style={styles.clubEditIcon} source={TrashImg} tintColor="#ed1834" />
-                                    </TouchableOpacity>
-                                </View>
-                            )}
+            <View>
+                <ClubCard isClubsPage clubInfo={item} onClickClubBlock={() => navigation.navigate("ClubDetail", { id: item.id || "" })}>
+                    {tab === "my_clubs" && (
+                        <View style={[styles.clubBottomEditBlock, { gap: 15 }]}>
+                            <TouchableOpacity
+                                style={styles.iconWrapper}
+                                onPress={() => {
+                                    setClubInfo({ title: item.title, isPrivate: item.private })
+                                    setShowAddClubModal({ id: item.id || "", isOpen: true })
+                                }}>
+                                <Image style={styles.clubEditIcon} source={EditImg} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.iconWrapper} onPress={() => setShowWarningModal({ isOpen: true, id: item.id || "" })}>
+                                <Image style={styles.clubEditIcon} source={TrashImg} tintColor="#ed1834" />
+                            </TouchableOpacity>
                         </View>
-                    </View>
-                </View>
+                    )}
+                </ClubCard>
+
                 {tab === "clubs" && item.private && !item.join && (
                     <TouchableOpacity style={[styles.iconWrapper, { position: "absolute", left: 5, top: 5 }]}>
                         <Image style={styles.clubEditIcon} source={LockImg} />
                     </TouchableOpacity>
                 )}
-            </TouchableOpacity>
+            </View>
         )
     }
 
@@ -241,7 +220,7 @@ export const Clubs = () => {
                             onRefresh={() => loadData()}
                             data={tab === "clubs" ? clubList : myClubList}
                             renderItem={({ item, index }) => (
-                                <View style={[styles.clibBlockBorder, { borderBottomWidth: (tab === "clubs" && isLastClubIndex(index)) || tab === "my_clubs" || isLastMyClubIndex(index) ? 0 : 0.5 }]}>
+                                <View style={[styles.clibBlockBorder, { borderBottomWidth: (tab === "clubs" && isLastClubIndex(index)) || (tab === "my_clubs" && isLastMyClubIndex(index)) ? 0 : 0.5 }]}>
                                     <ClubItem item={item} />
                                 </View>
                             )}
@@ -265,15 +244,17 @@ export const Clubs = () => {
                     <InputStyle inputTitle="Is private club">
                         <Switch checked={clubInfo.isPrivate} onChange={(e) => setClubInfo({ ...clubInfo, isPrivate: e })} />
                     </InputStyle>
-                    <InputStyle inputTitle="Invite code">
-                        <InputItem last type="text" style={styles.input} value={inviteCodeValue()} disabled />
-                        <TouchableOpacity onPress={() => copyToClipboard()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 50, paddingVertical: 5, paddingHorizontal: 5 }]}>
-                            <Icon name="copy" size={18} color="#0A78D6" />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => onRefreshInviteCode()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 10, paddingVertical: 5, paddingHorizontal: 5 }]}>
-                            <Icon name="reload" size={18} color="#0A78D6" />
-                        </TouchableOpacity>
-                    </InputStyle>
+                    {showAddClubModal.id !== "add" && (
+                        <InputStyle inputTitle="Invite code">
+                            <InputItem last type="text" style={styles.input} value={inviteCodeValue()} disabled />
+                            <TouchableOpacity onPress={() => copyToClipboard()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 50, paddingVertical: 5, paddingHorizontal: 5 }]}>
+                                <Icon name="copy" size={18} color="#0A78D6" />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => onRefreshInviteCode()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 10, paddingVertical: 5, paddingHorizontal: 5 }]}>
+                                <Icon name="reload" size={18} color="#0A78D6" />
+                            </TouchableOpacity>
+                        </InputStyle>
+                    )}
 
                     <Button type="primary" style={styles.createBtn} onPress={() => onSubmitClub()}>
                         {showAddClubModal.id === "add" ? "Create a club" : "Update club"}

@@ -3,11 +3,11 @@ import { Page } from "../../layouts/Page"
 import { bookInfo } from "../../api/bookApi"
 import { useEffect, useState } from "react"
 import { NewsApi, newsInfo } from "../../api/newsApi"
-import { CarouselBookList } from "../../components/CarouselBookList"
+import { CarouselBookList } from "../../components/carousel/CarouselBookList"
 import { bookReviewInfo } from "../../api/reviewApi"
 import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { BookShowBlock } from "../../components/BookShowBlock"
-import { CarouselReviewList } from "../../components/CarouselReviewList"
+import { CarouselReviewList } from "../../components/carousel/CarouselReviewList"
 import { UserAPI } from "../../api/userApi"
 import { setLoading, setUserInfo } from "../../redux/features/mainSlice"
 import Carousel from "react-native-snap-carousel"
@@ -24,6 +24,8 @@ import { Loading } from "../../components/Loading"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { NoData } from "../../components/NoData"
 import { useTranslation } from "react-i18next"
+import { ClubAPI, clubInfo } from "../../api/clubApi"
+import { CarouselClubs } from "../../components/carousel/CarouselClubs"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReaderNews">>
 
@@ -33,10 +35,13 @@ export const Home = () => {
     const { fetchData: fetchUserData } = UserAPI("info")
     const { fetchData: fetchNewsData } = NewsApi("list")
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
+    const { fetchData: fetchClubData } = ClubAPI("list")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [news, setNews] = useState<newsInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [posts, setPosts] = useState<postInfo[]>([])
+    const [clubList, setClubList] = useState<clubInfo[]>([])
+
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { isRefresh } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
@@ -45,28 +50,34 @@ export const Home = () => {
 
     useEffect(() => {
         if (!isRefresh) {
-            loadData()
+            loadDataRefresh()
         }
     }, [isRefresh])
 
+    useEffect(() => {
+        loadDataRefresh()
+        loadData()
+    }, [])
+
     const loadData = async () => {
+        const info = {
+            start: 0,
+            length: 10,
+        }
+
         try {
             dispatch(setLoading(false))
             setIsLoading(true)
-            const [newsRes, bookRes, reviewRes, postsRes, userRes] = await Promise.all([fetchNewsData({}), fetchBookData({ start: 0, length: 10 }), fetchReViewData({ start: 0, length: 10 }), fetchPostsData({ start: 0, length: 10 }), fetchUserData({})])
+            const [bookRes, postsRes, userRes] = await Promise.all([fetchBookData(info), fetchPostsData(info), fetchUserData({})])
 
-            if (newsRes.result_code === 0) {
-                setNews(newsRes.data)
-            }
             if (bookRes.result_code === 0) {
                 setBookDataList(JSON.parse(JSON.stringify(bookRes.data)))
             }
-            if (reviewRes.result_code === 0) {
-                setReviewDataList(JSON.parse(JSON.stringify(reviewRes.data)))
-            }
+
             if (postsRes.result_code === 0) {
                 setPosts(JSON.parse(JSON.stringify(postsRes.data)))
             }
+
             if (userRes.result_code === 0) {
                 dispatch(setUserInfo(userRes.data))
             }
@@ -75,6 +86,36 @@ export const Home = () => {
             console.error("Error occurred while fetching data:", error)
         }
     }
+
+    const loadDataRefresh = async () => {
+        const info = {
+            start: 0,
+            length: 10,
+        }
+
+        try {
+            dispatch(setLoading(false))
+            setIsLoading(true)
+            const [newsRes, clubRes, reviewRes] = await Promise.all([fetchNewsData({}), fetchClubData(info), fetchReViewData(info)])
+
+            if (newsRes.result_code === 0) {
+                setNews(newsRes.data)
+            }
+
+            if (reviewRes.result_code === 0) {
+                setReviewDataList(JSON.parse(JSON.stringify(reviewRes.data)))
+            }
+
+            if (clubRes.result_code === 0) {
+                setClubList(JSON.parse(JSON.stringify(clubRes.data)))
+            }
+
+            setIsLoading(false)
+        } catch (error) {
+            console.error("Error occurred while fetching data:", error)
+        }
+    }
+
     const _renderNews = ({ item }: { item: newsInfo }) => {
         return isLoading && !news.length ? (
             <SkeletonHomeNewsCard />
@@ -126,6 +167,10 @@ export const Home = () => {
                             <NoData />
                         </View>
                     )}
+                </BookShowBlock>
+
+                <BookShowBlock bookType="Clubs" navigationUrl="Clubs">
+                    <CarouselClubs dataList={clubList} />
                 </BookShowBlock>
             </Page>
             {isLoading && <Loading />}

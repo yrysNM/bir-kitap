@@ -3,7 +3,7 @@ import { Header } from "../../components/Header"
 import { Page } from "../../layouts/Page"
 import { BookApi, bookInfo } from "../../api/bookApi"
 import { View, StyleSheet } from "react-native"
-import { CarouselBookTypeFilter } from "../../components/CarouselBookTypeFilter"
+import { CarouselBookTypeFilter } from "../../components/carousel/CarouselBookTypeFilter"
 import { NoData } from "../../components/NoData"
 import { BookCard } from "../../components/BookCard"
 

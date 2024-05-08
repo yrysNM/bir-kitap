@@ -1,17 +1,18 @@
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, FlatList } from "react-native"
 import { Header } from "../components/Header"
 import { Page } from "../layouts/Page"
 import { useRoute, RouteProp } from "@react-navigation/native"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { FirstUpperCaseText } from "../helpers/firstUpperCaseText"
 import { BookCard } from "../components/BookCard"
-import { BookApi, bookInfo } from "../api/bookApi"
+import { bookInfo } from "../api/bookApi"
 import { useEffect, useState } from "react"
 import { NoData } from "../components/NoData"
+import { RecommendationAPI } from "../api/recommendationApi"
 
 export const BookMore = () => {
     const { id } = useRoute<RouteProp<RootStackParamList, "BookMore">>().params
-    const { fetchData: fetchBookData } = BookApi("list")
+    const { fetchData: fetchBookData } = RecommendationAPI("books")
     const [dataList, setDataList] = useState<bookInfo[]>([])
 
     useEffect(() => {
@@ -22,30 +23,28 @@ export const BookMore = () => {
         if (id === "books") {
             fetchBookData({}).then((res) => {
                 if (res.result_code === 0) {
-                    setDataList(res.data)
+                    setDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
         }
     }
 
     return (
-        <Page>
+        <Page isFlatList>
             <Header isCustomHeader={false} isGoBack title={FirstUpperCaseText(id)} />
 
-            <View style={styles.bookWrapper}>
-                <View style={styles.bookWrapper}>{dataList.length ? dataList.map((book) => <BookCard key={book.id} bookInfo={book} />) : <NoData />}</View>
-            </View>
+            <View style={{ flex: 1 }}>{dataList.length ? <FlatList data={dataList} numColumns={2} contentContainerStyle={styles.bookWrapper} columnWrapperStyle={{ gap: 25 }} renderItem={({ item }) => <BookCard bookInfo={item} />} /> : <NoData />}</View>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
     bookWrapper: {
-        flexWrap: "wrap",
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         gap: 25,
-        marginBottom: 30,
+        flexGrow: 1,
+        paddingVertical: 20,
     },
 })
