@@ -71,12 +71,14 @@ export const CreateAccount = () => {
                 </InputStyle>
                 <InputStyle inputTitle={"Number phone"}>
                     <MaskInput
+                        cursorColor="#212121"
+                        selectionColor="#212121"
                         value={info.phone}
                         onChangeText={(value) => setInfo({ ...info, phone: value })}
                         placeholder="(777) 777-77-77"
                         keyboardType="numeric"
                         mask={["(", /\d/, /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]}
-                        style={{ ...styles.input, marginBottom: 4, marginLeft: 0, paddingLeft: 30, position: "relative" }}
+                        style={{ ...styles.input, marginBottom: 4, marginLeft: 0, paddingLeft: 30, position: "relative", zIndex: 10 }}
                     />
                     <Text style={styles.numberText}>+7</Text>
                 </InputStyle>
@@ -160,8 +162,10 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         top: "50%",
+        width: 20,
         right: 0,
         left: 10,
+        zIndex: 11,
     },
     iconEye: {
         position: "absolute",

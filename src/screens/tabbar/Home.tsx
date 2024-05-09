@@ -116,7 +116,7 @@ export const Home = () => {
                     <CarouselReviewList dataList={reviewDataList} />
                 </BookShowBlock>
 
-                <BookShowBlock bookType="Posts" navigationUrl="">
+                <BookShowBlock bookType="Posts" navigationUrl="Posts">
                     {!isLoading ? (
                         <Carousel
                             data={posts}

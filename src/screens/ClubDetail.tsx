@@ -154,7 +154,7 @@ export const ClubDetail = () => {
                 </View>
 
                 <Button type="primary" style={styles.joinBtn} onPress={() => onClickToggleJoinBtn()}>
-                    <Text style={styles.joinBtnText}>{!clubInfo.club.join ? "Join" : "Go out"}</Text>
+                    <Text style={styles.joinBtnText}>{!clubInfo.club.join ? "Join" : "Unjoin"}</Text>
                     {isPrivate() && (
                         <View style={[styles.iconWrapper, { position: "absolute", left: -65, top: -20 }]}>
                             <Image style={styles.clubEditIcon} source={LockImg} />

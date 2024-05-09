@@ -36,7 +36,7 @@ export const Reviews = () => {
                     <FlatList data={dataList} refreshing={isRefresh} onRefresh={() => loadData()} contentContainerStyle={{ flexGrow: 1, paddingBottom: 140 }} renderItem={({ item }) => <ReviewCard reviewInfo={item} />} />
                 ) : isLoading ? (
                     <>
-                        <View style={styles.reviewWrapper}>
+                        <View style={[styles.reviewWrapper, { marginTop: 30 }]}>
                             <View style={{ marginTop: 10 }}>
                                 <Skeleton width={1} height={150} varient="box" styleProps={{ borderRadius: 12, width: "100%" }} />
                             </View>
@@ -140,8 +140,6 @@ const styles = StyleSheet.create({
         shadowRadius: 9,
         elevation: 1,
         shadowOpacity: 1,
-        marginTop: 1,
-        marginBottom: 10,
         paddingVertical: 10,
         paddingHorizontal: 19,
     },

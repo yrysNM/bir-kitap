@@ -45,7 +45,6 @@ export const BookTestWebView = () => {
         const janascript = `
         localStorage.setItem('token', '${token}');
     `
-        // webViewEl.current?.injectJavaScript(janascript)
         return janascript
     }
 
@@ -86,7 +85,6 @@ export const BookTestWebView = () => {
                         webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                     } else {
                         dispatch(setLoading(false))
-                        console.log(res.data)
                     }
                 })
                 .catch((err) => {
@@ -131,7 +129,7 @@ export const BookTestWebView = () => {
                     }}
                     onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                     onMessage={handleMessageFromWebview}
-                    injectedJavaScript={injectWebViewData()}
+                    injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
                             setLoading(true)

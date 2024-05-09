@@ -22,39 +22,28 @@ export const BookTrackerWebView = () => {
     const logOut = logOutHelper()
     const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(1)
-    // const [token, setToken] = useState<string>("")
-    // const [tokenLoading, setTokenLoading] = useState<boolean>(false)
-    // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
+    const [token, setToken] = useState<string>("")
+    const [tokenLoading, setTokenLoading] = useState<boolean>(false)
+    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
-        // setTokenLoading(true)
-        // AsyncStorage.getItem("token").then((value) => {
-        //     console.log(value)
-        //     setTokenLoading(false)
-        //     if (value) {
-        //         setToken(value)
-        //     } else {
-        //         setToken("")
-        //     }
-        // })
-        injectWebViewJS()
-    }, [isLoading])
+        setTokenLoading(true)
+        AsyncStorage.getItem("token").then((value) => {
+            setTokenLoading(false)
+            if (value) {
+                setToken(value)
+            } else {
+                setToken("")
+            }
+        })
+    }, [])
 
-    async function injectWebViewJS() {
-        const token = await AsyncStorage.getItem("token")
-        webViewEl.current?.injectJavaScript(`
-            setTimeout(() => {
-                localStorage.setItem('token', '${token}');
-            }, 20);
-        `)
+    function injectWebViewData() {
+        const janascript = `
+            localStorage.setItem('token', '${token}');
+        `
+        return janascript
     }
-
-    // function injectWebViewData() {
-    //     const janascript = `
-    //         localStorage.setItem('token', '${token}');
-    //     `
-    //     return janascript
-    // }
 
     const handleFileUpload = async () => {
         dispatch(setLoading(true))
@@ -95,7 +84,7 @@ export const BookTrackerWebView = () => {
                     webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                 } else {
                     dispatch(setLoading(false))
-                    console.log(res.data)
+                    // console.log(res.data)
                 }
             })
         } else {
@@ -116,38 +105,44 @@ export const BookTrackerWebView = () => {
 
     return (
         <>
-            {/* {tokenLoading || (isLoading && <Loading />)} */}
-            {isLoading && <Loading />}
-            <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
-                <WebView
-                    ref={webViewEl}
-                    key={webviewKey}
-                    webviewDebuggingEnabled={true}
-                    ignoreSilentHardwareSwitch={true}
-                    javaScriptEnabled={true}
-                    style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                    source={{ uri: `${_webview_base_url}` }}
-                    originWhitelist={["*"]}
-                    onRenderProcessGone={(syntheticEvent) => {
-                        const { nativeEvent } = syntheticEvent
-                        console.warn("WebView Crashed:", nativeEvent.didCrash)
-                        webViewEl.current?.reload()
-                    }}
-                    onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                    onMessage={handleMessageFromWebview}
-                    onLoadStart={injectWebViewJS}
-                    // onLoad={injectWebViewJS}
-                    // onLoadEnd={injectWebViewJS}
-                    // injectedJavaScript={injectWebViewData()}
-                    onLoadProgress={({ nativeEvent }) => {
-                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                            dispatch(setLoading(true))
-                        } else {
-                            dispatch(setLoading(false))
-                        }
-                    }}
-                />
-            </SafeAreaView>
+            {tokenLoading ? (
+                <Loading />
+            ) : (
+                <>
+                    {isLoading && <Loading />}
+                    <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
+                        <WebView
+                            ref={webViewEl}
+                            key={webviewKey}
+                            webviewDebuggingEnabled={true}
+                            ignoreSilentHardwareSwitch={true}
+                            javaScriptEnabled={true}
+                            style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
+                            source={{ uri: `${_webview_base_url}?randomNumber=${randomNumber}` }}
+                            originWhitelist={["*"]}
+                            onRenderProcessGone={(syntheticEvent) => {
+                                const { nativeEvent } = syntheticEvent
+                                console.warn("WebView Crashed:", nativeEvent.didCrash)
+                                webViewEl.current?.reload()
+                            }}
+                            onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
+                            onMessage={handleMessageFromWebview}
+                            injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
+                            // onLoadStart={injectWebViewJS}
+                            // onLoad={injectWebViewJS}
+                            // onLoadEnd={injectWebViewJS}
+                            // injectedJavaScript={injectWebViewData()}
+                            onLoadProgress={({ nativeEvent }) => {
+                                if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                                    dispatch(setLoading(true))
+                                } else {
+                                    dispatch(setLoading(false))
+                                }
+                            }}
+                        />
+                    </SafeAreaView>
+                </>
+            )}
         </>
     )
 }

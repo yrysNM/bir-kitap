@@ -1,6 +1,6 @@
 import { Header } from "../../components/Header"
 import { useState } from "react"
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
+import { View, StyleSheet, Text } from "react-native"
 import { InputStyle } from "../../components/InputStyle"
 import InputItem from "@ant-design/react-native/lib/input-item"
 import { ILogin, LoginAPI } from "../../api/authApi"
@@ -61,9 +61,9 @@ export const Login = () => {
                     <Text style={styles.btnText}>Log in</Text>
                 </Button>
 
-                <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword" as never)}>
+                {/* <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword" as never)}>
                     <Text style={styles.forGotPasWordText}>Forgot password?</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <View>
                     <View style={styles.orText}>
