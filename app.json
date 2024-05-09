@@ -4,11 +4,11 @@
         "slug": "bir-kitap",
         "version": "0.0.2",
         "orientation": "portrait",
-        "icon": "./assets/logo.png",
+        "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
         "jsEngine": "hermes",
         "splash": {
-            "image": "./assets/logo.png",
+            "image": "./assets/splash.png",
             "resizeMode": "contain",
             "backgroundColor": "#0a78d6",
             "boxShadow": "inset 0 4px 4px 0 rgba(0, 0, 0, 0.25)"
@@ -19,7 +19,8 @@
                 "expo-build-properties",
                 {
                     "android": {
-                        "usesCleartextTraffic": true
+                        "usesCleartextTraffic": true,
+                        "enableProguardInReleaseBuilds": true
                     }
                 }
             ],
@@ -41,14 +42,14 @@
         "android": {
             "package": "mobile.birkitap",
             "adaptiveIcon": {
-                "foregroundImage": "./assets/logo.png",
+                "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#F7F9F6"
             },
             "versionCode": 2,
             "googleServicesFile": "./google-services.json"
         },
         "web": {
-            "favicon": "./assets/logo.png"
+            "favicon": "./assets/favicon.png"
         },
         "scheme": "book-crossing",
         "extra": {
