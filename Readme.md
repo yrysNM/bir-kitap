@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://expo.dev/">
     <img alt="expo" height="128" src="assets/splash.png">
-    <h1 align="center">Expo</h1>
+    <h1 align="center">Birkitap</h1>
   </a>
 </p>
 
