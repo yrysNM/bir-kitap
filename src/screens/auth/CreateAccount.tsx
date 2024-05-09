@@ -56,7 +56,7 @@ export const CreateAccount = () => {
     }
 
     const isNotEmpty = () => {
-        return Object.values(info).every((item) => item)
+        return Object.values(info).every((item) => item === 0 || item)
     }
 
     return (

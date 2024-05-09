@@ -1,21 +1,42 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { View, Text, StyleSheet, Animated, Dimensions, TouchableOpacity } from "react-native"
 
 type propsInfo = {
     valueList: { value: string; label: string }[]
     onClickTab: (valueTab: string) => void
+    value?: string
 }
 
-export const CustomTabs = ({ valueList, onClickTab }: propsInfo) => {
+export const CustomTabs = ({ valueList, onClickTab, value }: propsInfo) => {
     const translationTabs = useRef(new Animated.Value(0)).current
     const [tab, setTab] = useState<{ value: string; label: string }>({
         value: valueList[0].value,
         label: valueList[0].label,
     })
 
+    useEffect(() => {
+        if (value && value.length) {
+            initialTab()
+        }
+    }, [value])
+
+    // useEffect(() => {
+    //     initialTab()
+    // }, [])
+
+    const initialTab = () => {
+        const tabValueIndex = valueList.findIndex((item) => item.value === value)
+        setTab(valueList[tabValueIndex])
+        startAnimation(tabValueIndex)
+    }
+
     const onChangeTabs = (index: number, valueTab: string) => {
         onClickTab(valueTab)
         setTab(valueList.find((value) => value.value === valueTab) || { value: valueList[0].value, label: valueList[0].label })
+        startAnimation(index)
+    }
+
+    const startAnimation = (index: number) => {
         Animated.timing(translationTabs, {
             toValue: (index * (Dimensions.get("window").width - 32)) / valueList.length,
             duration: 250,

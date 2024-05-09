@@ -135,14 +135,14 @@ export const Profile = () => {
                         <View style={{ marginTop: -10, marginBottom: 20 }}>
                             {bookType.map((item) => (
                                 <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
-                                    <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
+                                    <View style={{ marginHorizontal: info.books[item].length <= 1 ? 0 : -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
                                 </BookShowBlock>
                             ))}
                         </View>
                     ) : tab === "reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                     ) : tab === "posts" ? (
-                        <View style={{ marginTop: 10 }}>{info.posts.length ? info.posts.map((post) => <PostCard postInfo={post} key={post.id} />) : <NoData />}</View>
+                        <View style={{ marginTop: 10 }}>{info.posts.length ? info.posts.map((post) => <PostCard postInfo={post} key={post.id} isUpdatePost />) : <NoData />}</View>
                     ) : null}
                 </View>
             </View>

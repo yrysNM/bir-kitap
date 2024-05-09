@@ -9,7 +9,15 @@ import { CustomTabbar } from "../components/customs/CustomTabbar"
 import { useNavigation } from "@react-navigation/native"
 import { useRef, useEffect } from "react"
 
-const Tab = createBottomTabNavigator()
+export type RootTabbarStackParamList = {
+    Home: undefined
+    Search: undefined
+    Create: { id?: string }
+    Services: undefined
+    Profile: undefined
+}
+
+const Tab = createBottomTabNavigator<RootTabbarStackParamList>()
 export const TabNavigator = () => {
     const tabWidth = Dimensions.get("screen").width / 5 - 16
     const translationTabBar = useRef(new Animated.Value(0)).current

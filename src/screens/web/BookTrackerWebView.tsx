@@ -26,7 +26,10 @@ export const BookTrackerWebView = () => {
     // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
+        // dispatch(setLoading(true))
+
         AsyncStorage.getItem("token").then((value) => {
+            // dispatch(setLoading(false))
             if (value) {
                 setToken(value)
             } else {
