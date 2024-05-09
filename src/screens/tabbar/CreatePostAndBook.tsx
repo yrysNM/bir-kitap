@@ -222,7 +222,7 @@ export const CreatePostAndBook = () => {
                     <View>
                         <View style={{ marginTop: 30 }}>
                             <InputStyle inputTitle="Title">
-                                <InputItem last type="text" style={{ ...styles.input }} value={bookInfo.title} onChange={(value) => setBookInfo({ ...bookInfo, title: value })}></InputItem>
+                                <InputItem cursorColor="#212121" selectionColor="#212121" last type="text" style={{ ...styles.input }} value={bookInfo.title} onChange={(value) => setBookInfo({ ...bookInfo, title: value })}></InputItem>
                             </InputStyle>
 
                             <View style={{ marginVertical: 20 }}>
@@ -244,18 +244,18 @@ export const CreatePostAndBook = () => {
                             </View>
 
                             <InputStyle inputTitle="Author">
-                                <InputItem last type="text" style={styles.input} value={bookInfo.author} onChange={(value) => setBookInfo({ ...bookInfo, author: value })}></InputItem>
+                                <InputItem cursorColor="#212121" selectionColor="#212121" last type="text" style={styles.input} value={bookInfo.author} onChange={(value) => setBookInfo({ ...bookInfo, author: value })}></InputItem>
                             </InputStyle>
 
                             <View style={styles.inputWrapper}>
                                 <View style={{ flex: 1 }}>
                                     <InputStyle inputTitle="Year">
-                                        <InputItem last type="number" style={styles.input} value={year} onChange={(value) => setYear(value)}></InputItem>
+                                        <InputItem cursorColor="#212121" selectionColor="#212121" last type="number" style={styles.input} value={year} onChange={(value) => setYear(value)}></InputItem>
                                     </InputStyle>
                                 </View>
                                 <View style={{ flex: 1 }}>
                                     <InputStyle inputTitle="Pages">
-                                        <InputItem last type="number" style={styles.input} value={pages} onChange={(value) => setPages(value)}></InputItem>
+                                        <InputItem cursorColor="#212121" selectionColor="#212121" last type="number" style={styles.input} value={pages} onChange={(value) => setPages(value)}></InputItem>
                                     </InputStyle>
                                 </View>
                             </View>
@@ -265,7 +265,7 @@ export const CreatePostAndBook = () => {
                                 </TouchableOpacity>
                             </InputStyle>
                             <InputStyle inputTitle="Description">
-                                <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={bookInfo.description} onChange={(e) => setBookInfo({ ...bookInfo, description: e || "" })} placeholder="Type post here..." />
+                                <TextareaItem cursorColor="#212121" selectionColor="#212121" last style={styles.textAreaInput} rows={4} count={400} value={bookInfo.description} onChange={(e) => setBookInfo({ ...bookInfo, description: e || "" })} placeholder="Type post here..." />
                             </InputStyle>
 
                             <Button type="primary" style={styles.createBtn} onPress={() => onCreateBook()}>
@@ -277,7 +277,7 @@ export const CreatePostAndBook = () => {
                     <View>
                         <View style={{ marginTop: 30 }}>
                             <InputStyle inputTitle="Title">
-                                <InputItem last type="text" style={{ ...styles.input }} value={postInfo.title} onChange={(value) => setPostInfo({ ...postInfo, title: value })}></InputItem>
+                                <InputItem cursorColor="#212121" selectionColor="#212121" last type="text" style={{ ...styles.input }} value={postInfo.title} onChange={(value) => setPostInfo({ ...postInfo, title: value })}></InputItem>
                             </InputStyle>
 
                             <View style={{ marginVertical: 20 }}>
@@ -311,7 +311,7 @@ export const CreatePostAndBook = () => {
                                 </View>
                             </InputStyle>
                             <InputStyle inputTitle="Description">
-                                <TextareaItem last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
+                                <TextareaItem cursorColor="#212121" selectionColor="#212121" last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
                             </InputStyle>
 
                             <Button type="primary" style={styles.createBtn} onPress={() => onCreatePost()}>
@@ -321,7 +321,7 @@ export const CreatePostAndBook = () => {
                     </View>
                 </Tabs>
             </View>
-            <Modal popup animationType="slide-up" visible={showModalGenre} onClose={() => setShowModalGenre(false)} style={styles.modalWrapper} maskClosable>
+            <Modal popup animationType="slide-up" visible={showModalGenre} onClose={() => setShowModalGenre(false)} style={[styles.modalWrapper, { paddingHorizontal: 16 }]} maskClosable>
                 <SelectGenres
                     onSelect={(e) => {
                         setShowModalGenre(false)

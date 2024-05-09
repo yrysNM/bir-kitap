@@ -95,7 +95,7 @@ export const Search = () => {
 const styles = StyleSheet.create({
     modalWrapper: {
         paddingTop: 15,
-        paddingHorizontal: 32,
+        paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: "#fff",
         borderTopRightRadius: 50,

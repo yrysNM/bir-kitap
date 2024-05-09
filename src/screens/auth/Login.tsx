@@ -47,11 +47,11 @@ export const Login = () => {
 
             <View style={{ marginTop: 20, gap: 35 }}>
                 <InputStyle inputTitle={"E-mail"}>
-                    <InputItem last type="email-address" style={[styles.input]} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
+                    <InputItem cursorColor="#212121" selectionColor="#212121" last type="email-address" style={[styles.input]} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
                 </InputStyle>
 
                 <InputStyle inputTitle={"Password"}>
-                    <InputItem last type={!isVisiblePassword ? "password" : "text"} style={[styles.input]} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                    <InputItem cursorColor="#212121" selectionColor="#212121" last type={!isVisiblePassword ? "password" : "text"} style={[styles.input]} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
                     {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>

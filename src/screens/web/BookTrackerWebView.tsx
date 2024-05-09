@@ -12,8 +12,8 @@ import { BookApi } from "../../api/bookApi"
 import { logOut as logOutHelper } from "../../helpers/logOut"
 import { Loading } from "../../components/Loading"
 
-// const _webview_base_url = "http://192.168.1.4:5173/book-tracker/"
-const _webview_base_url = "https://birkitap.kz/book-tracker/?random=12"
+const _webview_base_url = "http://192.168.0.120:5173/book-tracker/"
+// const _webview_base_url = "https://birkitap.kz/book-tracker/?random=12"
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
@@ -22,29 +22,39 @@ export const BookTrackerWebView = () => {
     const logOut = logOutHelper()
     const { fetchData } = BookApi("upload")
     const [webviewKey, setWebviewKey] = useState<number>(1)
-    const [token, setToken] = useState<string>("")
+    // const [token, setToken] = useState<string>("")
+    // const [tokenLoading, setTokenLoading] = useState<boolean>(false)
     // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
     useEffect(() => {
-        // dispatch(setLoading(true))
+        // setTokenLoading(true)
+        // AsyncStorage.getItem("token").then((value) => {
+        //     console.log(value)
+        //     setTokenLoading(false)
+        //     if (value) {
+        //         setToken(value)
+        //     } else {
+        //         setToken("")
+        //     }
+        // })
+        injectWebViewJS()
+    }, [isLoading])
 
-        AsyncStorage.getItem("token").then((value) => {
-            // dispatch(setLoading(false))
-            if (value) {
-                setToken(value)
-            } else {
-                setToken("")
-            }
-        })
-    }, [])
-
-    function injectWebViewData() {
-        const janascript = `
-            localStorage.setItem('token', '${token}');
-        `
-        // webViewEl.current?.injectJavaScript(janascript)
-        return janascript
+    async function injectWebViewJS() {
+        const token = await AsyncStorage.getItem("token")
+        webViewEl.current?.injectJavaScript(`
+            setTimeout(() => {
+                localStorage.setItem('token', '${token}');
+            }, 20);
+        `)
     }
+
+    // function injectWebViewData() {
+    //     const janascript = `
+    //         localStorage.setItem('token', '${token}');
+    //     `
+    //     return janascript
+    // }
 
     const handleFileUpload = async () => {
         dispatch(setLoading(true))
@@ -106,6 +116,7 @@ export const BookTrackerWebView = () => {
 
     return (
         <>
+            {/* {tokenLoading || (isLoading && <Loading />)} */}
             {isLoading && <Loading />}
             <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
                 <WebView
@@ -124,7 +135,10 @@ export const BookTrackerWebView = () => {
                     }}
                     onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                     onMessage={handleMessageFromWebview}
-                    injectedJavaScript={injectWebViewData()}
+                    onLoadStart={injectWebViewJS}
+                    // onLoad={injectWebViewJS}
+                    // onLoadEnd={injectWebViewJS}
+                    // injectedJavaScript={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
                             dispatch(setLoading(true))

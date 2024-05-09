@@ -19,12 +19,12 @@ Birkitab is an online platform dedicated to reading enthusiasts and book communi
 
 To clean cache 
 ```bash
-    npx expo prebuild --clean
+npx expo prebuild --clean
 ```
 To deploy this project
 
 ```bash
-  eas build -p android --profile preview
+eas build -p android --profile preview
 ```
 
 
