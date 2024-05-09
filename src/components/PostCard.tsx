@@ -13,8 +13,9 @@ import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { useState } from "react"
 import { Loading } from "./Loading"
 import { setRefresh } from "../redux/features/mainSlice"
+import { RootTabbarStackParamList } from "../navigation/TabBarNavigator"
 
-type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "PostDetail">>
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootTabbarStackParamList, "Create">, NativeStackNavigationProp<RootStackParamList, "PostDetail">>
 
 type propsInfo = {
     postInfo: postInfo
@@ -41,9 +42,7 @@ export const PostCard = ({ postInfo, isUpdatePost = false }: propsInfo) => {
     }
 
     const openUpdatePost = () => {
-        navigation.navigate("Create", {
-            id: postInfo.id,
-        })
+        navigation.navigate("UpdatePost", { id: postInfo.id || "" })
     }
 
     return postInfo ? (

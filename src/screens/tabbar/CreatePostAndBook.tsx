@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Page } from "../../layouts/Page"
-import { Text, StyleSheet, View, TouchableOpacity, Dimensions, Image } from "react-native"
+import { Text, StyleSheet, View, TouchableOpacity, Dimensions } from "react-native"
 import Tabs from "@ant-design/react-native/lib/tabs"
 import { BookApi, bookInfo } from "../../api/bookApi"
 import { InputStyle } from "../../components/InputStyle"
@@ -26,6 +26,7 @@ import { CustomTabs } from "../../components/customs/CustomTabs"
 import { ClubAPI, clubInfo } from "../../api/clubApi"
 import { NoData } from "../../components/NoData"
 import { ClubCard } from "../../components/ClubCard"
+import { CloudImage } from "../../components/CloudImage"
 
 const _bookInfo = {
     title: "",
@@ -228,7 +229,7 @@ export const CreatePostAndBook = () => {
                                 <View style={styles.uploadWrapper}>
                                     {images[0] && images[0].length ? (
                                         <>
-                                            <Image style={styles.bookImage} source={{ uri: images[0] }} />
+                                            <CloudImage styleImg={styles.bookImage} url={images[0]} />
                                             <TouchableOpacity style={styles.iconCloseImg} onPress={() => handleRemoveImg(true, 0)}>
                                                 <Icon name="close" />
                                             </TouchableOpacity>
@@ -290,7 +291,7 @@ export const CreatePostAndBook = () => {
                                         </View>
                                         {images.map((image, i) => (
                                             <View key={i}>
-                                                <Image style={styles.bookImage} source={{ uri: image }} />
+                                                <CloudImage styleImg={styles.bookImage} url={image} />
                                                 <TouchableOpacity style={styles.iconCloseImg} onPress={() => handleRemoveImg(true, i)}>
                                                     <Icon name="close" />
                                                 </TouchableOpacity>

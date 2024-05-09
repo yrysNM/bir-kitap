@@ -55,8 +55,8 @@ export const Genre = () => {
 
             <View style={styles.genreWrapper}>
                 {dataList?.map((item) => (
-                    <Button key={item.id} activeStyle={false} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.id) ? "#005479" : "#F9FAF8", borderColor: isSelectGenre(item.id) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.id)}>
-                        <Text style={{ ...styles.genreText, color: isSelectGenre(item.id) ? "#F9FAF8" : "#000" }}>{item.title}</Text>
+                    <Button key={item.id} activeStyle={false} style={{ ...styles.genreBtn, backgroundColor: isSelectGenre(item.id) ? "#0A78D6" : "#fff", borderColor: isSelectGenre(item.id) ? "#005479" : "#000" }} onPress={() => onSelectGenre(item.id)}>
+                        <Text style={{ ...styles.genreText, color: isSelectGenre(item.id) ? "#fff" : "#212121" }}>{item.title}</Text>
                     </Button>
                 ))}
             </View>
@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
     },
     genreBtn: {
         paddingHorizontal: 30,
-        backgroundColor: "#F9FAF8",
+        backgroundColor: "#0A78D6",
         borderStyle: "solid",
         borderWidth: 1,
         borderColor: "#000",
-        borderRadius: 20,
+        borderRadius: 12,
     },
     genreText: {
         fontSize: 16,
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     continueBtn: {
         paddingVertical: 13,
-        backgroundColor: "#0C1E34",
+        backgroundColor: "#0A78D6",
         borderRadius: 20,
         borderWidth: 0,
     },

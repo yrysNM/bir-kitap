@@ -71,7 +71,7 @@ export const Services = () => {
             <View style={styles.serviceCotegory}>
                 <Text style={styles.contentTitle}>Services</Text>
 
-                <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "center", flexWrap: "wrap" }}>
+                <View style={{ gap: 25, flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap" }}>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTrackerWebView" as never)}>
                         <View style={styles.categoryBlock}>
                             <Image source={BookTrackerImg} style={{ width: 54, height: 54, objectFit: "cover" }} />
@@ -86,7 +86,7 @@ export const Services = () => {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.categoryWrapper} onPress={() => navigation.navigate("BookTestWebView" as never)}>
                         <View style={styles.categoryBlock}>
-                            <Image source={BookTestImg} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                            <Image source={BookTestImg} style={styles.serviceImg} />
                         </View>
                         <Text style={styles.categoryText}>Book test</Text>
                     </TouchableOpacity>
@@ -94,21 +94,21 @@ export const Services = () => {
             </View>
             <View style={{ marginTop: 58 }}>
                 <Text style={styles.contentTitle}>Categories </Text>
-                <View style={{ gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <View style={{ gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                     {categoryList.slice(0, 3).map((item, i) => (
                         <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
                             <View style={styles.categoryBlock}>
-                                <Image source={item.icon} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                                <Image source={item.icon} style={styles.serviceImg} />
                             </View>
                             <Text style={styles.categoryText}>{item.title}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
-                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <View style={{ marginTop: 35, gap: 25, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                     {categoryList.slice(3, 6).map((item, i) => (
                         <TouchableOpacity style={styles.categoryWrapper} key={i} onPress={() => onLink(item.url)}>
                             <View style={styles.categoryBlock}>
-                                <Image source={item.icon} style={{ width: 54, height: 54, objectFit: "scale-down" }} />
+                                <Image source={item.icon} style={styles.serviceImg} />
                             </View>
                             <Text style={styles.categoryText}>{item.title}</Text>
                         </TouchableOpacity>
@@ -123,6 +123,11 @@ const styles = StyleSheet.create({
     serviceCotegory: {
         marginTop: 42,
     },
+    serviceImg: {
+        width: 54,
+        height: 54,
+        objectFit: "scale-down",
+    },
     contentTitle: {
         fontSize: 20,
         fontWeight: "400",
@@ -132,12 +137,16 @@ const styles = StyleSheet.create({
     },
     categoryWrapper: {
         alignItems: "center",
+        justifyContent: "center",
         flexDirection: "column",
         flexWrap: "wrap",
-        width: 95,
+        flex: 1,
         gap: 5,
     },
     categoryBlock: {
+        width: "100%",
+        justifyContent: "center",
+        alignItems: "center",
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 6,

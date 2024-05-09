@@ -135,7 +135,7 @@ export const Profile = () => {
                         <View style={{ marginTop: -10, marginBottom: 20 }}>
                             {bookType.map((item) => (
                                 <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
-                                    <View style={{ marginHorizontal: -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
+                                    <View style={{ marginHorizontal: info.books[item].length <= 1 ? 0 : -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
                                 </BookShowBlock>
                             ))}
                         </View>
