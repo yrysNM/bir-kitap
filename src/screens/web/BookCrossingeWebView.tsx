@@ -12,8 +12,9 @@ import { logOut as logOutHelper } from "../../helpers/logOut"
 import { SafeAreaView } from "react-native"
 import { Loading } from "../../components/Loading"
 
-// const _webview_base_url = "http://192.168.0.116:5173/book-crossing/"
-const _webview_base_url = "https://birkitap.kz/book-crossing/?random=12"
+// const _webview_base_url = "http://192.168.1.4:5174/book-crossing/"
+const _webview_base_url = "https://birkitap.kz/book-crossing/"
+const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
 interface IUpload extends IResponse {
     data: { path: string }
@@ -27,10 +28,13 @@ export const BookCrossingWebView = () => {
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
-    // const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
+    const [tokenLoading, setTokenLoading] = useState<boolean>(false)
+    const _webview_url = `${_webview_base_url}?randomNumber=${randomNumber}`
 
     useEffect(() => {
+        setTokenLoading(true)
         AsyncStorage.getItem("token").then((value) => {
+            setTokenLoading(false)
             if (value) {
                 setToken(value)
             } else {
@@ -86,7 +90,7 @@ export const BookCrossingWebView = () => {
                     webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                 } else {
                     dispatch(setLoading(false))
-                    console.log(res.data)
+                    // console.log(res.data)
                 }
             })
         } else {
@@ -108,7 +112,7 @@ export const BookCrossingWebView = () => {
 
     return (
         <>
-            {isLoading && <Loading />}
+            {(tokenLoading || isLoading) && <Loading />}
             <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
                 <WebView
                     ref={webViewEl}
@@ -117,7 +121,7 @@ export const BookCrossingWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                    source={{ uri: `${_webview_base_url}` }}
+                    source={{ uri: _webview_url }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent
@@ -126,9 +130,9 @@ export const BookCrossingWebView = () => {
                     }}
                     onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                     onMessage={handleMessageFromWebview}
-                    injectedJavaScript={injectWebViewData()}
+                    injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
-                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_url) {
                             dispatch(setLoading(true))
                         } else {
                             dispatch(setLoading(false))

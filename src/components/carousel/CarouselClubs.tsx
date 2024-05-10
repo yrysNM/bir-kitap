@@ -36,6 +36,7 @@ export const CarouselClubs = ({ dataList }: { dataList: clubInfo[] }) => {
 const styles = StyleSheet.create({
     clubWrapper: {
         width: 110,
+        flex: 1,
         marginBottom: 10,
         paddingVertical: 10,
         borderRadius: 9,
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 1,
         shadowOpacity: 1,
-        justifyContent: "center",
+        // justifyContent: "center",
         alignItems: "center",
     },
     clubImg: {

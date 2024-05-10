@@ -17,7 +17,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../navigation/MainNavigation"
 import { SplitText } from "../../helpers/splitText"
-import { SkeletonHomeBooksCard, SkeletonHomeNewsCard } from "../../components/SkeletonCards"
+import { SkeletonCardReviewsCard, SkeletonHomeBooksCard, SkeletonHomeNewsCard } from "../../components/SkeletonCards"
 import { postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
 import { Loading } from "../../components/Loading"
@@ -113,10 +113,11 @@ export const Home = () => {
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
-                    <CarouselReviewList dataList={reviewDataList} />
+                    {!isLoading ? <CarouselReviewList dataList={reviewDataList} /> : <SkeletonCardReviewsCard />}
+                    {!reviewDataList.length && !isLoading && <NoData />}
                 </BookShowBlock>
 
-                <BookShowBlock bookType="Posts" navigationUrl="">
+                <BookShowBlock bookType="Posts" navigationUrl="Posts">
                     {!isLoading ? (
                         <Carousel
                             data={posts}
@@ -136,11 +137,7 @@ export const Home = () => {
                     ) : (
                         <SkeletonHomeBooksCard />
                     )}
-                    {!posts.length && !isLoading && (
-                        <View style={{ width: 100, marginBottom: 20 }}>
-                            <NoData />
-                        </View>
-                    )}
+                    {!posts.length && !isLoading && <NoData />}
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Clubs" navigationUrl="Clubs">

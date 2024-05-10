@@ -9,9 +9,8 @@
         "jsEngine": "hermes",
         "splash": {
             "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#0a78d6",
-            "boxShadow": "inset 0 4px 4px 0 rgba(0, 0, 0, 0.25)"
+            "resizeMode": "cover",
+            "backgroundColor": "#f7f9f6"
         },
         "assetBundlePatterns": ["**/*"],
         "plugins": [

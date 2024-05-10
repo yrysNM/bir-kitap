@@ -64,24 +64,26 @@ export const CreateAccount = () => {
             <Header isCustomHeader={true} title={"Create an account"} />
             <View style={{ marginTop: 20, gap: 11 }}>
                 <InputStyle inputTitle={"E-mail"}>
-                    <InputItem type="email-address" style={styles.input} value={info.email} onChange={(value) => setInfo((info) => ({ ...info, email: value }))} placeholder={"example@gmail.com"} />
+                    <InputItem cursorColor="#212121" selectionColor="#212121" type="email-address" style={styles.input} value={info.email} onChange={(value) => setInfo((info) => ({ ...info, email: value }))} placeholder={"example@gmail.com"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Nickname"}>
-                    <InputItem type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
+                    <InputItem cursorColor="#212121" selectionColor="#212121" type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Number phone"}>
                     <MaskInput
+                        cursorColor="#212121"
+                        selectionColor="#212121"
                         value={info.phone}
                         onChangeText={(value) => setInfo({ ...info, phone: value })}
                         placeholder="(777) 777-77-77"
                         keyboardType="numeric"
                         mask={["(", /\d/, /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]}
-                        style={{ ...styles.input, marginBottom: 4, marginLeft: 0, paddingLeft: 30, position: "relative" }}
+                        style={{ ...styles.input, marginBottom: 4, marginLeft: 0, paddingLeft: 30, position: "relative", zIndex: 10 }}
                     />
                     <Text style={styles.numberText}>+7</Text>
                 </InputStyle>
                 <InputStyle inputTitle={"Password"}>
-                    <InputItem type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                    <InputItem cursorColor="#212121" selectionColor="#212121" type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
                     {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
@@ -160,8 +162,10 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         top: "50%",
+        width: 20,
         right: 0,
         left: 10,
+        zIndex: 11,
     },
     iconEye: {
         position: "absolute",

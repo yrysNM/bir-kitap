@@ -14,7 +14,8 @@ import { useNavigation } from "@react-navigation/native"
 import { Loading } from "../../components/Loading"
 
 // const _webview_base_url = "http://192.168.1.4:5174/book-test"
-const _webview_base_url = "https://birkitap.kz/book-test/?random=12"
+const _webview_base_url = "https://birkitap.kz/book-test/"
+const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
 interface IUpload extends IResponse {
     data: { path: string }
@@ -29,7 +30,7 @@ export const BookTestWebView = () => {
     const logOut = logOutHelper()
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
-    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
+    const _webview_url = `${_webview_base_url}?randomNumber=${randomNumber}`
 
     useEffect(() => {
         AsyncStorage.getItem("token").then((value) => {
@@ -45,7 +46,6 @@ export const BookTestWebView = () => {
         const janascript = `
         localStorage.setItem('token', '${token}');
     `
-        // webViewEl.current?.injectJavaScript(janascript)
         return janascript
     }
 
@@ -86,7 +86,6 @@ export const BookTestWebView = () => {
                         webViewEl.current?.injectJavaScript(`window.postMessage(${JSON.stringify(info)}, "*")`)
                     } else {
                         dispatch(setLoading(false))
-                        console.log(res.data)
                     }
                 })
                 .catch((err) => {
@@ -122,7 +121,7 @@ export const BookTestWebView = () => {
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                    source={{ uri: `${_webview_base_url}?${randomNumber}` }}
+                    source={{ uri: _webview_url }}
                     originWhitelist={["*"]}
                     onRenderProcessGone={(syntheticEvent) => {
                         const { nativeEvent } = syntheticEvent
@@ -131,11 +130,11 @@ export const BookTestWebView = () => {
                     }}
                     onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
                     onMessage={handleMessageFromWebview}
-                    injectedJavaScript={injectWebViewData()}
+                    injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
-                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_url) {
                             setLoading(true)
-                        } else if (nativeEvent.url === _webview_base_url) {
+                        } else if (nativeEvent.url === _webview_url) {
                             setLoading(false)
                         }
                     }}
