@@ -55,7 +55,7 @@ export const ClubDetail = () => {
         followers: [],
     })
     const {
-        userInfo: { fullName },
+        userInfo: { id: userId },
         isLoading,
     } = useAppSelector((state) => state.mainSlice)
 
@@ -141,7 +141,7 @@ export const ClubDetail = () => {
             <View style={styles.clubWrapper}>
                 <CloudImage url={clubInfo.club.avatar} styleImg={styles.avatarImg} />
                 <Text style={styles.clubTitleText}>{clubInfo.club.title}</Text>
-                <Text style={[styles.userNameText, { color: fullName === clubInfo.admin.fullName ? "#0A78D6" : "#6D7885" }]}>{clubInfo.admin.fullName}</Text>
+                <Text style={[styles.userNameText, { color: userId === clubInfo.admin.id ? "#0A78D6" : "#6D7885" }]}>{clubInfo.admin.fullName}</Text>
                 <View style={styles.clubInfo}>
                     <View>
                         <Text style={styles.infoNumber}>{clubPosts.length}</Text>

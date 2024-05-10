@@ -387,6 +387,9 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         justifyContent: "flex-end",
         zIndex: 1,
+        position: "absolute",
+        top: 0,
+        left: 16,
     },
     clubs: {
         marginTop: 15,
