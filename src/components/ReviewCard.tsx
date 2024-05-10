@@ -23,7 +23,7 @@ type propsInfo = {
 export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
     const navigation = useNavigation<NavigateType>()
     const {
-        userInfo: { fullName },
+        userInfo: { id: userId },
     } = useAppSelector((state) => state.mainSlice)
     // const [blackPercentage, setBlackPercentage] = useState<string | null>(null)
 
@@ -80,7 +80,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
                 <View style={[styles.headerReview, { justifyContent: "space-between", marginTop: 5 }]}>
                     <View style={styles.headerReview}>
                         <CloudImage url={reviewInfo?.avatar} styleImg={styles.userAvatar} />
-                        <Text style={[styles.userNameText, { color: fullName === reviewInfo.userName ? "#0A78D6" : "#6D7885" }]}>{reviewInfo?.userName}</Text>
+                        <Text style={[styles.userNameText, { color: userId === reviewInfo.userId ? "#0A78D6" : "#6D7885" }]}>{reviewInfo?.userName}</Text>
                     </View>
                     <Text style={styles.bookDescrText}>{dayjs(reviewInfo.createtime).format("DD MMMM YYYY [y].")}</Text>
                 </View>

@@ -48,7 +48,7 @@ const _reviewTemp = {
 export const BookDetail = () => {
     const navigate = useNavigation()
     const {
-        userInfo: { fullName },
+        userInfo: { id: userId },
     } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchCreateReviewData } = BookApi("review/create")
     const { fetchData: fetchClubsData } = ClubAPI("list")
@@ -158,7 +158,7 @@ export const BookDetail = () => {
                             <CloudImage styleImg={{ width: 32, height: 32, borderRadius: 100, backgroundColor: "#fff" }} url={item.avatar} />
                             <View style={[styles.reviewWrapper, { flex: item.message.length > 70 ? 1 : 0 }]}>
                                 <View>
-                                    <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
+                                    <Text style={[styles.reviewUserName, { color: item.userId === userId ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
                                     <View>
                                         <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                                             <StarRate rateNumber={item.rating} />

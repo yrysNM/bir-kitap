@@ -15,7 +15,7 @@ type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackPar
 
 export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] }) => {
     const {
-        userInfo: { fullName },
+        userInfo: { id: userId },
         isLoading,
     } = useAppSelector((state) => state.mainSlice)
     const navigation = useNavigation<NavigateType>()
@@ -30,7 +30,7 @@ export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                     <View style={styles.reviewUserInfo}>
                         <CloudImage styleImg={styles.reviewUserProfileImg} url={item.avatar || ""} />
                         <View style={{ flexShrink: 1 }}>
-                            <Text style={[styles.reviewUserName, { color: item.userName === fullName ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
+                            <Text style={[styles.reviewUserName, { color: item.userId === userId ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
                             <Text style={styles.reviewUserNic}>{SplitText(item.book.title, 15)}</Text>
                         </View>
                     </View>

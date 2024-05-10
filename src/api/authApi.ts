@@ -11,6 +11,7 @@ export interface IRegistration extends IResponse {
 }
 
 export interface IUserInfo {
+    id?: string
     email: string
     fullName: string
     phone: string
