@@ -14,6 +14,7 @@ import { Loading } from "../../components/Loading"
 
 // const _webview_base_url = "http://192.168.1.4:5174/book-crossing/"
 const _webview_base_url = "https://birkitap.kz/book-crossing/"
+const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
 interface IUpload extends IResponse {
     data: { path: string }
@@ -28,7 +29,7 @@ export const BookCrossingWebView = () => {
     const [webviewKey, setWebviewKey] = useState<number>(0)
     const [token, setToken] = useState<string>("")
     const [tokenLoading, setTokenLoading] = useState<boolean>(false)
-    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
+    const _webview_url = `${_webview_base_url}?randomNumber=${randomNumber}`
 
     useEffect(() => {
         setTokenLoading(true)
@@ -111,40 +112,34 @@ export const BookCrossingWebView = () => {
 
     return (
         <>
-            {tokenLoading ? (
-                <Loading />
-            ) : (
-                <>
-                    {isLoading && <Loading />}
-                    <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
-                        <WebView
-                            ref={webViewEl}
-                            key={webviewKey}
-                            webviewDebuggingEnabled={true}
-                            ignoreSilentHardwareSwitch={true}
-                            javaScriptEnabled={true}
-                            style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                            source={{ uri: `${_webview_base_url}?randomNumber=${randomNumber}` }}
-                            originWhitelist={["*"]}
-                            onRenderProcessGone={(syntheticEvent) => {
-                                const { nativeEvent } = syntheticEvent
-                                console.warn("WebView Crashed:", nativeEvent.didCrash)
-                                webViewEl.current?.reload()
-                            }}
-                            onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
-                            onMessage={handleMessageFromWebview}
-                            injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
-                            onLoadProgress={({ nativeEvent }) => {
-                                if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
-                                    dispatch(setLoading(true))
-                                } else {
-                                    dispatch(setLoading(false))
-                                }
-                            }}
-                        />
-                    </SafeAreaView>
-                </>
-            )}
+            {(tokenLoading || isLoading) && <Loading />}
+            <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
+                <WebView
+                    ref={webViewEl}
+                    key={webviewKey}
+                    webviewDebuggingEnabled={true}
+                    ignoreSilentHardwareSwitch={true}
+                    javaScriptEnabled={true}
+                    style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
+                    source={{ uri: _webview_url }}
+                    originWhitelist={["*"]}
+                    onRenderProcessGone={(syntheticEvent) => {
+                        const { nativeEvent } = syntheticEvent
+                        console.warn("WebView Crashed:", nativeEvent.didCrash)
+                        webViewEl.current?.reload()
+                    }}
+                    onContentProcessDidTerminate={() => setWebviewKey((webviewKey) => webviewKey + 1)}
+                    onMessage={handleMessageFromWebview}
+                    injectedJavaScriptBeforeContentLoaded={injectWebViewData()}
+                    onLoadProgress={({ nativeEvent }) => {
+                        if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_url) {
+                            dispatch(setLoading(true))
+                        } else {
+                            dispatch(setLoading(false))
+                        }
+                    }}
+                />
+            </SafeAreaView>
         </>
     )
 }

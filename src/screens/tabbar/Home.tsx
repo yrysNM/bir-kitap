@@ -17,7 +17,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../navigation/MainNavigation"
 import { SplitText } from "../../helpers/splitText"
-import { SkeletonHomeBooksCard, SkeletonHomeNewsCard } from "../../components/SkeletonCards"
+import { SkeletonCardReviewsCard, SkeletonHomeBooksCard, SkeletonHomeNewsCard } from "../../components/SkeletonCards"
 import { postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
 import { Loading } from "../../components/Loading"
@@ -113,8 +113,8 @@ export const Home = () => {
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
+                    {!isLoading ? <CarouselReviewList dataList={reviewDataList} /> : <SkeletonCardReviewsCard />}
                     {!reviewDataList.length && !isLoading && <NoData />}
-                    <CarouselReviewList dataList={reviewDataList} />
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Posts" navigationUrl="Posts">

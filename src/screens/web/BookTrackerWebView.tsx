@@ -14,6 +14,7 @@ import { Loading } from "../../components/Loading"
 
 // const _webview_base_url = "http://192.168.1.4:5173/book-tracker/"
 const _webview_base_url = "https://birkitap.kz/book-tracker/"
+const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
 export const BookTrackerWebView = () => {
     const webViewEl = useRef<WebView>(null)
@@ -24,7 +25,7 @@ export const BookTrackerWebView = () => {
     const [webviewKey, setWebviewKey] = useState<number>(1)
     const [token, setToken] = useState<string>("")
     const [tokenLoading, setTokenLoading] = useState<boolean>(false)
-    const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
+    const _webview_url = `${_webview_base_url}?randomNumber=${randomNumber}`
 
     useEffect(() => {
         setTokenLoading(true)
@@ -118,7 +119,7 @@ export const BookTrackerWebView = () => {
                             ignoreSilentHardwareSwitch={true}
                             javaScriptEnabled={true}
                             style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                            source={{ uri: `${_webview_base_url}?randomNumber=${randomNumber}` }}
+                            source={{ uri: _webview_url }}
                             originWhitelist={["*"]}
                             onRenderProcessGone={(syntheticEvent) => {
                                 const { nativeEvent } = syntheticEvent
@@ -133,7 +134,7 @@ export const BookTrackerWebView = () => {
                             // onLoadEnd={injectWebViewJS}
                             // injectedJavaScript={injectWebViewData()}
                             onLoadProgress={({ nativeEvent }) => {
-                                if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_base_url) {
+                                if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_url) {
                                     dispatch(setLoading(true))
                                 } else {
                                     dispatch(setLoading(false))
