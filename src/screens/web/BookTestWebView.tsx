@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native"
 import { Loading } from "../../components/Loading"
 
 // const _webview_base_url = "http://192.168.1.4:5174/book-test"
-const _webview_base_url = "https://birkitap.kz/book-test/?random=12"
+const _webview_base_url = "https://birkitap.kz/book-test/"
 
 interface IUpload extends IResponse {
     data: { path: string }

@@ -40,9 +40,7 @@ export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] })
             </TouchableOpacity>
         )
     }
-    return (
-        <>{dataList.length ? <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} /> : <SkeletonCardReviewsCard />}</>
-    )
+    return <Carousel data={dataList} renderItem={_renderReviewItem} sliderWidth={Dimensions.get("window").width} itemWidth={275} layout={"default"} vertical={false} inactiveSlideOpacity={1} inactiveSlideScale={1} activeSlideAlignment={"start"} />
 }
 
 const styles = StyleSheet.create({

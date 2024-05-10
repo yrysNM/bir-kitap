@@ -113,6 +113,7 @@ export const Home = () => {
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Reviews" navigationUrl="Reviews">
+                    {!reviewDataList.length && !isLoading && <NoData />}
                     <CarouselReviewList dataList={reviewDataList} />
                 </BookShowBlock>
 
@@ -136,11 +137,7 @@ export const Home = () => {
                     ) : (
                         <SkeletonHomeBooksCard />
                     )}
-                    {!posts.length && !isLoading && (
-                        <View style={{ width: 100, marginBottom: 20 }}>
-                            <NoData />
-                        </View>
-                    )}
+                    {!posts.length && !isLoading && <NoData />}
                 </BookShowBlock>
 
                 <BookShowBlock bookType="Clubs" navigationUrl="Clubs">
