@@ -438,8 +438,8 @@ const styles = StyleSheet.create({
         height: 169,
         borderRadius: 25,
         backgroundColor: "#F9FAF8",
-        borderStyle: "dotted",
-        borderWidth: 1,
+        borderStyle: "solid",
+        borderWidth: 0.5,
         borderColor: "#212121",
     },
     uploadIcon: {

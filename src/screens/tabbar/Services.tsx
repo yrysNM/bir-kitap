@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     contentTitle: {
         fontSize: 20,
-        fontWeight: "400",
+        fontWeight: "500",
         lineHeight: 20,
         color: "#212121",
         marginBottom: 17,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     categoryText: {
         textAlign: "center",
         fontSize: 16,
-        fontWeight: "700",
+        fontWeight: "400",
         lineHeight: 16,
         color: "#212121",
     },
