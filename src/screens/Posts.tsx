@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
-import { PostAPI, postInfo } from "../api/postApi"
+import { postInfo } from "../api/postApi"
 import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
 import { View, FlatList, StyleSheet } from "react-native"
 import { PostCard } from "../components/PostCard"
 import { NoData } from "../components/NoData"
+import { RecommendationAPI } from "../api/recommendationApi"
 
 export const Posts = () => {
-    const { fetchData } = PostAPI("list")
+    const { fetchData } = RecommendationAPI("posts")
     const [dataList, setDataList] = useState<postInfo[]>([])
     const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
@@ -18,7 +19,7 @@ export const Posts = () => {
     const loadData = () => {
         fetchData({}).then((res) => {
             if (res.result_code === 0) {
-                setDataList(res.data)
+                setDataList(JSON.parse(JSON.stringify(res.data)))
                 setIsRefresh(false)
             }
         })
@@ -31,6 +32,8 @@ export const Posts = () => {
             <View style={styles.postWrapper}>
                 {dataList.length ? (
                     <FlatList
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
                         data={dataList}
                         refreshing={isRefresh}
                         onRefresh={() => loadData()}

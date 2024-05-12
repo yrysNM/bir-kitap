@@ -1,15 +1,16 @@
 import { View, StyleSheet, FlatList } from "react-native"
 import { Header } from "../../components/Header"
 import { Page } from "../../layouts/Page"
-import { bookReviewInfo, ReviewApi } from "../../api/reviewApi"
+import { bookReviewInfo } from "../../api/reviewApi"
 import { useEffect, useState } from "react"
 import { NoData } from "../../components/NoData"
 import { ReviewCard } from "../../components/ReviewCard"
 import { useAppSelector } from "../../hook/useStore"
 import Skeleton from "../../components/Skeleton"
+import { RecommendationAPI } from "../../api/recommendationApi"
 
 export const Reviews = () => {
-    const { fetchData: fetchReviewData } = ReviewApi("list")
+    const { fetchData: fetchReviewData } = RecommendationAPI("reviews")
     const { isLoading } = useAppSelector((state) => state.mainSlice)
     const [dataList, setDataList] = useState<bookReviewInfo[]>([])
     const [isRefresh, setIsRefresh] = useState<boolean>(false)
@@ -33,7 +34,7 @@ export const Reviews = () => {
 
             <View style={styles.bookWrapper}>
                 {dataList.length ? (
-                    <FlatList data={dataList} refreshing={isRefresh} onRefresh={() => loadData()} contentContainerStyle={{ flexGrow: 1, paddingBottom: 140 }} renderItem={({ item }) => <ReviewCard reviewInfo={item} />} />
+                    <FlatList showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} data={dataList} refreshing={isRefresh} onRefresh={() => loadData()} contentContainerStyle={{ flexGrow: 1, paddingBottom: 140 }} renderItem={({ item }) => <ReviewCard reviewInfo={item} />} />
                 ) : isLoading ? (
                     <>
                         <View style={[styles.reviewWrapper, { marginTop: 30 }]}>

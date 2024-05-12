@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     categoryText: {
         textAlign: "center",
         fontSize: 16,
-        fontWeight: "400",
+        fontWeight: "500",
         lineHeight: 16,
         color: "#212121",
     },

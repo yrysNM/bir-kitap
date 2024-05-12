@@ -21,6 +21,11 @@ export interface IUserInfo {
     avatar?: string
 }
 
+export interface IRecommendationUser extends IUserInfo {
+    id: string
+    followed: boolean
+}
+
 export interface ILogin {
     username: string
     password: string

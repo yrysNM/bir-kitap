@@ -102,7 +102,7 @@ export const Profile = () => {
 
     return (
         <Page>
-            <TouchableOpacity onPress={() => setVisibleModal(true)}>
+            <TouchableOpacity onPress={() => setVisibleModal(true)} delayPressIn={10}>
                 <Icon name="setting" style={styles.settingIcon} />
             </TouchableOpacity>
             <View style={styles.profileInfoWrapper}>
@@ -177,6 +177,8 @@ export const Profile = () => {
                             return (
                                 <View style={{ width: 200 }}>
                                     <FlatList
+                                        showsVerticalScrollIndicator={false}
+                                        showsHorizontalScrollIndicator={false}
                                         data={languages}
                                         renderItem={({ item }) => (
                                             <Item key={item.value} value={item.value}>
@@ -264,11 +266,11 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         paddingTop: 32,
-        paddingHorizontal: 32,
+        paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: "#fff",
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
+        borderTopLeftRadius: 18,
+        borderTopRightRadius: 18,
     },
     line: {
         top: 0,

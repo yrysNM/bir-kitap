@@ -15,6 +15,7 @@ import ArrowBack from "../../assets/images/arrow-back.png"
 import Carousel from "react-native-snap-carousel"
 import { CarouselClubs } from "../components/carousel/CarouselClubs"
 import { ClubAPI, clubInfo } from "../api/clubApi"
+import Toast from "@ant-design/react-native/lib/toast"
 
 type bookReviewInfo = {
     id?: string
@@ -88,6 +89,14 @@ export const BookDetail = () => {
     }
 
     const onSubmitReview = () => {
+        if (!reviewInfo.message.trim().length) {
+            Toast.fail("Type review!")
+            return
+        } else if (reviewInfo.rating === 0) {
+            Toast.fail("Rating!")
+            return
+        }
+
         fetchCreateReviewData({
             bookId: bookInfo?.book.id,
             ...reviewInfo,
@@ -105,6 +114,10 @@ export const BookDetail = () => {
                 <Text style={styles.genreText}>{item}</Text>
             </View>
         )
+    }
+
+    const isUserReview = (id: string) => {
+        return userId === id
     }
 
     return (
@@ -154,11 +167,11 @@ export const BookDetail = () => {
 
                 <View style={{ marginTop: 10 }}>
                     {bookInfo?.reviews.map((item) => (
-                        <View key={item.id} style={{ flexDirection: "row", gap: 5, alignItems: "flex-end" }}>
+                        <View key={item.id} style={{ flexDirection: isUserReview(item.userId) ? "row-reverse" : "row", gap: 5, alignItems: "flex-end" }}>
                             <CloudImage styleImg={{ width: 32, height: 32, borderRadius: 100, backgroundColor: "#fff" }} url={item.avatar} />
-                            <View style={[styles.reviewWrapper, { flex: item.message.length > 70 ? 1 : 0 }]}>
+                            <View style={[styles.reviewWrapper, { flex: item.message.length > 70 ? 1 : 0 }, isUserReview(item.userId) ? styles.userReviewWrapper : null]}>
                                 <View>
-                                    <Text style={[styles.reviewUserName, { color: item.userId === userId ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
+                                    <Text style={[styles.reviewUserName, { color: isUserReview(item.userId) ? "#0A78D6" : "#000" }]}>{item.userName}</Text>
                                     <View>
                                         <View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
                                             <StarRate rateNumber={item.rating} />
@@ -174,8 +187,8 @@ export const BookDetail = () => {
 
                 <View style={{ marginTop: 17 }}>
                     <Text style={styles.rateText}>Rating {reviewInfo.rating}/5</Text>
-                    <View style={{ marginTop: 10 }}>
-                        <StarRate size={25} rateNumber={reviewInfo.rating} onChangeRate={(e) => setReviewInfo({ ...reviewInfo, rating: e })} />
+                    <View style={{ marginTop: 10, justifyContent: "center", alignItems: "center", flex: 1 }}>
+                        <StarRate size={45} rateNumber={reviewInfo.rating} onChangeRate={(e) => setReviewInfo({ ...reviewInfo, rating: e })} />
                     </View>
                     <View>
                         <TextareaItem cursorColor="#212121" selectionColor="#212121" last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
@@ -185,7 +198,7 @@ export const BookDetail = () => {
                     </Button>
                 </View>
 
-                <BookShowBlock bookType="Clubs" navigationUrl="Recommendations">
+                <BookShowBlock bookType="Clubs" navigationUrl="Clubs">
                     <View>{dataList.length ? <CarouselClubs dataList={dataList} /> : <NoData />}</View>
                 </BookShowBlock>
             </View>
@@ -242,6 +255,13 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
         shadowOpacity: 0.3,
         marginBottom: 10,
+    },
+    userReviewWrapper: {
+        justifyContent: "flex-end",
+        borderBottomStartRadius: 12,
+        borderBottomEndRadius: 0,
+        borderTopStartRadius: 12,
+        borderTopEndRadius: 12,
     },
     listHeaderBlock: {
         marginTop: 25,
@@ -355,7 +375,7 @@ const styles = StyleSheet.create({
     },
     reviewUserName: {
         fontSize: 12,
-        fontWeight: "600",
+        fontWeight: "400",
         fontStyle: "normal",
         lineHeight: 15,
         color: "#212121",
@@ -366,7 +386,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         lineHeight: 15,
         marginTop: 5,
-        marginLeft: 5,
+        marginLeft: 2,
     },
     reviewNumberRate: {
         fontSize: 9,
@@ -396,6 +416,9 @@ const styles = StyleSheet.create({
         elevation: 1,
         shadowRadius: 1,
         shadowOpacity: 1,
+        borderWidth: 0.5,
+        borderStyle: "solid",
+        borderColor: "#212121",
     },
     btnReview: {
         borderRadius: 12,

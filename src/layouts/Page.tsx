@@ -23,7 +23,12 @@ export const Page = ({ isFlatList = false, children }: { isFlatList?: boolean; c
             {isFlatList ? (
                 <View style={{ flexGrow: 1, paddingHorizontal: route.name === "ReaderNews" ? 0 : 16 }}>{children}</View>
             ) : (
-                <ScrollView keyboardShouldPersistTaps={"handled"} contentContainerStyle={{ flexGrow: 1, paddingHorizontal: route.name === "ReaderNews" ? 0 : 16 }} refreshControl={<RefreshControl refreshing={isRefresh} onRefresh={onRefresh} />}>
+                <ScrollView
+                    keyboardShouldPersistTaps={"handled"}
+                    contentContainerStyle={{ flexGrow: 1, paddingHorizontal: route.name === "ReaderNews" ? 0 : 16 }}
+                    refreshControl={<RefreshControl refreshing={isRefresh} onRefresh={onRefresh} />}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
                     {children}
                 </ScrollView>
             )}

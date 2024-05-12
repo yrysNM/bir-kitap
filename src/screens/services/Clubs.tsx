@@ -216,6 +216,8 @@ export const Clubs = () => {
                 <View style={styles.clubWrapper}>
                     {clubList.length || myClubList.length ? (
                         <FlatList
+                            showsVerticalScrollIndicator={false}
+                            showsHorizontalScrollIndicator={false}
                             refreshing={isRefresh}
                             onRefresh={() => loadData()}
                             data={tab === "clubs" ? clubList : myClubList}
@@ -372,24 +374,25 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         paddingTop: 15,
-        paddingHorizontal: 32,
+        paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: "#fff",
-        borderTopRightRadius: 50,
-        borderTopLeftRadius: 50,
+        borderTopRightRadius: 18,
+        borderTopLeftRadius: 18,
     },
     myCluWrapper: {
         marginVertical: 10,
     },
     addClubWrapper: {
+        width: 60,
         marginTop: 10,
-        width: "100%",
+        // width: "100%",
         alignItems: "flex-end",
         justifyContent: "flex-end",
         zIndex: 1,
         position: "absolute",
         top: 0,
-        left: 16,
+        right: 16,
     },
     clubs: {
         marginTop: 15,

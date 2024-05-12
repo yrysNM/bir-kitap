@@ -408,8 +408,8 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         paddingBottom: 20,
         backgroundColor: "#fff",
-        borderTopRightRadius: 50,
-        borderTopLeftRadius: 50,
+        borderTopRightRadius: 18,
+        borderTopLeftRadius: 18,
     },
     spliBlock: {
         position: "absolute",
