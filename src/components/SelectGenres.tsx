@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     selectBtn: {
         paddingVertical: 13,
         backgroundColor: "#0A78D6",
-        borderRadius: 20,
+        borderRadius: 12,
         borderWidth: 0,
     },
     selectText: {

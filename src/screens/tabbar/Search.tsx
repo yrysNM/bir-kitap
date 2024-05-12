@@ -68,7 +68,7 @@ export const Search = () => {
                 <SearchInput onEnterSearch={(e) => setSearch(e)} onClickFilter={() => setVisibleModal(true)} placeholder="Search books" />
             </View>
             <View style={{ marginTop: 18 }}>
-                <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "object" ? setSelectCategories(e) : null)} isMultiple={true} />
+                <CarouselBookTypeFilter dataList={categoryList} handleBookType={(e) => (typeof e === "string" ? setSelectCategories([e]) : null)} isMultiple={false} />
             </View>
             {!bookList.length ? (
                 <View style={styles.searchBlock}>
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: "#fff",
-        borderTopRightRadius: 50,
-        borderTopLeftRadius: 50,
+        borderTopRightRadius: 18,
+        borderTopLeftRadius: 18,
     },
     bookWrapper: {
         flexWrap: "wrap",

@@ -12,7 +12,7 @@ import { BookApi } from "../../api/bookApi"
 import { logOut as logOutHelper } from "../../helpers/logOut"
 import { Loading } from "../../components/Loading"
 
-// const _webview_base_url = "http://192.168.1.4:5173/book-tracker/"
+// const _webview_base_url = "http://192.168.0.120:5173/book-tracker/"
 const _webview_base_url = "https://birkitap.kz/book-tracker/"
 const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 

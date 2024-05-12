@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, View } from "react-native"
+import { FlatList, StyleSheet, View } from "react-native"
 import { Page } from "../../layouts/Page"
 import { useEffect, useState } from "react"
 import { Header } from "../../components/Header"
@@ -11,17 +11,20 @@ import { ReviewCard } from "../../components/ReviewCard"
 import { CarouselBookTypeFilter } from "../../components/carousel/CarouselBookTypeFilter"
 import { PostCard } from "../../components/PostCard"
 import Follow from "../../components/Follow"
+import { IRecommendationUser } from "../../api/authApi"
 
 export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
     const { fetchData: fetchReviewsData } = RecommendationAPI("reviews")
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
+    const { fetchData: fetchUsersData } = RecommendationAPI("users")
     const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
     const [recommendationType, setRecommendationType] = useState<string>("Books")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
     const [postDataList, setPostDataList] = useState<postInfo[]>([])
+    const [userDataList, setUserDataList] = useState<IRecommendationUser[]>([])
 
     const [tabs] = useState<{ title: string }[]>([
         {
@@ -44,22 +47,28 @@ export const Recommendations = () => {
     }, [])
 
     const onLoadData = (e: string) => {
-        if (e === "Books") {
+        if (isUpdateRequest(e, bookDataList)) {
             fetchBookData({}).then((res) => {
                 if (res.result_code === 0) {
                     setBookDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
-        } else if (e === "Reviews") {
+        } else if (isUpdateRequest(e, reviewDataList)) {
             fetchReviewsData({}).then((res) => {
                 if (res.result_code === 0) {
                     setReviewDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
-        } else if (e === "Posts") {
+        } else if (isUpdateRequest(e, postDataList)) {
             fetchPostsData({}).then((res) => {
                 if (res.result_code === 0) {
                     setPostDataList(JSON.parse(JSON.stringify(res.data)))
+                }
+            })
+        } else if (isUpdateRequest(e, userDataList)) {
+            fetchUsersData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setUserDataList(JSON.parse(JSON.stringify(res.data)))
                 }
             })
         }
@@ -68,15 +77,22 @@ export const Recommendations = () => {
     }
 
     const dataList = () => {
-        if (recommendationType === "Books") {
-            return bookDataList
-        } else if (recommendationType === "Reviews") {
-            return reviewDataList
-        } else if (recommendationType === "Posts") {
-            return postDataList
-        } else {
-            return []
+        switch (recommendationType) {
+            case "Books":
+                return bookDataList
+            case "Reviews":
+                return reviewDataList
+            case "Posts":
+                return postDataList
+            case "Users":
+                return userDataList
+            default:
+                return []
         }
+    }
+
+    const isUpdateRequest = (tabValue: string, dataList: unknown[]) => {
+        return (tabs.findIndex((item) => item.title === tabValue) !== -1 && !dataList.length) || isRefresh
     }
 
     return (
@@ -95,26 +111,34 @@ export const Recommendations = () => {
                     type={recommendationType}
                 />
             </View>
-
-            {recommendationType === "Users" ? (
-                <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
-                    <Follow />
-                </ScrollView>
-            ) : (
-                <FlatList
-                    data={dataList() as []}
-                    refreshing={isRefresh}
-                    onRefresh={() => {
-                        setRecommendationType("Books")
-                        onLoadData("Books")
-                    }}
-                    key={recommendationType === "Books" ? 2 : 1}
-                    numColumns={recommendationType === "Books" ? 2 : 1}
-                    contentContainerStyle={[recommendationType === "Books" && styles.bookWrapper, recommendationType === "Reviews" && styles.reviewWrapper, { flexGrow: 1, marginTop: 10, paddingBottom: 140 }]}
-                    columnWrapperStyle={recommendationType === "Books" ? { gap: recommendationType === "Books" ? 25 : 0 } : null}
-                    renderItem={({ item }) => (recommendationType === "Books" ? <BookCard bookInfo={item} /> : recommendationType === "Reviews" ? <ReviewCard reviewInfo={item} /> : recommendationType === "Posts" ? <PostCard postInfo={item} /> : null)}
-                />
-            )}
+            <FlatList
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                data={dataList() as []}
+                refreshing={isRefresh}
+                onRefresh={() => {
+                    setRecommendationType("Books")
+                    onLoadData("Books")
+                }}
+                key={recommendationType === "Books" ? 2 : 1}
+                numColumns={recommendationType === "Books" ? 2 : 1}
+                contentContainerStyle={[recommendationType === "Books" && styles.bookWrapper, (recommendationType === "Reviews" || recommendationType === "Users") && styles.reviewWrapper, { flexGrow: 1, marginTop: 10, paddingBottom: 140 }]}
+                columnWrapperStyle={recommendationType === "Books" ? { gap: recommendationType === "Books" ? 25 : 0 } : null}
+                renderItem={({ item }) => {
+                    switch (recommendationType) {
+                        case "Books":
+                            return <BookCard bookInfo={item} />
+                        case "Reviews":
+                            return <ReviewCard reviewInfo={item} />
+                        case "Posts":
+                            return <PostCard postInfo={item} />
+                        case "Users":
+                            return <Follow users={item} onToggleFollow={(e) => setUserDataList(e)} />
+                        default:
+                            return null
+                    }
+                }}
+            />
 
             <View style={{ marginBottom: 5, flex: 1, height: "auto" }}></View>
         </Page>

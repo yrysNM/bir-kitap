@@ -19,12 +19,24 @@ import Modal from "@ant-design/react-native/lib/modal"
 import { Loading } from "../components/Loading"
 import { InputItem } from "@ant-design/react-native"
 import { InputStyle } from "../components/InputStyle"
+import { CustomTabs } from "../components/customs/CustomTabs"
 
 interface IClubGet {
     admin: IUserInfo
     club: clubInfo
     followers: string[]
 }
+
+const _tabList = [
+    {
+        value: "posts",
+        label: "Posts",
+    },
+    {
+        value: "Followers",
+        label: "Followers",
+    },
+]
 
 export const ClubDetail = () => {
     const { fetchData: fetchClubDetailData } = ClubAPI("get")
@@ -36,6 +48,8 @@ export const ClubDetail = () => {
     const [inviteCode, setInviteCode] = useState<string>("")
     const [showInviteModal, setShowInviteModal] = useState<boolean>(false)
     const [showWarningModal, setShowWarningModal] = useState<boolean>(false)
+    const [tab, setTab] = useState<string>("posts")
+    const [tabList, setTabList] = useState(_tabList)
     const [clubInfo, setClubInfo] = useState<IClubGet>({
         admin: {
             email: "",
@@ -77,6 +91,11 @@ export const ClubDetail = () => {
         }).then((res) => {
             if (res.result_code === 0) {
                 setClubPosts(JSON.parse(JSON.stringify(res.data)))
+
+                setTabList([
+                    { value: _tabList[0].value, label: `Post ${res.data.length}` },
+                    { value: _tabList[1].value, label: `Followers ${clubInfo.followers.length}` },
+                ])
             }
         })
     }
@@ -142,16 +161,6 @@ export const ClubDetail = () => {
                 <CloudImage url={clubInfo.club.avatar} styleImg={styles.avatarImg} />
                 <Text style={styles.clubTitleText}>{clubInfo.club.title}</Text>
                 <Text style={[styles.userNameText, { color: userId === clubInfo.admin.id ? "#0A78D6" : "#6D7885" }]}>{clubInfo.admin.fullName}</Text>
-                <View style={styles.clubInfo}>
-                    <View>
-                        <Text style={styles.infoNumber}>{clubPosts.length}</Text>
-                        <Text style={styles.infoText}>Posts</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.infoNumber}>{clubInfo?.followers.length}</Text>
-                        <Text style={styles.infoText}>Followers</Text>
-                    </View>
-                </View>
 
                 <Button type="primary" style={styles.joinBtn} onPress={() => onClickToggleJoinBtn()}>
                     <Text style={styles.joinBtnText}>{!clubInfo.club.join ? "Join" : "Unjoin"}</Text>
@@ -161,10 +170,11 @@ export const ClubDetail = () => {
                         </View>
                     )}
                 </Button>
+                <CustomTabs valueList={tabList} onClickTab={(e) => setTab(e)} />
             </View>
             {isPrivate() ? (
                 <BlurView intensity={50} style={styles.blurContainer}>
-                    <View style={{ zIndex: -1, gap: 20 }}>
+                    <View style={{ zIndex: -1, gap: 20, paddingTop: 20 }}>
                         <NoData />
                     </View>
                 </BlurView>
@@ -231,11 +241,11 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         paddingTop: 15,
-        paddingHorizontal: 32,
+        paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: "#fff",
-        borderTopRightRadius: 50,
-        borderTopLeftRadius: 50,
+        borderTopRightRadius: 18,
+        borderTopLeftRadius: 18,
     },
     cancelText: {
         borderRightWidth: 1,
@@ -296,6 +306,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
     },
     blurContainer: {
+        height: "100%",
         marginTop: 10,
         width: "100%",
         borderRadius: 12,

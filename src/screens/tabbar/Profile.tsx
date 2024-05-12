@@ -53,6 +53,7 @@ export const Profile = () => {
     const navigation = useNavigation()
     const {
         userInfo: { fullName, avatar },
+        isLoading,
         isRefresh,
     } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
@@ -101,7 +102,7 @@ export const Profile = () => {
 
     return (
         <Page>
-            <TouchableOpacity onPress={() => setVisibleModal(true)}>
+            <TouchableOpacity onPress={() => setVisibleModal(true)} delayPressIn={10}>
                 <Icon name="setting" style={styles.settingIcon} />
             </TouchableOpacity>
             <View style={styles.profileInfoWrapper}>
@@ -133,11 +134,15 @@ export const Profile = () => {
                 <View style={styles.contentWrapper}>
                     {tab === "survey" ? (
                         <View style={{ marginTop: -10, marginBottom: 20 }}>
-                            {bookType.map((item) => (
-                                <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
-                                    <View style={{ marginHorizontal: info.books[item].length <= 1 ? 0 : -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
-                                </BookShowBlock>
-                            ))}
+                            {bookType.length && !isLoading ? (
+                                bookType.map((item) => (
+                                    <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
+                                        <View style={{ marginHorizontal: info.books[item].length <= 1 ? 0 : -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
+                                    </BookShowBlock>
+                                ))
+                            ) : (
+                                <NoData />
+                            )}
                         </View>
                     ) : tab === "reviews" ? (
                         <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
@@ -172,6 +177,8 @@ export const Profile = () => {
                             return (
                                 <View style={{ width: 200 }}>
                                     <FlatList
+                                        showsVerticalScrollIndicator={false}
+                                        showsHorizontalScrollIndicator={false}
                                         data={languages}
                                         renderItem={({ item }) => (
                                             <Item key={item.value} value={item.value}>
@@ -259,11 +266,11 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         paddingTop: 32,
-        paddingHorizontal: 32,
+        paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: "#fff",
-        borderTopLeftRadius: 50,
-        borderTopRightRadius: 50,
+        borderTopLeftRadius: 18,
+        borderTopRightRadius: 18,
     },
     line: {
         top: 0,

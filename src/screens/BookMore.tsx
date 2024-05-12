@@ -33,7 +33,9 @@ export const BookMore = () => {
         <Page isFlatList>
             <Header isCustomHeader={false} isGoBack title={FirstUpperCaseText(id)} />
 
-            <View style={{ flex: 1 }}>{dataList.length ? <FlatList data={dataList} numColumns={2} contentContainerStyle={styles.bookWrapper} columnWrapperStyle={{ gap: 25 }} renderItem={({ item }) => <BookCard bookInfo={item} />} /> : <NoData />}</View>
+            <View style={{ flex: 1 }}>
+                {dataList.length ? <FlatList data={dataList} numColumns={2} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.bookWrapper} columnWrapperStyle={{ gap: 25 }} renderItem={({ item }) => <BookCard bookInfo={item} />} /> : <NoData />}
+            </View>
         </Page>
     )
 }

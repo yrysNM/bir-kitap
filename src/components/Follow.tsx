@@ -1,23 +1,20 @@
 import { StyleSheet, Text, View } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
-import { useEffect, useMemo, useState } from "react"
-import { RecommendationAPI } from "../api/recommendationApi"
+import { useMemo, useState } from "react"
 import { CloudImage } from "./CloudImage"
 import { UserAPI } from "../api/userApi"
-import { IUserInfo } from "../api/authApi"
+import { IRecommendationUser } from "../api/authApi"
 import { SearchInput } from "../components/SearchInput"
 import { NoData } from "./NoData"
 
-interface IRecommendationUser extends IUserInfo {
-    id: string
-    followed: boolean
+type propsInfo = {
+    users: IRecommendationUser[]
+    onToggleFollow: (users: IRecommendationUser[]) => void
 }
 
-const Follow = () => {
-    const [users, setUsers] = useState<IRecommendationUser[]>([])
+const Follow = ({ users, onToggleFollow }: propsInfo) => {
     const [search, setSearch] = useState<string | null>(null)
 
-    const { fetchData } = RecommendationAPI("users")
     const { fetchData: fetchDataUserFollow } = UserAPI("follow")
     const { fetchData: fetchDataUserOnFollow } = UserAPI("unfollow")
 
@@ -30,18 +27,8 @@ const Follow = () => {
             }
             return user
         })
-        setUsers(updatedUsers)
+        onToggleFollow(updatedUsers)
     }
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            const res = await fetchData({})
-            if (res.result_code === 0) {
-                setUsers(JSON.parse(JSON.stringify(res.data)))
-            }
-        }
-        fetchUsers()
-    }, [])
 
     const searchList = useMemo(() => {
         if (search && search.length > 0) {
@@ -56,7 +43,7 @@ const Follow = () => {
             <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search books" />
 
             <View style={styles.followWrapper}>
-                {searchList ? (
+                {searchList.length ? (
                     searchList.map((item) => (
                         <View style={styles.followBlock} key={item.id}>
                             <View style={styles.followContent}>
