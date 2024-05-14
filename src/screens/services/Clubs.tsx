@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     clibBlockBorder: {
         borderBottomWidth: 0.5,
         borderBottomColor: "#0000001f",
-        borderBottomStyle: "solid",
+        borderStyle: "solid",
     },
     clubImg: {
         width: 110,
