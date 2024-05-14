@@ -8,7 +8,7 @@ export const CustomTabbar = ({ state, descriptors, navigation }: BottomTabBarPro
         if (isFocused) {
             return "#0A78D6"
         } else {
-            return "#212121"
+            return "#6D7885"
         }
     }
 

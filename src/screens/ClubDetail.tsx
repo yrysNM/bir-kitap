@@ -20,11 +20,12 @@ import { Loading } from "../components/Loading"
 import { InputItem } from "@ant-design/react-native"
 import { InputStyle } from "../components/InputStyle"
 import { CustomTabs } from "../components/customs/CustomTabs"
+import FollowUserCard from "../components/FollowUserCard"
 
 interface IClubGet {
     admin: IUserInfo
     club: clubInfo
-    followers: string[]
+    followers: IUserInfo[]
 }
 
 const _tabList = [
@@ -33,7 +34,7 @@ const _tabList = [
         label: "Posts",
     },
     {
-        value: "Followers",
+        value: "followers",
         label: "Followers",
     },
 ]
@@ -78,11 +79,14 @@ export const ClubDetail = () => {
     }, [])
 
     const loadData = async () => {
+        let clubTabInfo = { value: _tabList[1].value, label: `Followers` }
         await fetchClubDetailData({
             id,
         }).then((res) => {
             if (res.result_code === 0) {
-                setClubInfo(JSON.parse(JSON.stringify(res.data)))
+                const clubInfo: IClubGet = JSON.parse(JSON.stringify(res.data))
+                setClubInfo(clubInfo)
+                clubTabInfo = { value: _tabList[1].value, label: `Followers ${clubInfo.followers.length}` }
             }
         })
 
@@ -92,10 +96,7 @@ export const ClubDetail = () => {
             if (res.result_code === 0) {
                 setClubPosts(JSON.parse(JSON.stringify(res.data)))
 
-                setTabList([
-                    { value: _tabList[0].value, label: `Post ${res.data.length}` },
-                    { value: _tabList[1].value, label: `Followers ${clubInfo.followers.length}` },
-                ])
+                setTabList([{ value: _tabList[0].value, label: `Post ${res.data.length}` }, clubTabInfo])
             }
         })
     }
@@ -153,6 +154,21 @@ export const ClubDetail = () => {
         }
     }
 
+    const dataList = () => {
+        if (tab === "posts") {
+            return clubPosts
+        } else if (tab === "followers") {
+            return clubInfo.followers
+        }
+    }
+
+    const isDataListEmpty = () => {
+        if ((tab === "posts" && !clubPosts.length) || (tab === "followers" && !clubInfo.followers.length)) {
+            return true
+        }
+        return false
+    }
+
     return (
         <Page isFlatList>
             <Header isGoBack title="" />
@@ -173,17 +189,50 @@ export const ClubDetail = () => {
 
                 <CustomTabs valueList={tabList} onClickTab={(e) => setTab(e)} />
             </View>
-            <View>
-                {isPrivate() ? (
-                    <BlurView intensity={10} tint="light" style={styles.blurContainer}>
-                        <View style={{ zIndex: -10, position: "relative", top: 0, left: 0, gap: 20, paddingTop: 20 }}>
+
+            <View style={{ marginTop: 10, gap: 20, flex: 1 }}>
+                {!isDataListEmpty() ? (
+                    <FlatList
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        data={dataList() as []}
+                        renderItem={({ item }) => (
+                            <BlurView
+                                experimentalBlurMethod="dimezisBlurView"
+                                intensity={isPrivate() ? 10 : 0}
+                                tint="light"
+                                style={[styles.blurContainer, { backgroundColor: "none", paddingHorizontal: 0, shadowOpacity: 0, elevation: 0, shadowOffset: { width: 0, height: 0 }, marginBottom: 0, marginTop: 0 }]}>
+                                <View style={{ zIndex: isPrivate() ? -10 : 1 }}>
+                                    {tab === "clubs" ? (
+                                        <PostCard postInfo={item} />
+                                    ) : (
+                                        <FollowUserCard
+                                            user={item}
+                                            onToggleFollow={(e) =>
+                                                setClubInfo({
+                                                    ...clubInfo,
+                                                    followers: clubInfo.followers.map((item) => {
+                                                        if (item.id === e.id) {
+                                                            return e
+                                                        }
+                                                        return item
+                                                    }),
+                                                })
+                                            }
+                                        />
+                                    )}
+                                </View>
+                            </BlurView>
+                        )}
+                    />
+                ) : (
+                    <BlurView experimentalBlurMethod="dimezisBlurView" intensity={isPrivate() ? 10 : 0} tint="light" style={styles.blurContainer}>
+                        <View style={{ zIndex: isPrivate() ? -10 : 1, gap: 20, paddingTop: 20 }}>
                             <NoData />
                         </View>
                     </BlurView>
-                ) : (
-                    <View style={{ marginTop: 10, gap: 20, flex: 1 }}>{clubPosts.length ? <FlatList contentContainerStyle={{ flexGrow: 1 }} data={clubPosts} renderItem={({ item }) => <PostCard postInfo={item} />} /> : <NoData />}</View>
                 )}
             </View>
+
             <Modal popup animationType="slide-up" visible={showInviteModal} onClose={() => onCloseModal(true)} style={styles.modalWrapper} maskClosable>
                 <View>
                     <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Join Club </Text>
@@ -310,14 +359,10 @@ const styles = StyleSheet.create({
     },
     blurContainer: {
         flex: 1,
-        position: "absolute",
-        top: 0,
-        left: 0,
         width: "100%",
-        zIndex: 1,
         marginTop: 10,
         borderRadius: 12,
-        backgroundColor: "transparent",
+        backgroundColor: "#fff",
         paddingHorizontal: 10,
         overflow: "hidden",
         marginBottom: 16,
@@ -365,10 +410,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        paddingBottom: 20,
-        borderBottomWidth: 0.5,
-        borderColor: "#0000001f",
-        borderStyle: "solid",
+        paddingBottom: 10,
     },
     avatarImg: {
         width: 150,
