@@ -45,12 +45,12 @@ export const TabNavigator = () => {
                     Animated.parallel([
                         Animated.timing(widthAnim, {
                             toValue: 1,
-                            duration: 600,
+                            duration: 400,
                             useNativeDriver: true,
                         }),
                         Animated.timing(opacityAnim, {
                             toValue: 1,
-                            duration: 600,
+                            duration: 400,
                             useNativeDriver: true,
                         }),
                         Animated.timing(translationTabBar, {

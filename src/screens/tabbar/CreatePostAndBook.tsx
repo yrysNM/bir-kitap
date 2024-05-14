@@ -192,17 +192,19 @@ export const CreatePostAndBook = () => {
         const { goToTab, onTabClick } = tabProps
 
         return (
-            <CustomTabs
-                valueList={tabs}
-                onClickTab={(e) => {
-                    const tabsIdex = tabs.findIndex((tab) => tab.value === e)
-                    if (tabsIdex !== -1) {
-                        onTabClick && onTabClick(tabs[tabsIdex], tabsIdex)
-                        goToTab && goToTab(tabsIdex)
-                        onChangeTab()
-                    }
-                }}
-            />
+            <View style={{ position: "relative", bottom: -10, overflow: "hidden", paddingHorizontal: -16, width: "100%", backgroundColor: "#f7f9f6" }}>
+                <CustomTabs
+                    valueList={tabs}
+                    onClickTab={(e) => {
+                        const tabsIdex = tabs.findIndex((tab) => tab.value === e)
+                        if (tabsIdex !== -1) {
+                            onTabClick && onTabClick(tabs[tabsIdex], tabsIdex)
+                            goToTab && goToTab(tabsIdex)
+                            onChangeTab()
+                        }
+                    }}
+                />
+            </View>
         )
     }
 
