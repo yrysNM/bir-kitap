@@ -1,87 +1,51 @@
 import { StyleSheet, Text, View } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
-import { useMemo, useState } from "react"
 import { CloudImage } from "./CloudImage"
 import { UserAPI } from "../api/userApi"
 import { IRecommendationUser } from "../api/authApi"
-import { SearchInput } from "../components/SearchInput"
-import { NoData } from "./NoData"
 
 type propsInfo = {
-    users: IRecommendationUser[]
-    onToggleFollow: (users: IRecommendationUser[]) => void
+    user: IRecommendationUser
+    onToggleFollow: (user: IRecommendationUser) => void
 }
 
-const Follow = ({ users, onToggleFollow }: propsInfo) => {
-    const [search, setSearch] = useState<string | null>(null)
-
+const FollowUserCard = ({ user, onToggleFollow }: propsInfo) => {
     const { fetchData: fetchDataUserFollow } = UserAPI("follow")
     const { fetchData: fetchDataUserOnFollow } = UserAPI("unfollow")
 
     const onFollow = async (id: string, followed: boolean) => {
+        const updatedUser = { ...user, followed: !followed }
+        onToggleFollow(updatedUser)
         const action = !followed ? fetchDataUserFollow : fetchDataUserOnFollow
-        await action({ toUserId: id })
-        const updatedUsers = users?.map((user) => {
-            if (user.id === id) {
-                return { ...user, followed: !followed }
-            }
-            return user
-        })
-        onToggleFollow(updatedUsers)
+        action({ toUserId: id })
     }
-
-    const searchList = useMemo(() => {
-        if (search && search.length > 0) {
-            return users.filter((user) => user.fullName.toLowerCase().includes(search.toLowerCase()))
-        }
-
-        return users
-    }, [search, users])
-
     return (
-        <>
-            <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search books" />
-
-            <View style={styles.followWrapper}>
-                {searchList.length ? (
-                    searchList.map((item) => (
-                        <View style={styles.followBlock} key={item.id}>
-                            <View style={styles.followContent}>
-                                <View>
-                                    <CloudImage url={item.avatar} styleImg={styles.followImage} />
-                                </View>
-                                <View>
-                                    <Text style={styles.followUser}>{item.fullName}</Text>
-                                    <Text style={{ ...styles.followUser, color: "#6D7885" }}>{item.email}</Text>
-                                </View>
-                            </View>
-
-                            <View style={styles.followBtnBlock}>
-                                <Button style={!item.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(item.id, item.followed)}>
-                                    <Text style={!item.followed ? styles.followBtnText : styles.unFollowBtnText}>{!item.followed ? "Follow" : "Unfollow"}</Text>
-                                </Button>
-                            </View>
-                        </View>
-                    ))
-                ) : (
-                    <NoData />
-                )}
+        <View style={styles.followBlock}>
+            <View style={styles.followContent}>
+                <View>
+                    <CloudImage url={user.avatar} styleImg={styles.followImage} />
+                </View>
+                <View>
+                    <Text style={styles.followUser}>{user.fullName}</Text>
+                    <Text style={{ ...styles.followUser, color: "#6D7885" }}>{user.email}</Text>
+                </View>
             </View>
-        </>
+
+            <View style={styles.followBtnBlock}>
+                <Button style={!user.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(user.id, user.followed)}>
+                    <Text style={!user.followed ? styles.followBtnText : styles.unFollowBtnText}>{!user.followed ? "Follow" : "Unfollow"}</Text>
+                </Button>
+            </View>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    followWrapper: {
-        marginTop: 36,
-    },
-
     followImage: {
         width: 55,
         height: 55,
         borderRadius: 1000,
     },
-
     followBlock: {
         display: "flex",
         flexDirection: "row",
@@ -162,4 +126,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Follow
+export default FollowUserCard

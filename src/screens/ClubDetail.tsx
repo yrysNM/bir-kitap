@@ -170,17 +170,20 @@ export const ClubDetail = () => {
                         </View>
                     )}
                 </Button>
+
                 <CustomTabs valueList={tabList} onClickTab={(e) => setTab(e)} />
             </View>
-            {isPrivate() ? (
-                <BlurView intensity={50} style={styles.blurContainer}>
-                    <View style={{ zIndex: -1, gap: 20, paddingTop: 20 }}>
-                        <NoData />
-                    </View>
-                </BlurView>
-            ) : (
-                <View style={{ marginTop: 10, gap: 20, flex: 1 }}>{clubPosts.length ? <FlatList contentContainerStyle={{ flexGrow: 1 }} data={clubPosts} renderItem={({ item }) => <PostCard postInfo={item} />} /> : <NoData />}</View>
-            )}
+            <View>
+                {isPrivate() ? (
+                    <BlurView intensity={10} tint="light" style={styles.blurContainer}>
+                        <View style={{ zIndex: -10, position: "relative", top: 0, left: 0, gap: 20, paddingTop: 20 }}>
+                            <NoData />
+                        </View>
+                    </BlurView>
+                ) : (
+                    <View style={{ marginTop: 10, gap: 20, flex: 1 }}>{clubPosts.length ? <FlatList contentContainerStyle={{ flexGrow: 1 }} data={clubPosts} renderItem={({ item }) => <PostCard postInfo={item} />} /> : <NoData />}</View>
+                )}
+            </View>
             <Modal popup animationType="slide-up" visible={showInviteModal} onClose={() => onCloseModal(true)} style={styles.modalWrapper} maskClosable>
                 <View>
                     <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Join Club </Text>
@@ -306,14 +309,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
     },
     blurContainer: {
-        height: "100%",
-        marginTop: 10,
+        flex: 1,
+        position: "absolute",
+        top: 0,
+        left: 0,
         width: "100%",
+        zIndex: 1,
+        marginTop: 10,
         borderRadius: 12,
+        backgroundColor: "transparent",
         paddingHorizontal: 10,
         overflow: "hidden",
         marginBottom: 16,
-
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
             width: 1,
@@ -340,7 +347,7 @@ const styles = StyleSheet.create({
         color: "#fff",
     },
     joinBtn: {
-        marginTop: 20,
+        marginVertical: 20,
         width: 150,
         height: 40,
         borderRadius: 13,

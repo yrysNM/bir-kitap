@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native"
 import { Page } from "../../layouts/Page"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Header } from "../../components/Header"
 import { bookInfo } from "../../api/bookApi"
 import { RecommendationAPI } from "../../api/recommendationApi"
@@ -10,8 +10,9 @@ import { postInfo } from "../../api/postApi"
 import { ReviewCard } from "../../components/ReviewCard"
 import { CarouselBookTypeFilter } from "../../components/carousel/CarouselBookTypeFilter"
 import { PostCard } from "../../components/PostCard"
-import Follow from "../../components/Follow"
 import { IRecommendationUser } from "../../api/authApi"
+import FollowUserCard from "../../components/FollowUserCard"
+import { SearchInput } from "../../components/SearchInput"
 
 export const Recommendations = () => {
     const { fetchData: fetchBookData } = RecommendationAPI("books")
@@ -19,7 +20,7 @@ export const Recommendations = () => {
     const { fetchData: fetchPostsData } = RecommendationAPI("posts")
     const { fetchData: fetchUsersData } = RecommendationAPI("users")
     const [isRefresh, setIsRefresh] = useState<boolean>(false)
-
+    const [searchUser, setSearchUser] = useState<string | null>(null)
     const [recommendationType, setRecommendationType] = useState<string>("Books")
     const [bookDataList, setBookDataList] = useState<bookInfo[]>([])
     const [reviewDataList, setReviewDataList] = useState<bookReviewInfo[]>([])
@@ -46,35 +47,44 @@ export const Recommendations = () => {
         onLoadData("Books")
     }, [])
 
-    const onLoadData = (e: string) => {
-        if (isUpdateRequest(e, bookDataList)) {
-            fetchBookData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setBookDataList(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
-        } else if (isUpdateRequest(e, reviewDataList)) {
-            fetchReviewsData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setReviewDataList(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
-        } else if (isUpdateRequest(e, postDataList)) {
-            fetchPostsData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setPostDataList(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
-        } else if (isUpdateRequest(e, userDataList)) {
-            fetchUsersData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setUserDataList(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
+    const searchList = useMemo(() => {
+        if (searchUser && searchUser.length > 0) {
+            return userDataList.filter((user) => user.fullName.toLowerCase().includes(searchUser.toLowerCase()))
         }
 
-        setIsRefresh(false)
-    }
+        return userDataList
+    }, [searchUser, userDataList])
+
+    const onLoadData = useCallback(
+        async (e: string) => {
+            if (isUpdateRequest(e, bookDataList, "Books")) {
+                await fetchBookData({}).then((res) => {
+                    if (res.result_code === 0) {
+                        setBookDataList(JSON.parse(JSON.stringify(res.data)))
+                    }
+                })
+            } else if (isUpdateRequest(e, reviewDataList, "Reviews")) {
+                await fetchReviewsData({}).then((res) => {
+                    if (res.result_code === 0) {
+                        setReviewDataList(JSON.parse(JSON.stringify(res.data)))
+                    }
+                })
+            } else if (isUpdateRequest(e, postDataList, "Posts")) {
+                await fetchPostsData({}).then((res) => {
+                    if (res.result_code === 0) {
+                        setPostDataList(JSON.parse(JSON.stringify(res.data)))
+                    }
+                })
+            } else if (isUpdateRequest(e, userDataList, "Users")) {
+                await fetchUsersData({}).then((res) => {
+                    if (res.result_code === 0) {
+                        setUserDataList(JSON.parse(JSON.stringify(res.data)))
+                    }
+                })
+            }
+        },
+        [isRefresh],
+    )
 
     const dataList = () => {
         switch (recommendationType) {
@@ -85,16 +95,15 @@ export const Recommendations = () => {
             case "Posts":
                 return postDataList
             case "Users":
-                return userDataList
+                return searchList
             default:
                 return []
         }
     }
-
-    const isUpdateRequest = (tabValue: string, dataList: unknown[]) => {
-        return (tabs.findIndex((item) => item.title === tabValue) !== -1 && !dataList.length) || isRefresh
+    const isUpdateRequest = (tabValue: string, dataList: unknown[], typeDataList: string) => {
+        console.log(tabValue, typeDataList, isRefresh)
+        return (tabValue === typeDataList && !dataList.length) || isRefresh
     }
-
     return (
         <Page isFlatList>
             <Header isCustomHeader={false} title="Recommendations" isGoBack />
@@ -111,18 +120,27 @@ export const Recommendations = () => {
                     type={recommendationType}
                 />
             </View>
+
+            {recommendationType === "Users" && (
+                <View style={{ paddingVertical: 10 }}>
+                    <SearchInput onEnterSearch={(e) => setSearchUser(e)} placeholder="Search users" />
+                </View>
+            )}
+
             <FlatList
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
-                data={dataList() as []}
                 refreshing={isRefresh}
                 onRefresh={() => {
-                    setRecommendationType("Books")
-                    onLoadData("Books")
+                    setIsRefresh(true)
+                    onLoadData(recommendationType).then(() => {
+                        setIsRefresh(false)
+                    })
                 }}
+                data={dataList() as []}
                 key={recommendationType === "Books" ? 2 : 1}
                 numColumns={recommendationType === "Books" ? 2 : 1}
-                contentContainerStyle={[recommendationType === "Books" && styles.bookWrapper, (recommendationType === "Reviews" || recommendationType === "Users") && styles.reviewWrapper, { flexGrow: 1, marginTop: 10, paddingBottom: 140 }]}
+                contentContainerStyle={[recommendationType === "Books" && styles.bookWrapper, recommendationType === "Reviews" && styles.reviewWrapper, { flexGrow: 1, marginTop: 10, paddingBottom: 140 }]}
                 columnWrapperStyle={recommendationType === "Books" ? { gap: recommendationType === "Books" ? 25 : 0 } : null}
                 renderItem={({ item }) => {
                     switch (recommendationType) {
@@ -133,7 +151,21 @@ export const Recommendations = () => {
                         case "Posts":
                             return <PostCard postInfo={item} />
                         case "Users":
-                            return <Follow users={item} onToggleFollow={(e) => setUserDataList(e)} />
+                            return (
+                                <FollowUserCard
+                                    user={item}
+                                    onToggleFollow={(e) =>
+                                        setUserDataList(
+                                            userDataList.map((item) => {
+                                                if (item.id === e.id) {
+                                                    return e
+                                                }
+                                                return item
+                                            }),
+                                        )
+                                    }
+                                />
+                            )
                         default:
                             return null
                     }
