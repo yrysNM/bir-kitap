@@ -73,7 +73,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
 
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Icon name="star" color="#0A78D6" size={13} style={{ marginTop: 2 }} />
-                            <Text style={styles.rateNumberText}>{reviewInfo?.book.rating}</Text>
+                            <Text style={styles.rateNumberText}>{reviewInfo?.book.rating?.toFixed(2)}</Text>
                         </View>
                     </View>
                 </ImageBackground>
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
         paddingVertical: 25,
         paddingHorizontal: 20,
         marginTop: 10,
-        wdith: "100%",
         flexDirection: "row",
         alignItems: "center",
         gap: 20,
