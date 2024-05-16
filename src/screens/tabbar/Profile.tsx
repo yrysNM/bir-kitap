@@ -102,7 +102,7 @@ export const Profile = () => {
 
     return (
         <Page>
-            <TouchableOpacity onPress={() => setVisibleModal(true)} delayPressIn={10}>
+            <TouchableOpacity onPress={() => setVisibleModal(true)} delayPressIn={5}>
                 <Icon name="setting" style={styles.settingIcon} />
             </TouchableOpacity>
             <View style={styles.profileInfoWrapper}>

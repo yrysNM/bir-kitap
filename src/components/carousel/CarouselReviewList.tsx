@@ -31,7 +31,7 @@ export const CarouselReviewList = ({ dataList }: { dataList: bookReviewInfo[] })
                         <CloudImage styleImg={styles.reviewUserProfileImg} url={item.avatar || ""} />
                         <View style={{ flexShrink: 1 }}>
                             <Text style={[styles.reviewUserName, { color: item.userId === userId ? "#0A78D6" : "#212121" }]}>{item.userName}</Text>
-                            <Text style={styles.reviewUserNic}>{SplitText(item.book.title, 14)}</Text>
+                            <Text style={styles.reviewUserNic}>{SplitText(item.book.title.trim(), 13)}</Text>
                         </View>
                     </View>
                     <StarRate rateNumber={item.rating} />

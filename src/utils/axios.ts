@@ -67,7 +67,7 @@ instance.interceptors.response.use(
     },
 )
 
-async function refreshAccessToken(): Promise<string> {
+export async function refreshAccessToken(): Promise<string> {
     const refreshToken = await AsyncStorage.getItem("token").then((value) => {
         if (value) {
             return JSON.parse(value).refreshToken
@@ -75,7 +75,7 @@ async function refreshAccessToken(): Promise<string> {
             return null
         }
     })
-
+    alert(refreshToken)
     return axios
         .post(`${API_URL}auth/refresh/token`, {
             refreshToken,

@@ -11,7 +11,6 @@ import { InputStyle } from "../components/InputStyle"
 import { useEffect, useState } from "react"
 import { PostAPI, postInfo } from "../api/postApi"
 import Toast from "@ant-design/react-native/lib/toast"
-import { base64toFiile } from "../helpers/base64toFile"
 import { setLoading } from "../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import { useAppDispatch } from "../hook/useStore"
@@ -82,8 +81,8 @@ export const UpdatePost = () => {
 
         if (!response.canceled && response.assets) {
             const uriList = response.assets[0].uri.split("/")
-            const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
-            const isLt5M: boolean = file.size / 1024 / 1024 < 5
+            const fileSize = typeof response.assets[0].fileSize === "number" ? response.assets[0].fileSize : 0
+            const isLt5M: boolean = fileSize / 1024 / 1024 < 5
             if (!isLt5M) {
                 console.log("The file size must be less than 5 MB.")
                 Toast.fail("The file size must be less than 5 MB.")
