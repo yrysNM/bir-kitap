@@ -13,7 +13,6 @@ import TextareaItem from "@ant-design/react-native/lib/textarea-item"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
-import { base64toFiile } from "../../helpers/base64toFile"
 import { useNavigation } from "@react-navigation/native"
 import { PostAPI, postInfo } from "../../api/postApi"
 import Carousel from "@ant-design/react-native/lib/carousel"
@@ -88,11 +87,10 @@ export const CreatePostAndBook = () => {
             selectionLimit: 1,
             base64: true,
         })
-
         if (!response.canceled && response.assets) {
             const uriList = response.assets[0].uri.split("/")
-            const file = base64toFiile(`data:image/jpeg;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
-            const isLt5M: boolean = file.size / 1024 / 1024 < 5
+            const fileSize = typeof response.assets[0].fileSize === "number" ? response.assets[0].fileSize : 0
+            const isLt5M: boolean = fileSize / 1024 / 1024 < 5
             if (!isLt5M) {
                 console.log("The file size must be less than 5 MB.")
                 Toast.fail("The file size must be less than 5 MB.")
@@ -188,9 +186,12 @@ export const CreatePostAndBook = () => {
         setShowModalGenre(true)
     }
 
+    /**
+     * @TODO fix tabs when open upload file
+     */
     const tabHeader = (tabProps: TabBarPropsType) => {
-        const { goToTab, onTabClick } = tabProps
-
+        const { goToTab, onTabClick, activeTab } = tabProps
+        console.log(tabs[activeTab].value)
         return (
             <View style={{ position: "relative", bottom: -10, overflow: "hidden", paddingHorizontal: -16, width: "100%", backgroundColor: "#f7f9f6" }}>
                 <CustomTabs
@@ -203,6 +204,7 @@ export const CreatePostAndBook = () => {
                             onChangeTab()
                         }
                     }}
+                    value={tabs[activeTab].value}
                 />
             </View>
         )

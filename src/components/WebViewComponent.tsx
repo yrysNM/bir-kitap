@@ -6,7 +6,6 @@ import { setLoading } from "../redux/features/mainSlice"
 import * as ImagePicker from "expo-image-picker"
 import { API_URL } from "@env"
 import Toast from "@ant-design/react-native/lib/toast"
-import { base64toFiile } from "../helpers/base64toFile"
 import useApi from "../hook/useApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { BackHandler, SafeAreaView } from "react-native"
@@ -95,8 +94,8 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
         if (!response.canceled && response.assets) {
             const uriList = response.assets[0].uri.split("/")
 
-            const file = base64toFiile(`data:image/*;base64,${response.assets[0].base64}`, uriList[uriList.length - 1])
-            const isLt5M: boolean = file.size / 1024 / 1024 < 5
+            const fileSize = typeof response.assets[0].fileSize === "number" ? response.assets[0].fileSize : 0
+            const isLt5M: boolean = fileSize / 1024 / 1024 < 5
             if (!isLt5M) {
                 console.log("File size small than 5mb")
                 Toast.fail("File size small than 5mb")
