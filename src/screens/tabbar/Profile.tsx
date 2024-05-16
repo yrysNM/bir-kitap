@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Easing, FlatList } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Easing, FlatList, Dimensions } from "react-native"
 import { useAppSelector } from "../../hook/useStore"
 import { useEffect, useRef, useState } from "react"
 import { UserAPI } from "../../api/userApi"
@@ -21,6 +21,7 @@ import Popover from "@ant-design/react-native/lib/popover"
 import i18next from "i18next"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useTranslation } from "react-i18next"
+import { Loading } from "../../components/Loading"
 
 const Item = Popover.Item
 
@@ -59,6 +60,7 @@ export const Profile = () => {
     const logOut = logOutHelper()
     const { fetchData: fetchUserProfileData } = UserAPI("profile")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
+    const [showWarningModal, setShowWarningModal] = useState<boolean>(false)
     const [info, setInfo] = useState<IProfile>(_infoTemp)
     const [tab, setTab] = useState<string>("survey")
     const languages = [
@@ -220,17 +222,70 @@ export const Profile = () => {
                         <Text style={[styles.infoText, { opacity: 0.3 }]}>Information (soon)</Text>
                     </View> */}
 
-                    <TouchableOpacity style={styles.modalWrapperBlock} onPress={() => logOut()}>
+                    <TouchableOpacity style={styles.modalWrapperBlock} onPress={() => setShowWarningModal(true)}>
                         <Icon name="logout" style={{ color: "red" }} />
                         <Text style={[styles.infoText, { color: "red" }]}>Log out</Text>
                     </TouchableOpacity>
                 </View>
+            </Modal>
+            <Modal animationType="fade" transparent={false} visible={showWarningModal} onClose={() => setShowWarningModal(false)} maskClosable style={styles.modalWrapperWarning}>
+                <View>
+                    <Text style={styles.tileWarningText}>Are you sure logout ?</Text>
+                </View>
+                <View style={styles.warningBtns}>
+                    <Text style={[styles.btnText, styles.cancelText]} onPress={() => setShowWarningModal(false)}>
+                        No
+                    </Text>
+                    <Text style={[styles.btnText, { color: "#ed1834", fontWeight: "500" }]} onPress={() => logOut()}>
+                        Yes
+                    </Text>
+                </View>
+                {isLoading && <Loading />}
             </Modal>
         </Page>
     )
 }
 
 const styles = StyleSheet.create({
+    cancelText: {
+        borderRightWidth: 1,
+        borderStyle: "solid",
+        borderColor: "#0000001f",
+        fontWeight: "700",
+        color: "#0A78D6",
+    },
+    warningBtns: {
+        marginTop: 20,
+        alignItems: "center",
+        flexDirection: "row",
+        borderTopWidth: 1,
+        borderStyle: "solid",
+        borderTopColor: "#0000001f",
+    },
+    btnText: {
+        flex: 1,
+        justifyContent: "center",
+        paddingVertical: 16,
+        textAlign: "center",
+    },
+    tileWarningText: {
+        paddingHorizontal: 16,
+        color: "#212121",
+        fontSize: 17,
+        lineHeight: 18,
+        fontWeight: "700",
+    },
+    modalWrapperWarning: {
+        width: "90%",
+        paddingTop: 32,
+        marginHorizontal: 32,
+        borderRadius: 12,
+        backgroundColor: "#fff",
+        position: "absolute",
+        left: -10,
+        bottom: -Dimensions.get("window").height / 2,
+        zIndex: -1,
+    },
     bookWrapper: {
         width: "100%",
         justifyContent: "center",

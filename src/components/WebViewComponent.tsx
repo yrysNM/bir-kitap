@@ -11,7 +11,10 @@ import { logOut as logOutHelper } from "../helpers/logOut"
 import { BackHandler, SafeAreaView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Loading } from "./Loading"
-import { refreshAccessToken } from "../utils/axios"
+/**
+ * @TODO fix refresh token error
+ */
+// import { refreshAccessToken } from "../utils/axios"
 
 type propsInfo = {
     webViewUrl: string
@@ -40,7 +43,6 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
     useEffect(() => {
         const loadData = async () => {
             setTokenLoading(true)
-            await refreshAccessToken()
 
             AsyncStorage.getItem("token").then((value) => {
                 setTokenLoading(false)
@@ -135,15 +137,21 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
 
     const handleMessageFromWebview = (e: WebViewMessageEvent) => {
         const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "500") {
-            logOut()
-        } else if (messageData.key === "uploadImg") {
-            handleFileUpload()
-        } else if (messageData.key === "closeWin") {
-            navigation.goBack()
+        switch (messageData.key) {
+            case "500":
+                logOut()
+                break
+            case "uploadImg":
+                handleFileUpload()
+                break
+            case "closeWin":
+                navigation.goBack()
+                break
+            case "route":
+                console.log(messageData)
+            default:
+                return {}
         }
-
-        return {}
     }
 
     return (
@@ -174,9 +182,9 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
                     // injectedJavaScript={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_url) {
-                            setLoading(true)
+                            dispatch(setLoading(true))
                         } else if (nativeEvent.url === _webview_url) {
-                            setLoading(false)
+                            dispatch(setLoading(false))
                         }
                     }}
                 />

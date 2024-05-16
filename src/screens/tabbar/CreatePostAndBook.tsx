@@ -19,8 +19,6 @@ import Carousel from "@ant-design/react-native/lib/carousel"
 import Switch from "@ant-design/react-native/lib/switch"
 import { TabBarPropsType } from "@ant-design/react-native/lib/tabs/PropsType"
 import { SelectGenres } from "../../components/SelectGenres"
-import { useAppDispatch } from "../../hook/useStore"
-import { setLoading } from "../../redux/features/mainSlice"
 import { CustomTabs } from "../../components/customs/CustomTabs"
 import { ClubAPI, clubInfo } from "../../api/clubApi"
 import { NoData } from "../../components/NoData"
@@ -46,7 +44,6 @@ const _postInfo = {
 }
 
 export const CreatePostAndBook = () => {
-    const dispatch = useAppDispatch()
     const navigation = useNavigation()
     const { fetchData: fetchGenreData } = GenreAPI("list")
     const { fetchData: fetchMyClubData } = ClubAPI("my/list")
@@ -81,7 +78,6 @@ export const CreatePostAndBook = () => {
     }
 
     const handleFileUpload = async () => {
-        dispatch(setLoading(true))
         const response = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             selectionLimit: 1,
@@ -94,7 +90,6 @@ export const CreatePostAndBook = () => {
             if (!isLt5M) {
                 console.log("The file size must be less than 5 MB.")
                 Toast.fail("The file size must be less than 5 MB.")
-                dispatch(setLoading(false))
 
                 return
             }
@@ -107,8 +102,6 @@ export const CreatePostAndBook = () => {
             } as never)
 
             fetchUploadBookImgData(param, { "Content-Type": "multipart/form-data" } as never).then((res) => {
-                dispatch(setLoading(false))
-
                 if (res.result_code === 0) {
                     const info: { path: string } = JSON.parse(JSON.stringify(res.data))
                     const urlImage = `${API_URL}public/get_resource?name=${info.path}`
@@ -117,8 +110,6 @@ export const CreatePostAndBook = () => {
                     setBookInfo({ ...bookInfo, imageLink: info.path })
                 }
             })
-        } else {
-            dispatch(setLoading(false))
         }
     }
 
@@ -186,12 +177,8 @@ export const CreatePostAndBook = () => {
         setShowModalGenre(true)
     }
 
-    /**
-     * @TODO fix tabs when open upload file
-     */
     const tabHeader = (tabProps: TabBarPropsType) => {
         const { goToTab, onTabClick, activeTab } = tabProps
-        console.log(tabs[activeTab].value)
         return (
             <View style={{ position: "relative", bottom: -10, overflow: "hidden", paddingHorizontal: -16, width: "100%", backgroundColor: "#f7f9f6" }}>
                 <CustomTabs
