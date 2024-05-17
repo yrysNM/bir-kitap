@@ -193,7 +193,7 @@ export const BookDetail = () => {
                         <StarRate size={45} rateNumber={reviewInfo.rating} onChangeRate={(e) => setReviewInfo({ ...reviewInfo, rating: e })} />
                     </View>
                     <View>
-                        <TextareaItem cursorColor="#212121" selectionColor="#212121" last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
+                        <TextareaItem cursorColor="#0A78D6" selectionColor="#0A78D6" last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
                     </View>
                     <Button type="primary" style={styles.btnReview} onPress={() => onSubmitReview()}>
                         Submit review

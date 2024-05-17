@@ -97,9 +97,17 @@ export const Recommendations = () => {
                 return []
         }
     }
+
     const isUpdateRequest = (tabValue: string, dataList: unknown[], typeDataList: string) => {
-        return (tabValue === typeDataList && !dataList.length) || isRefresh
+        return (!dataList.length || isRefresh) && tabValue === typeDataList
     }
+
+    useEffect(() => {
+        if (isRefresh) {
+            onLoadData(recommendationType)
+        }
+    }, [isRefresh])
+
     return (
         <Page isFlatList>
             <Header isCustomHeader={false} title="Recommendations" isGoBack />
@@ -127,11 +135,11 @@ export const Recommendations = () => {
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
                 refreshing={isRefresh}
-                onRefresh={() => {
+                onRefresh={async () => {
                     setIsRefresh(true)
-                    onLoadData(recommendationType).then(() => {
+                    setTimeout(() => {
                         setIsRefresh(false)
-                    })
+                    }, 100)
                 }}
                 data={dataList() as []}
                 key={recommendationType === "Books" ? 2 : 1}

@@ -202,7 +202,7 @@ export const ClubDetail = () => {
                                 tint="light"
                                 style={[styles.blurContainer, { backgroundColor: "none", paddingHorizontal: 0, shadowOpacity: 0, elevation: 0, shadowOffset: { width: 0, height: 0 }, marginBottom: 0, marginTop: 0 }]}>
                                 <View style={{ zIndex: isPrivate() ? -10 : 1 }}>
-                                    {tab === "clubs" ? (
+                                    {tab === "posts" ? (
                                         <PostCard postInfo={item} />
                                     ) : (
                                         <FollowUserCard
@@ -237,7 +237,7 @@ export const ClubDetail = () => {
                 <View>
                     <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Join Club </Text>
                     <InputStyle inputTitle="Invite code">
-                        <InputItem cursorColor="#212121" selectionColor="#212121" last type="text" style={styles.input} value={inviteCode} onChange={(e) => setInviteCode(e)} />
+                        <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type="text" style={styles.input} value={inviteCode} onChange={(e) => setInviteCode(e)} />
                     </InputStyle>
 
                     <Button type="primary" style={styles.createBtn} onPress={() => onJoinClub()}>
