@@ -9,8 +9,11 @@ import Toast from "@ant-design/react-native/lib/toast"
 import useApi from "../hook/useApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { BackHandler, SafeAreaView } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { Loading } from "./Loading"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
 /**
  * @TODO fix refresh token error
  */
@@ -21,6 +24,8 @@ type propsInfo = {
     uploadImgUrl: string
 }
 
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookDetail">>
+
 interface IUpload extends IResponse {
     data: { path: string }
 }
@@ -28,7 +33,7 @@ interface IUpload extends IResponse {
 const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
 export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
-    const navigation = useNavigation()
+    const navigation = useNavigation<NavigateType>()
     const { isLoading } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const { fetchData: fetchUploadImg } = useApi<IUpload>(uploadImgUrl)
@@ -148,7 +153,11 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
                 navigation.goBack()
                 break
             case "route":
-                console.log(messageData)
+                if (!messageData.data) {
+                    console.log("data is empty")
+                    return {}
+                }
+                navigation.navigate(messageData.data.name, { id: messageData.data.id })
             default:
                 return {}
         }

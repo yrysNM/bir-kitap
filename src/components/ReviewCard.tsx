@@ -11,7 +11,6 @@ import { API_URL } from "@env"
 import Skeleton from "./Skeleton"
 import { useAppSelector } from "../hook/useStore"
 import { SplitText } from "../helpers/splitText"
-// import { useState } from "react"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail" | "BookDetail">>
 
@@ -35,30 +34,9 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
         }
     }
 
-    // const calculateImageBlackPercent = () => {
-    //     if (!reviewInfo?.book.imageLink) return
-    //     else if (!imageUrl(reviewInfo.book.imageLink)) return
-    //     console.log(imageUrl(reviewInfo.book.imageLink))
-
-    //     getPixelRGBA(imageUrl(reviewInfo.book.imageLink), 50, 50)
-    //         .then((color: number[]) => {
-    //             let blackCount = 0
-    //             const totalPixels = color.length / 4
-
-    //             for (let i = 0; i < color.length; i += 4) {
-    //                 const intensity = (color[i] + color[i + 1] + color[i + 2]) / 3
-    //                 if (intensity < 30) {
-    //                     blackCount++
-    //                 }
-    //             }
-
-    //             const percentage = (blackCount / totalPixels) * 100
-    //             setBlackPercentage(percentage.toFixed(2))
-    //         })
-    //         .catch((err: unknown) => {
-    //             console.error("Error getting pixels:", err)
-    //         })
-    // }
+    const isFloatRating = (rating: number) => {
+        return Number(rating) === rating && (rating || 0) % 1 !== 0
+    }
 
     const ReChildComponent = () => {
         return reviewInfo ? (
@@ -73,8 +51,8 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
                             </View>
 
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="star" color="#0A78D6" size={13} style={{ marginTop: 2 }} />
-                                <Text style={styles.rateNumberText}>{Number(reviewInfo.book.rating) === reviewInfo.book.rating && (reviewInfo.book.rating || 0) % 1 !== 0 ? reviewInfo?.book.rating?.toFixed(2) : reviewInfo.book.rating}</Text>
+                                <Icon name="star" color="#ffc043" size={13} style={{ marginTop: 2 }} />
+                                <Text style={styles.rateNumberText}>{isFloatRating(reviewInfo.book.rating || 0) ? reviewInfo?.book.rating?.toFixed(2) : reviewInfo.book.rating}</Text>
                             </View>
                         </View>
                     </ImageBackground>
@@ -91,7 +69,7 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
                     <View style={styles.reviewTitleBlock}>
                         <Text style={styles.reviewTitle}>
                             <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 10, height: 21 }}>
-                                <Icon name="star" color="#0A78D6" size={20} style={{ paddingTop: 2 }} />
+                                <Icon name="star" color="#ffc043" size={20} style={{ paddingTop: 2 }} />
                                 <Text style={styles.reviewTitle}>{reviewInfo.rating}</Text>
                             </View>
                             <Text>{reviewInfo.message.trim()}</Text>
@@ -200,8 +178,6 @@ const styles = StyleSheet.create({
         gap: 20,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
-        // borderTopEndRadius: 12,
-        // borderTopStartRadius: 12,
     },
     bookImage: {
         width: 100,

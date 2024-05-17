@@ -425,10 +425,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#0A78D6",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
-            width: 0,
-            height: 3.8518519401550293,
+            width: 1,
+            height: 1,
         },
-        shadowRadius: 3.8518519401550293,
+        elevation: 1,
+        shadowRadius: 1,
         shadowOpacity: 1,
         borderWidth: 0,
         marginTop: 13,
@@ -441,11 +442,5 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 40,
         width: "auto",
-    },
-
-    borderFlex: {
-        flexDirection: "row",
-        gap: 10,
-        overflowX: "scroll",
     },
 })
