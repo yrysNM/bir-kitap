@@ -142,7 +142,7 @@ export const UpdatePost = () => {
             <Header isGoBack title="Update post" />
             <View style={{ marginTop: 30 }}>
                 <InputStyle inputTitle="Title">
-                    <InputItem cursorColor="#212121" selectionColor="#212121" last type="text" style={{ ...styles.input }} value={postInfo.title} onChange={(value) => setPostInfo({ ...postInfo, title: value })}></InputItem>
+                    <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type="text" style={{ ...styles.input }} value={postInfo.title} onChange={(value) => setPostInfo({ ...postInfo, title: value })}></InputItem>
                 </InputStyle>
 
                 <View style={{ marginVertical: 20 }}>
@@ -176,7 +176,7 @@ export const UpdatePost = () => {
                     </View>
                 </InputStyle>
                 <InputStyle inputTitle="Description">
-                    <TextareaItem cursorColor="#212121" selectionColor="#212121" last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
+                    <TextareaItem cursorColor="#0A78D6" selectionColor="#0A78D6" last style={styles.textAreaInput} rows={4} count={400} value={postInfo.content} onChange={(e) => setPostInfo({ ...postInfo, content: e || "" })} placeholder="Type post here..." />
                 </InputStyle>
 
                 <Button type="primary" style={styles.createBtn} onPress={() => onUpdateBtn()}>
