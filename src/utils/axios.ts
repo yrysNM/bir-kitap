@@ -75,7 +75,7 @@ export async function refreshAccessToken(): Promise<string> {
             return null
         }
     })
-    alert(refreshToken)
+    console.log(refreshToken)
     return axios
         .post(`${API_URL}auth/refresh/token`, {
             refreshToken,

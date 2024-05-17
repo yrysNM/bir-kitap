@@ -20,10 +20,6 @@ export const CustomTabs = ({ valueList, onClickTab, value }: propsInfo) => {
         }
     }, [value])
 
-    // useEffect(() => {
-    //     initialTab()
-    // }, [])
-
     const initialTab = () => {
         const tabValueIndex = valueList.findIndex((item) => item.value === value)
         setTab(valueList[tabValueIndex])

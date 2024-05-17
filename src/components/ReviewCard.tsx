@@ -11,9 +11,8 @@ import { API_URL } from "@env"
 import Skeleton from "./Skeleton"
 import { useAppSelector } from "../hook/useStore"
 import { SplitText } from "../helpers/splitText"
-// import { useState } from "react"
 
-type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail">>
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail" | "BookDetail">>
 
 type propsInfo = {
     isReviewCard?: boolean
@@ -35,68 +34,51 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
         }
     }
 
-    // const calculateImageBlackPercent = () => {
-    //     if (!reviewInfo?.book.imageLink) return
-    //     else if (!imageUrl(reviewInfo.book.imageLink)) return
-    //     console.log(imageUrl(reviewInfo.book.imageLink))
-
-    //     getPixelRGBA(imageUrl(reviewInfo.book.imageLink), 50, 50)
-    //         .then((color: number[]) => {
-    //             let blackCount = 0
-    //             const totalPixels = color.length / 4
-
-    //             for (let i = 0; i < color.length; i += 4) {
-    //                 const intensity = (color[i] + color[i + 1] + color[i + 2]) / 3
-    //                 if (intensity < 30) {
-    //                     blackCount++
-    //                 }
-    //             }
-
-    //             const percentage = (blackCount / totalPixels) * 100
-    //             setBlackPercentage(percentage.toFixed(2))
-    //         })
-    //         .catch((err: unknown) => {
-    //             console.error("Error getting pixels:", err)
-    //         })
-    // }
+    const isFloatRating = (rating: number) => {
+        return Number(rating) === rating && (rating || 0) % 1 !== 0
+    }
 
     const ReChildComponent = () => {
         return reviewInfo ? (
             <>
-                <ImageBackground style={[styles.bookWrapper, { paddingHorizontal: isReviewCard ? 0 : 20 }]} imageStyle={{ borderRadius: 12, objectFit: "cover" }} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30} tintColor="#fff">
-                    <CloudImage styleImg={styles.bookImage} url={reviewInfo?.book.imageLink || ""} />
-                    <View style={styles.bookInfo}>
-                        <View>
-                            <Text style={styles.bookTitleText}>{reviewInfo?.book.title}</Text>
-                            <Text style={styles.bookDescrText}>{reviewInfo?.book.author}</Text>
-                        </View>
+                <TouchableOpacity onPress={() => (!isReviewCard ? navigation.navigate("BookDetail", { id: reviewInfo.book.id || "" }) : navigation.navigate("ReviewDetail", { id: reviewInfo.id || "" }))}>
+                    <ImageBackground style={[styles.bookWrapper]} imageStyle={[styles.bookImgBg, { borderBottomLeftRadius: isReviewCard ? 0 : 12, borderBottomRightRadius: isReviewCard ? 0 : 12 }]} source={{ uri: imageUrl(reviewInfo.book.imageLink) }} blurRadius={30}>
+                        <CloudImage styleImg={styles.bookImage} url={reviewInfo?.book.imageLink || ""} />
+                        <View style={styles.bookInfo}>
+                            <View>
+                                <Text style={styles.bookTitleText}>{SplitText(reviewInfo?.book.title, 16)}</Text>
+                                <Text style={styles.bookDescrText}>{SplitText(reviewInfo?.book.author, 20)}</Text>
+                            </View>
 
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Icon name="star" color="#0A78D6" size={13} style={{ marginTop: 2 }} />
-                            <Text style={styles.rateNumberText}>{reviewInfo?.book.rating?.toFixed(2)}</Text>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <Icon name="star" color="#ffc043" size={13} style={{ marginTop: 2 }} />
+                                <Text style={styles.rateNumberText}>{isFloatRating(reviewInfo.book.rating || 0) ? reviewInfo?.book.rating?.toFixed(2) : reviewInfo.book.rating}</Text>
+                            </View>
                         </View>
+                    </ImageBackground>
+                </TouchableOpacity>
+                <View style={{ paddingHorizontal: isReviewCard ? 16 : 0, paddingBottom: 10 }}>
+                    <View style={[styles.headerReview, { justifyContent: "space-between", marginTop: 5 }]}>
+                        <View style={styles.headerReview}>
+                            <CloudImage url={reviewInfo?.avatar} styleImg={styles.userAvatar} />
+                            <Text style={[styles.userNameText, { color: userId === reviewInfo.userId ? "#0A78D6" : "#6D7885" }]}>{reviewInfo?.userName}</Text>
+                        </View>
+                        <Text style={styles.bookDescrText}>{dayjs(reviewInfo.createtime).format("DD MMMM YYYY [y].")}</Text>
                     </View>
-                </ImageBackground>
-                <View style={[styles.headerReview, { justifyContent: "space-between", marginTop: 5 }]}>
-                    <View style={styles.headerReview}>
-                        <CloudImage url={reviewInfo?.avatar} styleImg={styles.userAvatar} />
-                        <Text style={[styles.userNameText, { color: userId === reviewInfo.userId ? "#0A78D6" : "#6D7885" }]}>{reviewInfo?.userName}</Text>
+
+                    <View style={styles.reviewTitleBlock}>
+                        <Text style={styles.reviewTitle}>
+                            <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 10, height: 21 }}>
+                                <Icon name="star" color="#ffc043" size={20} style={{ paddingTop: 2 }} />
+                                <Text style={styles.reviewTitle}>{reviewInfo.rating}</Text>
+                            </View>
+                            <Text>{reviewInfo.message.trim()}</Text>
+                        </Text>
                     </View>
-                    <Text style={styles.bookDescrText}>{dayjs(reviewInfo.createtime).format("DD MMMM YYYY [y].")}</Text>
-                </View>
 
-                <View style={styles.reviewTitleBlock}>
-                    <Text style={styles.reviewTitle}>
-                        <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 10, height: 21 }}>
-                            <Icon name="star" color="#0A78D6" size={20} style={{ paddingTop: 2 }} />
-                            <Text style={styles.reviewTitle}>{reviewInfo.rating}</Text>
-                        </View>
-                        <Text>{reviewInfo.message.trim()}</Text>
-                    </Text>
-                </View>
-
-                <View>
-                    <Text style={[styles.bookDescrText, { lineHeight: 20 }]}>{isReviewCard ? SplitText(reviewInfo.book.description || "", 90) : reviewInfo.book.description}</Text>
+                    <View>
+                        <Text style={[styles.bookDescrText, { lineHeight: 20 }]}>{isReviewCard ? SplitText(reviewInfo.book.description || "", 90) : reviewInfo.book.description}</Text>
+                    </View>
                 </View>
             </>
         ) : (
@@ -137,6 +119,11 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
 }
 
 const styles = StyleSheet.create({
+    bookImgBg: {
+        objectFit: "cover",
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
+    },
     reviewTitle: {
         fontSize: 21,
         lineHeight: 25,
@@ -176,21 +163,27 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         flexShrink: 1,
         gap: 10,
+        backgroundColor: "#fff",
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 12,
+        height: 100,
+        width: "100%",
     },
     bookWrapper: {
         paddingVertical: 25,
         paddingHorizontal: 20,
-        marginTop: 10,
         flexDirection: "row",
         alignItems: "center",
         gap: 20,
-        borderRadius: 12,
+        borderTopLeftRadius: 12,
+        borderTopRightRadius: 12,
     },
     bookImage: {
         width: 100,
         height: 100,
         borderRadius: 12,
-        objectFit: "cover",
+        objectFit: "contain",
     },
     headerReview: {
         flexDirection: "row",
@@ -223,8 +216,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         marginTop: 1,
         marginBottom: 10,
-        paddingVertical: 10,
-        paddingHorizontal: 19,
     },
 
     bookReviewImg: {

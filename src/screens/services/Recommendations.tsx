@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native"
 import { Page } from "../../layouts/Page"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Header } from "../../components/Header"
 import { bookInfo } from "../../api/bookApi"
 import { RecommendationAPI } from "../../api/recommendationApi"
@@ -55,36 +55,33 @@ export const Recommendations = () => {
         return userDataList
     }, [searchUser, userDataList])
 
-    const onLoadData = useCallback(
-        async (e: string) => {
-            if (isUpdateRequest(e, bookDataList, "Books")) {
-                await fetchBookData({}).then((res) => {
-                    if (res.result_code === 0) {
-                        setBookDataList(JSON.parse(JSON.stringify(res.data)))
-                    }
-                })
-            } else if (isUpdateRequest(e, reviewDataList, "Reviews")) {
-                await fetchReviewsData({}).then((res) => {
-                    if (res.result_code === 0) {
-                        setReviewDataList(JSON.parse(JSON.stringify(res.data)))
-                    }
-                })
-            } else if (isUpdateRequest(e, postDataList, "Posts")) {
-                await fetchPostsData({}).then((res) => {
-                    if (res.result_code === 0) {
-                        setPostDataList(JSON.parse(JSON.stringify(res.data)))
-                    }
-                })
-            } else if (isUpdateRequest(e, userDataList, "Users")) {
-                await fetchUsersData({}).then((res) => {
-                    if (res.result_code === 0) {
-                        setUserDataList(JSON.parse(JSON.stringify(res.data)))
-                    }
-                })
-            }
-        },
-        [isRefresh],
-    )
+    const onLoadData = async (e: string) => {
+        if (isUpdateRequest(e, bookDataList, "Books")) {
+            await fetchBookData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setBookDataList(JSON.parse(JSON.stringify(res.data)))
+                }
+            })
+        } else if (isUpdateRequest(e, reviewDataList, "Reviews")) {
+            await fetchReviewsData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setReviewDataList(JSON.parse(JSON.stringify(res.data)))
+                }
+            })
+        } else if (isUpdateRequest(e, postDataList, "Posts")) {
+            await fetchPostsData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setPostDataList(JSON.parse(JSON.stringify(res.data)))
+                }
+            })
+        } else if (isUpdateRequest(e, userDataList, "Users")) {
+            await fetchUsersData({}).then((res) => {
+                if (res.result_code === 0) {
+                    setUserDataList(JSON.parse(JSON.stringify(res.data)))
+                }
+            })
+        }
+    }
 
     const dataList = () => {
         switch (recommendationType) {
@@ -101,7 +98,6 @@ export const Recommendations = () => {
         }
     }
     const isUpdateRequest = (tabValue: string, dataList: unknown[], typeDataList: string) => {
-        console.log(tabValue, typeDataList, isRefresh)
         return (tabValue === typeDataList && !dataList.length) || isRefresh
     }
     return (

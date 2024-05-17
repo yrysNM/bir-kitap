@@ -13,9 +13,9 @@ import { BookShowBlock } from "../components/BookShowBlock"
 import { useAppSelector } from "../hook/useStore"
 import ArrowBack from "../../assets/images/arrow-back.png"
 import Carousel from "react-native-snap-carousel"
-import { CarouselClubs } from "../components/carousel/CarouselClubs"
-import { ClubAPI, clubInfo } from "../api/clubApi"
 import Toast from "@ant-design/react-native/lib/toast"
+import { CarouselBookList } from "../components/carousel/CarouselBookList"
+import { RecommendationAPI } from "../api/recommendationApi"
 
 type bookReviewInfo = {
     id?: string
@@ -52,17 +52,19 @@ export const BookDetail = () => {
         userInfo: { id: userId },
     } = useAppSelector((state) => state.mainSlice)
     const { fetchData: fetchCreateReviewData } = BookApi("review/create")
-    const { fetchData: fetchClubsData } = ClubAPI("list")
+    const { fetchData: fetchRecommendationBooksData } = RecommendationAPI("books")
     const { id } = useRoute<RouteProp<RootStackParamList, "BookDetail">>().params
     const { fetchData: fetchGetBookData } = BookApi(`get`)
     const [bookInfo, setBookInfo] = useState<IBookInfo | null>(null)
-    const [dataList, setDataList] = useState<clubInfo[]>([])
+    const [dataList, setDataList] = useState<bookInfo[]>([])
     const [reviewInfo, setReviewInfo] = useState<{ title: string; message: string; rating: number }>(_reviewTemp)
 
     useEffect(() => {
-        loadBookData()
-        loadRecommendationBookData()
-    }, [])
+        if (id && id.length) {
+            loadBookData()
+            loadRecommendationBookData()
+        }
+    }, [id])
 
     const loadBookData = async () => {
         if (id) {
@@ -78,9 +80,9 @@ export const BookDetail = () => {
     }
 
     const loadRecommendationBookData = () => {
-        fetchClubsData({
+        fetchRecommendationBooksData({
             start: 0,
-            length: 5,
+            length: 15,
         }).then((res) => {
             if (res.result_code === 0) {
                 setDataList(JSON.parse(JSON.stringify(res.data)))
@@ -198,8 +200,8 @@ export const BookDetail = () => {
                     </Button>
                 </View>
 
-                <BookShowBlock bookType="Clubs" navigationUrl="Clubs">
-                    <View>{dataList.length ? <CarouselClubs dataList={dataList} /> : <NoData />}</View>
+                <BookShowBlock bookType="Recommendations" navigationUrl="BookMore/books">
+                    <View>{dataList.length ? <CarouselBookList dataList={dataList} /> : <NoData />}</View>
                 </BookShowBlock>
             </View>
         </Page>
@@ -425,10 +427,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#0A78D6",
         shadowColor: "rgba(0, 0, 0, 0.25)",
         shadowOffset: {
-            width: 0,
-            height: 3.8518519401550293,
+            width: 1,
+            height: 1,
         },
-        shadowRadius: 3.8518519401550293,
+        elevation: 1,
+        shadowRadius: 1,
         shadowOpacity: 1,
         borderWidth: 0,
         marginTop: 13,
@@ -441,11 +444,5 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 40,
         width: "auto",
-    },
-
-    borderFlex: {
-        flexDirection: "row",
-        gap: 10,
-        overflowX: "scroll",
     },
 })

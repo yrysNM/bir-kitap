@@ -9,14 +9,22 @@ import Toast from "@ant-design/react-native/lib/toast"
 import useApi from "../hook/useApi"
 import { logOut as logOutHelper } from "../helpers/logOut"
 import { BackHandler, SafeAreaView } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { Loading } from "./Loading"
-import { refreshAccessToken } from "../utils/axios"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
+/**
+ * @TODO fix refresh token error
+ */
+// import { refreshAccessToken } from "../utils/axios"
 
 type propsInfo = {
     webViewUrl: string
     uploadImgUrl: string
 }
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookDetail">>
 
 interface IUpload extends IResponse {
     data: { path: string }
@@ -25,7 +33,7 @@ interface IUpload extends IResponse {
 const randomNumber = Math.floor(Math.random() * (100 - 1) + 1)
 
 export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
-    const navigation = useNavigation()
+    const navigation = useNavigation<NavigateType>()
     const { isLoading } = useAppSelector((state) => state.mainSlice)
     const dispatch = useAppDispatch()
     const { fetchData: fetchUploadImg } = useApi<IUpload>(uploadImgUrl)
@@ -40,7 +48,6 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
     useEffect(() => {
         const loadData = async () => {
             setTokenLoading(true)
-            await refreshAccessToken()
 
             AsyncStorage.getItem("token").then((value) => {
                 setTokenLoading(false)
@@ -135,15 +142,25 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
 
     const handleMessageFromWebview = (e: WebViewMessageEvent) => {
         const messageData = JSON.parse(e.nativeEvent.data)
-        if (messageData && messageData.key === "500") {
-            logOut()
-        } else if (messageData.key === "uploadImg") {
-            handleFileUpload()
-        } else if (messageData.key === "closeWin") {
-            navigation.goBack()
+        switch (messageData.key) {
+            case "500":
+                logOut()
+                break
+            case "uploadImg":
+                handleFileUpload()
+                break
+            case "closeWin":
+                navigation.goBack()
+                break
+            case "route":
+                if (!messageData.data) {
+                    console.log("data is empty")
+                    return {}
+                }
+                navigation.navigate(messageData.data.name, { id: messageData.data.id })
+            default:
+                return {}
         }
-
-        return {}
     }
 
     return (
@@ -174,9 +191,9 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
                     // injectedJavaScript={injectWebViewData()}
                     onLoadProgress={({ nativeEvent }) => {
                         if (nativeEvent.progress !== 1 && nativeEvent.url === _webview_url) {
-                            setLoading(true)
+                            dispatch(setLoading(true))
                         } else if (nativeEvent.url === _webview_url) {
-                            setLoading(false)
+                            dispatch(setLoading(false))
                         }
                     }}
                 />

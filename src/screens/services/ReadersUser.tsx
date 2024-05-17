@@ -1,4 +1,4 @@
-import { View } from "react-native"
+import { View, FlatList } from "react-native"
 import { Page } from "../../layouts/Page"
 import { Header } from "../../components/Header"
 import FollowUserCard from "../../components/FollowUserCard"
@@ -6,7 +6,6 @@ import { IRecommendationUser } from "../../api/authApi"
 import { useEffect, useMemo, useState } from "react"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { SearchInput } from "../../components/SearchInput"
-import { FlatList } from "react-native-gesture-handler"
 
 const ReadersUser = () => {
     const { fetchData } = RecommendationAPI("users")
@@ -35,7 +34,7 @@ const ReadersUser = () => {
     }, [search, users])
 
     return (
-        <Page>
+        <Page isFlatList>
             <Header isGoBack={true} title="Readers" />
             <View style={{ paddingVertical: 10 }} />
             <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search users" />
