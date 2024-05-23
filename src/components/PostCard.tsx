@@ -52,12 +52,16 @@ export const PostCard = ({ postInfo, isUpdatePost = false }: propsInfo) => {
                 <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
                     <View style={styles.readerTitle}>
                         <View style={styles.readerTitleBlock}>
-                            <Text style={{ color: "#fff", fontSize: 16, lineHeight: 20 }}>{postInfo.title || "-"}</Text>
+                            <Text style={{ color: "#fff", fontSize: 16, lineHeight: 20 }} numberOfLines={1}>
+                                {postInfo.title || "-"}
+                            </Text>
                         </View>
                     </View>
                 </View>
                 <View>
-                    <Text style={styles.readerText}>{postInfo.content || "-"}</Text>
+                    <Text style={styles.readerText} numberOfLines={2}>
+                        {postInfo.content || "-"}
+                    </Text>
                 </View>
                 {isUpdatePost && (
                     <View style={styles.updateDeletePost}>
