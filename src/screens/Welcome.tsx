@@ -8,12 +8,14 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "Login">>
 
-export const Welcome = () => {
-    const navigation = useNavigation<NavigateType>()
+export const Welcome = ({ isHaveNavigation = true }: { isHaveNavigation?: boolean }) => {
+    const navigation = isHaveNavigation ? useNavigation<NavigateType>() : null
 
     useEffect(() => {
         const restTime = setTimeout(() => {
-            navigation.navigate("Login")
+            if (navigation) {
+                navigation.navigate("Login")
+            }
         }, 1000)
 
         return () => {

@@ -20,7 +20,7 @@ export const Page = ({ isFlatList = false, children }: { isFlatList?: boolean; c
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F9F6" }}>
-            <StatusBar barStyle="light-content" animated />
+            <StatusBar barStyle="dark-content" animated />
             {isFlatList ? (
                 <View style={{ flexGrow: 1, paddingHorizontal: route.name === "ReaderNews" ? 0 : 16 }}>{children}</View>
             ) : (

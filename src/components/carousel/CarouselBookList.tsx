@@ -6,7 +6,6 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../navigation/MainNavigation"
 import { CloudImage } from "../CloudImage"
-import { SplitText } from "../../helpers/splitText"
 import { SkeletonHomeBooksCard } from "../SkeletonCards"
 import { useAppSelector } from "../../hook/useStore"
 
@@ -23,9 +22,13 @@ export const CarouselBookList = ({ dataList }: { dataList: bookInfo[] }) => {
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("BookDetail", { id: item.id as string })} delayPressIn={5}>
                 <CloudImage styleImg={styles.bookImg} url={item.imageLink} />
                 <View style={{ flex: 1, justifyContent: "center" }}>
-                    <Text style={styles.text}>{SplitText(item.title, 20)}</Text>
+                    <Text style={styles.text} numberOfLines={2}>
+                        {item.title}
+                    </Text>
                     <View style={styles.textInfo}>
-                        <Text style={styles.descr}>{SplitText(item.author, 15)}</Text>
+                        <Text style={styles.descr} numberOfLines={1}>
+                            {item.author}
+                        </Text>
                         {item.year !== 0 && <Text style={styles.descr}>{item.year}</Text>}
                     </View>
                 </View>

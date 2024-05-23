@@ -6,7 +6,6 @@ import { clubInfo } from "../../api/clubApi"
 import { Text, Dimensions, TouchableOpacity, StyleSheet } from "react-native"
 import Carousel from "react-native-snap-carousel"
 import { CloudImage } from "../CloudImage"
-import { SplitText } from "../../helpers/splitText"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ClubDetail">>
 
@@ -19,7 +18,9 @@ export const CarouselClubs = ({ dataList }: { dataList: clubInfo[] }) => {
             renderItem={({ item }: { item: clubInfo }) => (
                 <TouchableOpacity delayPressIn={10} onPress={() => navigation.navigate("ClubDetail", { id: item.id || "" })} style={styles.clubWrapper}>
                     <CloudImage url={item.avatar} styleImg={styles.clubImg} />
-                    <Text style={styles.clibTitleText}>{SplitText(item.title, 20)}</Text>
+                    <Text style={styles.clibTitleText} numberOfLines={2}>
+                        {item.title}
+                    </Text>
                 </TouchableOpacity>
             )}
             sliderWidth={Dimensions.get("window").width}

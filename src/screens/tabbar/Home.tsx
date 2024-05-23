@@ -16,7 +16,6 @@ import { CompositeNavigationProp, useNavigation } from "@react-navigation/native
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RootStackParamList } from "../../navigation/MainNavigation"
-import { SplitText } from "../../helpers/splitText"
 import { SkeletonCardReviewsCard, SkeletonHomeBooksCard, SkeletonHomeNewsCard } from "../../components/SkeletonCards"
 import { postInfo } from "../../api/postApi"
 import { PostCard } from "../../components/PostCard"
@@ -94,9 +93,11 @@ export const Home = () => {
         return isLoading && !news.length ? (
             <SkeletonHomeNewsCard />
         ) : (
-            <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} delayPressIn={15} style={styles.newsBlock}>
+            <TouchableOpacity onPressIn={() => navigation.navigate("ReaderNews", { id: item.id || "" })} delayPressIn={50} style={styles.newsBlock}>
                 <CloudImage styleImg={styles.newsImg} url={item.imageLink} />
-                <Text style={styles.newsTitle}>{SplitText(item.content, 25)}</Text>
+                <Text style={styles.newsTitle} numberOfLines={1}>
+                    {item.content}
+                </Text>
             </TouchableOpacity>
         )
     }

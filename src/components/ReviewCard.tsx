@@ -10,7 +10,6 @@ import dayjs from "dayjs"
 import { API_URL } from "@env"
 import Skeleton from "./Skeleton"
 import { useAppSelector } from "../hook/useStore"
-import { SplitText } from "../helpers/splitText"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail" | "BookDetail">>
 
@@ -46,8 +45,12 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
                         <CloudImage styleImg={styles.bookImage} url={reviewInfo?.book.imageLink || ""} />
                         <View style={styles.bookInfo}>
                             <View>
-                                <Text style={styles.bookTitleText}>{SplitText(reviewInfo?.book.title, 16)}</Text>
-                                <Text style={styles.bookDescrText}>{SplitText(reviewInfo?.book.author, 20)}</Text>
+                                <Text style={styles.bookTitleText} numberOfLines={2}>
+                                    {reviewInfo?.book.title}
+                                </Text>
+                                <Text style={styles.bookDescrText} numberOfLines={2}>
+                                    {reviewInfo?.book.author}
+                                </Text>
                             </View>
 
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -77,7 +80,9 @@ export const ReviewCard = ({ reviewInfo, isReviewCard = true }: propsInfo) => {
                     </View>
 
                     <View>
-                        <Text style={[styles.bookDescrText, { lineHeight: 20 }]}>{isReviewCard ? SplitText(reviewInfo.book.description || "", 90) : reviewInfo.book.description}</Text>
+                        <Text style={[styles.bookDescrText, { lineHeight: 20 }]} numberOfLines={isReviewCard ? 3 : undefined}>
+                            {isReviewCard ? reviewInfo.book.description : reviewInfo.book.description}
+                        </Text>
                     </View>
                 </View>
             </>
