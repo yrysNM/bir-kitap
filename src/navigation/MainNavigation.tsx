@@ -28,6 +28,7 @@ import { PostDetail } from "../screens/PostDetail"
 import { ClubDetail } from "../screens/ClubDetail"
 import { UpdatePost } from "../screens/UpdatePost"
 import { Posts } from "../screens/Posts"
+import { Welcome } from "../screens/Welcome"
 
 export type RootStackParamList = {
     Root: undefined
@@ -116,7 +117,7 @@ export const MainNavigation = () => {
                 </>
             ) : (
                 <>
-                    {/* <Stack.Screen name="WelcomeScreen" component={Welcome} /> */}
+                    <Stack.Screen name="WelcomeScreen" component={Welcome} />
                     <Stack.Screen name="Login" component={Login} />
                     <Stack.Screen name="CreateAccount" component={CreateAccount} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
