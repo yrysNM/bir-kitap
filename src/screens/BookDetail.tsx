@@ -181,7 +181,7 @@ export const BookDetail = () => {
                                         </View>
                                     </View>
                                 </View>
-                                <Text style={styles.reviewMessage}>{item.message}</Text>
+                                <Text style={styles.reviewMessage}>{item.message.trim()}</Text>
                             </View>
                         </View>
                     ))}
