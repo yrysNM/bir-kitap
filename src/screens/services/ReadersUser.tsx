@@ -6,16 +6,20 @@ import { IRecommendationUser } from "../../api/authApi"
 import { useEffect, useMemo, useState } from "react"
 import { RecommendationAPI } from "../../api/recommendationApi"
 import { SearchInput } from "../../components/SearchInput"
+import { useAppSelector } from "../../hook/useStore"
 
 const ReadersUser = () => {
+    const { isRefresh: isRefreshStore } = useAppSelector((state) => state.mainSlice)
     const { fetchData } = RecommendationAPI("users")
     const [users, setUsers] = useState<IRecommendationUser[]>([])
     const [search, setSearch] = useState<string | null>(null)
     const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
     useEffect(() => {
-        fetchUsers()
-    }, [])
+        if (!isRefreshStore) {
+            fetchUsers()
+        }
+    }, [isRefreshStore])
 
     const fetchUsers = async () => {
         const res = await fetchData({})

@@ -63,7 +63,7 @@ export type RootStackParamList = {
     ClubDetail: { id: string }
     UpdatePost: { id: string }
     Posts: undefined
-    UserProfile: { id: string }
+    UserProfile: { id: string; isFollow: boolean }
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
