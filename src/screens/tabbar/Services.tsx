@@ -47,7 +47,7 @@ export const Services = () => {
         {
             title: "Readers",
             icon: ReadersImg,
-            url: "ReadersUser",
+            url: "ReadersUser/recommendation",
         },
     ]
     const navigation = useNavigation<NavigateType>()

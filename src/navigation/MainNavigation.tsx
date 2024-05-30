@@ -57,7 +57,7 @@ export type RootStackParamList = {
         id: string
     }
     BookTestWebView: undefined
-    ReadersUser: undefined
+    ReadersUser: { id: string; userId?: string }
     Clubs: undefined
     PostDetail: { id: string }
     ClubDetail: { id: string }

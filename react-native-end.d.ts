@@ -10,4 +10,4 @@ interface IResponse {
     result_msg: string
 }
 
-type navigationDetail = "BookMore" | "BookDetail"
+type navigationDetail = "BookMore" | "BookDetail" | "ReadersUser"

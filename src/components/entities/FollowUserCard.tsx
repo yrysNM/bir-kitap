@@ -8,6 +8,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import React from "react"
 import { RootStackParamList } from "../../navigation/MainNavigation"
+import { useAppSelector } from "../../hook/useStore"
 
 type propsInfo = {
     user: IRecommendationUser
@@ -17,6 +18,9 @@ type propsInfo = {
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "UserProfile">>
 
 const FollowUserCard = ({ user, onToggleFollow }: propsInfo) => {
+    const {
+        userInfo: { id },
+    } = useAppSelector((state) => state.mainSlice)
     const navigation = useNavigation<NavigateType>()
     const { fetchData: fetchDataUserFollow } = UserAPI("follow")
     const { fetchData: fetchDataUserOnFollow } = UserAPI("unfollow")
@@ -39,11 +43,13 @@ const FollowUserCard = ({ user, onToggleFollow }: propsInfo) => {
                 </View>
             </View>
 
-            <View style={styles.followBtnBlock}>
-                <Button style={!user.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(user.id, user.followed)}>
-                    <Text style={!user.followed ? styles.followBtnText : styles.unFollowBtnText}>{!user.followed ? "Follow" : "Unfollow"}</Text>
-                </Button>
-            </View>
+            {user.id !== id && (
+                <View style={styles.followBtnBlock}>
+                    <Button style={!user.followed ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(user.id, user.followed)}>
+                        <Text style={!user.followed ? styles.followBtnText : styles.unFollowBtnText}>{!user.followed ? "Follow" : "Unfollow"}</Text>
+                    </Button>
+                </View>
+            )}
         </TouchableOpacity>
     )
 }
