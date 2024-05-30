@@ -5,7 +5,7 @@ import { bookReviewInfo } from "../api/reviewApi"
 import { useAppDispatch, useAppSelector } from "../hook/useStore"
 import { UserAPI } from "../api/userApi"
 import { useEffect, useState } from "react"
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native"
 import { BookShowBlock } from "./BookShowBlock"
 import { CarouselBookList } from "./carousel/CarouselBookList"
 import { CloudImage } from "./CloudImage"
@@ -15,6 +15,10 @@ import { PostCard } from "./entities/PostCard"
 import { ReviewCard } from "./entities/ReviewCard"
 import Button from "@ant-design/react-native/lib/button"
 import { setRefresh } from "../redux/features/mainSlice"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { RootStackParamList } from "../navigation/MainNavigation"
 
 type propsInfo = {
     id: string
@@ -54,10 +58,13 @@ const _infoTemp = {
     },
 }
 
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReadersUser">>
+
 export const UserProfileComponent = ({ id, isFollowUser = false }: propsInfo) => {
     const dispatch = useAppDispatch()
+    const navigation = useNavigation<NavigateType>()
     const {
-        userInfo: { fullName, avatar },
+        userInfo: { fullName, avatar, id: userId },
         isLoading,
         isRefresh,
     } = useAppSelector((state) => state.mainSlice)
@@ -128,14 +135,14 @@ export const UserProfileComponent = ({ id, isFollowUser = false }: propsInfo) =>
                     <Text style={styles.statisticNumber}>{info?.reviewsCount}</Text>
                     <Text style={styles.statisticDescr}>Reviews</Text>
                 </View>
-                <View>
+                <TouchableOpacity onPress={() => navigation.navigate("ReadersUser", { id: "followers", userId: isOwnUser() ? userId : info.userVO.id })}>
                     <Text style={[styles.statisticNumber, { textDecorationLine: "underline" }]}>{info?.followersCount}</Text>
                     <Text style={styles.statisticDescr}>Followers</Text>
-                </View>
-                <View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("ReadersUser", { id: "following", userId: isOwnUser() ? userId : info.userVO.id })}>
                     <Text style={[styles.statisticNumber, { textDecorationLine: "underline" }]}>{info?.followingCount}</Text>
                     <Text style={styles.statisticDescr}>Following</Text>
-                </View>
+                </TouchableOpacity>
             </View>
 
             <View style={[styles.profileInfoWrapper, { gap: 10, marginTop: -5 }]}>
@@ -166,7 +173,7 @@ export const UserProfileComponent = ({ id, isFollowUser = false }: propsInfo) =>
                 ) : tab === "reviews" ? (
                     <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
                 ) : tab === "posts" ? (
-                    <View style={{ marginTop: 10 }}>{info.posts.length ? info.posts.map((post) => <PostCard postInfo={post} key={post.id} isUpdatePost />) : <NoData />}</View>
+                    <View style={{ marginTop: 10 }}>{info.posts.length ? info.posts.map((post) => <PostCard postInfo={post} key={post.id} isUpdatePost={isOwnUser()} />) : <NoData />}</View>
                 ) : null}
             </View>
         </View>
