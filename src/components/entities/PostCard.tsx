@@ -1,19 +1,19 @@
 import { TouchableOpacity, View, Text, StyleSheet, Image, Dimensions } from "react-native"
-import { PostAPI, postInfo } from "../api/postApi"
-import { CloudImage } from "./CloudImage"
-import Skeleton from "./Skeleton"
+import { PostAPI, postInfo } from "../../api/postApi"
+import { CloudImage } from "../CloudImage"
+import Skeleton from "../Skeleton"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RootStackParamList } from "../navigation/MainNavigation"
-import EditImg from "../../assets/images/edit.png"
-import TrashImg from "../../assets/images/trash.png"
+import { RootStackParamList } from "../../navigation/MainNavigation"
+import EditImg from "../../../assets/images/edit.png"
+import TrashImg from "../../../assets/images/trash.png"
 import Modal from "@ant-design/react-native/lib/modal"
-import { useAppDispatch, useAppSelector } from "../hook/useStore"
+import { useAppDispatch, useAppSelector } from "../../hook/useStore"
 import { useState } from "react"
-import { Loading } from "./Loading"
-import { setRefresh } from "../redux/features/mainSlice"
-import { RootTabbarStackParamList } from "../navigation/TabBarNavigator"
+import { Loading } from "../Loading"
+import { setRefresh } from "../../redux/features/mainSlice"
+import { RootTabbarStackParamList } from "../../navigation/TabBarNavigator"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootTabbarStackParamList, "Create">, NativeStackNavigationProp<RootStackParamList, "PostDetail">>
 
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 20,
         alignItems: "center",
+        backgroundColor: "#fff",
     },
     postBlock: {
         backgroundColor: "#fff",
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
 
     readerTitle: {
         flexDirection: "row",
+        zIndex: 10,
     },
 
     readerTitleBlock: {

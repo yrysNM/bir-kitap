@@ -1,95 +1,32 @@
 import { View, Text, StyleSheet, TouchableOpacity, Easing, FlatList, Dimensions } from "react-native"
 import { useAppSelector } from "../../hook/useStore"
-import { useEffect, useRef, useState } from "react"
-import { UserAPI } from "../../api/userApi"
-import { bookReviewInfo } from "../../api/reviewApi"
+import { useRef, useState } from "react"
 import { Page } from "../../layouts/Page"
 import Icon from "@ant-design/react-native/lib/icon"
 import Modal from "@ant-design/react-native/lib/modal"
 import { logOut as logOutHelper } from "../../helpers/logOut"
 import { useNavigation } from "@react-navigation/native"
-import { BookShowBlock } from "../../components/BookShowBlock"
-import { bookInfo } from "../../api/bookApi"
-import { NoData } from "../../components/NoData"
-import { ReviewCard } from "../../components/ReviewCard"
-import { CarouselBookList } from "../../components/carousel/CarouselBookList"
-import { CloudImage } from "../../components/CloudImage"
-import { CustomTabs } from "../../components/customs/CustomTabs"
-import { postInfo } from "../../api/postApi"
-import { PostCard } from "../../components/PostCard"
 import Popover from "@ant-design/react-native/lib/popover"
 import i18next from "i18next"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useTranslation } from "react-i18next"
 import { Loading } from "../../components/Loading"
+import { UserProfileComponent } from "../../components/UserProfileComponent"
 
 const Item = Popover.Item
 
-interface IProfile {
-    readBooksCount: number
-    reviewsCount: number
-    followersCount: number
-    followingCount: number
-    reviews: bookReviewInfo[]
-    books: {
-        [key: string]: bookInfo[]
-    }
-    posts: postInfo[]
-}
-
-const _infoTemp = {
-    books: {
-        selected: [],
-    },
-    readBooksCount: 0,
-    reviewsCount: 0,
-    followersCount: 0,
-    followingCount: 0,
-    reviews: [],
-    posts: [],
-}
 export const Profile = () => {
     const { i18n } = useTranslation()
     const popoverRef = useRef<Popover | null>(null)
     const navigation = useNavigation()
-    const {
-        userInfo: { fullName, avatar },
-        isLoading,
-        isRefresh,
-    } = useAppSelector((state) => state.mainSlice)
+    const { isLoading } = useAppSelector((state) => state.mainSlice)
     const logOut = logOutHelper()
-    const { fetchData: fetchUserProfileData } = UserAPI("profile")
     const [visibleModal, setVisibleModal] = useState<boolean>(false)
     const [showWarningModal, setShowWarningModal] = useState<boolean>(false)
-    const [info, setInfo] = useState<IProfile>(_infoTemp)
-    const [tab, setTab] = useState<string>("survey")
     const languages = [
         { label: "English", value: "en" },
         { label: "Қазақша", value: "kk" },
     ]
-    const statusList = [
-        { value: "reading", label: "Reading" },
-        { value: "selected", label: "Read Later" },
-        { value: "finish", label: "Read" },
-    ]
-    const tabList = [
-        { value: "survey", label: "Survey" },
-        { value: "reviews", label: "Reviews" },
-        { value: "posts", label: "Posts" },
-    ]
-    useEffect(() => {
-        if (!isRefresh) {
-            fetchUserProfileData({}).then((res) => {
-                if (res.result_code === 0) {
-                    setInfo(JSON.parse(JSON.stringify(res.data)))
-                }
-            })
-        }
-    }, [isRefresh])
-
-    const onChangeTab = (type: string) => {
-        setTab(type)
-    }
 
     const onChangeLang = async (lang: string) => {
         try {
@@ -100,59 +37,13 @@ export const Profile = () => {
         }
     }
 
-    const bookType = Object.keys(info.books)
-
     return (
         <Page>
             <TouchableOpacity onPress={() => setVisibleModal(true)} delayPressIn={5}>
                 <Icon name="setting" style={styles.settingIcon} />
             </TouchableOpacity>
-            <View style={styles.profileInfoWrapper}>
-                <CloudImage url={avatar || ""} styleImg={styles.userProfileImg} />
 
-                <Text style={styles.fullName}>{fullName}</Text>
-
-                <View style={styles.userStatistic}>
-                    <View>
-                        <Text style={styles.statisticNumber}>{info?.readBooksCount}</Text>
-                        <Text style={styles.statisticDescr}>Read</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.statisticNumber}>{info?.reviewsCount}</Text>
-                        <Text style={styles.statisticDescr}>Reviews</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.statisticNumber}>{info?.followersCount}</Text>
-                        <Text style={styles.statisticDescr}>Followers</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.statisticNumber}>{info?.followingCount}</Text>
-                        <Text style={styles.statisticDescr}>Following</Text>
-                    </View>
-                </View>
-
-                <CustomTabs valueList={tabList} onClickTab={onChangeTab} />
-
-                <View style={styles.contentWrapper}>
-                    {tab === "survey" ? (
-                        <View style={{ marginTop: -10, marginBottom: 20 }}>
-                            {bookType.length && !isLoading ? (
-                                bookType.map((item) => (
-                                    <BookShowBlock key={item} bookType={statusList.find((status) => status.value === item)?.label || ""}>
-                                        <View style={{ marginHorizontal: info.books[item].length <= 1 ? 0 : -16 }}>{info.books[item].length ? <CarouselBookList dataList={info.books[item]} /> : <NoData />}</View>
-                                    </BookShowBlock>
-                                ))
-                            ) : (
-                                <NoData />
-                            )}
-                        </View>
-                    ) : tab === "reviews" ? (
-                        <View style={styles.bookWrapper}>{info.reviews.length ? info.reviews.map((item) => <ReviewCard key={item.id} reviewInfo={item} />) : <NoData />}</View>
-                    ) : tab === "posts" ? (
-                        <View style={{ marginTop: 10 }}>{info.posts.length ? info.posts.map((post) => <PostCard postInfo={post} key={post.id} isUpdatePost />) : <NoData />}</View>
-                    ) : null}
-                </View>
-            </View>
+            <UserProfileComponent id="add" />
 
             <Modal popup animationType="slide-up" visible={visibleModal} onClose={() => setVisibleModal(false)} style={styles.modalWrapper} maskClosable>
                 <TouchableOpacity onPressIn={() => setVisibleModal(false)}>

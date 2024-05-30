@@ -1,8 +1,8 @@
-import { clubInfo } from "../api/clubApi"
+import { clubInfo } from "../../api/clubApi"
 import { TouchableOpacity, StyleSheet, View, Text, Image } from "react-native"
-import { CloudImage } from "./CloudImage"
+import { CloudImage } from "../CloudImage"
 import dayjs from "dayjs"
-import ClubImg from "../../assets/images/category/club.png"
+import ClubImg from "../../../assets/images/category/club.png"
 
 type propsInfo = {
     isClubsPage: boolean

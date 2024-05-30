@@ -5,7 +5,7 @@ import { BookApi, bookInfo } from "../../api/bookApi"
 import { View, StyleSheet } from "react-native"
 import { CarouselBookTypeFilter } from "../../components/carousel/CarouselBookTypeFilter"
 import { NoData } from "../../components/NoData"
-import { BookCard } from "../../components/BookCard"
+import { BookCard } from "../../components/entities/BookCard"
 
 export const Collections = () => {
     const [collectionList, setCollectionList] = useState<{ [key: string]: bookInfo[] }>({})

@@ -1,15 +1,15 @@
 import { View, StyleSheet, Text, TouchableOpacity, ImageBackground } from "react-native"
-import { CloudImage } from "./CloudImage"
-import { bookReviewInfo } from "../api/reviewApi"
+import { CloudImage } from "../CloudImage"
+import { bookReviewInfo } from "../../api/reviewApi"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RootStackParamList } from "../navigation/MainNavigation"
+import { RootStackParamList } from "../../navigation/MainNavigation"
 import { Icon } from "@ant-design/react-native"
 import dayjs from "dayjs"
 import { API_URL } from "@env"
-import Skeleton from "./Skeleton"
-import { useAppSelector } from "../hook/useStore"
+import Skeleton from "../Skeleton"
+import { useAppSelector } from "../../hook/useStore"
 
 type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "ReviewDetail" | "BookDetail">>
 

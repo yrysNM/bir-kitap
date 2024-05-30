@@ -1,11 +1,11 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native"
-import { bookInfo } from "../api/bookApi"
-import { CloudImage } from "./CloudImage"
-import { StarRate } from "./StarRate"
+import { bookInfo } from "../../api/bookApi"
+import { CloudImage } from "../CloudImage"
+import { StarRate } from "../StarRate"
 import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RootStackParamList } from "../navigation/MainNavigation"
+import { RootStackParamList } from "../../navigation/MainNavigation"
 
 type propsInfo = {
     bookInfo: bookInfo

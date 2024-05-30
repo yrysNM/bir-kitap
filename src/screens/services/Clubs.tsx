@@ -25,7 +25,7 @@ import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
 import Icon from "@ant-design/react-native/lib/icon"
 import * as Clipboard from "expo-clipboard"
-import { ClubCard } from "../../components/ClubCard"
+import { ClubCard } from "../../components/entities/ClubCard"
 
 dayjs.extend(relativeTime)
 

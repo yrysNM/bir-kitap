@@ -1,15 +1,23 @@
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import Button from "@ant-design/react-native/lib/button"
-import { CloudImage } from "./CloudImage"
-import { UserAPI } from "../api/userApi"
-import { IRecommendationUser } from "../api/authApi"
+import { CloudImage } from "../CloudImage"
+import { UserAPI } from "../../api/userApi"
+import { IRecommendationUser } from "../../api/authApi"
+import { CompositeNavigationProp, useNavigation } from "@react-navigation/native"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import React from "react"
+import { RootStackParamList } from "../../navigation/MainNavigation"
 
 type propsInfo = {
     user: IRecommendationUser
     onToggleFollow: (user: IRecommendationUser) => void
 }
 
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "UserProfile">>
+
 const FollowUserCard = ({ user, onToggleFollow }: propsInfo) => {
+    const navigation = useNavigation<NavigateType>()
     const { fetchData: fetchDataUserFollow } = UserAPI("follow")
     const { fetchData: fetchDataUserOnFollow } = UserAPI("unfollow")
 
@@ -20,7 +28,7 @@ const FollowUserCard = ({ user, onToggleFollow }: propsInfo) => {
         action({ toUserId: id })
     }
     return (
-        <View style={styles.followBlock}>
+        <TouchableOpacity style={styles.followBlock} onPress={() => navigation.navigate("UserProfile", { id: user.id, isFollow: user.followed })} delayPressIn={50}>
             <View style={styles.followContent}>
                 <View>
                     <CloudImage url={user.avatar} styleImg={styles.followImage} />
@@ -36,7 +44,7 @@ const FollowUserCard = ({ user, onToggleFollow }: propsInfo) => {
                     <Text style={!user.followed ? styles.followBtnText : styles.unFollowBtnText}>{!user.followed ? "Follow" : "Unfollow"}</Text>
                 </Button>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

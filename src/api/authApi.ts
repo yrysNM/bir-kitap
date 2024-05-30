@@ -1,4 +1,5 @@
 import useApi from "../hook/useApi"
+import { genreInfo } from "./genreApi"
 
 export interface IRegistration extends IResponse {
     data: {
@@ -19,6 +20,7 @@ export interface IUserInfo {
     birth: number
     gender: string
     avatar?: string
+    genres?: genreInfo[]
 }
 
 export interface IRecommendationUser extends IUserInfo {
