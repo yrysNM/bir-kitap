@@ -10,7 +10,7 @@ import { RouteProp, useRoute } from "@react-navigation/native"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { postInfo } from "../api/postApi"
 import { NoData } from "../components/NoData"
-import { PostCard } from "../components/PostCard"
+import { PostCard } from "../components/entities/PostCard"
 import { useAppSelector } from "../hook/useStore"
 import { BlurView } from "expo-blur"
 import LockImg from "../../assets/images/lock.png"
@@ -20,7 +20,7 @@ import { Loading } from "../components/Loading"
 import { InputItem } from "@ant-design/react-native"
 import { InputStyle } from "../components/InputStyle"
 import { CustomTabs } from "../components/customs/CustomTabs"
-import FollowUserCard from "../components/FollowUserCard"
+import FollowUserCard from "../components/entities/FollowUserCard"
 
 interface IClubGet {
     admin: IUserInfo

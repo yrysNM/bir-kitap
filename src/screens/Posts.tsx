@@ -3,7 +3,7 @@ import { postInfo } from "../api/postApi"
 import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
 import { View, FlatList, StyleSheet } from "react-native"
-import { PostCard } from "../components/PostCard"
+import { PostCard } from "../components/entities/PostCard"
 import { NoData } from "../components/NoData"
 import { RecommendationAPI } from "../api/recommendationApi"
 

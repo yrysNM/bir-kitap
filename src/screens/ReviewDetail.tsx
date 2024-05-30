@@ -5,7 +5,7 @@ import { RootStackParamList } from "../navigation/MainNavigation"
 import { useRoute, RouteProp } from "@react-navigation/native"
 import { Page } from "../layouts/Page"
 import { Header } from "../components/Header"
-import { ReviewCard } from "../components/ReviewCard"
+import { ReviewCard } from "../components/entities/ReviewCard"
 
 interface IReviewDetail extends bookReviewInfo {
     book: bookInfo

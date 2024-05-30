@@ -22,7 +22,7 @@ import { SelectGenres } from "../../components/SelectGenres"
 import { CustomTabs } from "../../components/customs/CustomTabs"
 import { ClubAPI, clubInfo } from "../../api/clubApi"
 import { NoData } from "../../components/NoData"
-import { ClubCard } from "../../components/ClubCard"
+import { ClubCard } from "../../components/entities/ClubCard"
 import { CloudImage } from "../../components/CloudImage"
 
 const _bookInfo = {

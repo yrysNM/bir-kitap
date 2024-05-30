@@ -29,6 +29,7 @@ import { ClubDetail } from "../screens/ClubDetail"
 import { UpdatePost } from "../screens/UpdatePost"
 import { Posts } from "../screens/Posts"
 import { Welcome } from "../screens/Welcome"
+import { UserProfile } from "../screens/UserProfile"
 
 export type RootStackParamList = {
     Root: undefined
@@ -62,6 +63,7 @@ export type RootStackParamList = {
     ClubDetail: { id: string }
     UpdatePost: { id: string }
     Posts: undefined
+    UserProfile: { id: string }
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -114,6 +116,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="ClubDetail" component={ClubDetail} />
                     <Stack.Screen name="UpdatePost" component={UpdatePost} />
                     <Stack.Screen name="Posts" component={Posts} />
+                    <Stack.Screen name="UserProfile" component={UserProfile} />
                 </>
             ) : (
                 <>

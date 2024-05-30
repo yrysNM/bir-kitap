@@ -1,7 +1,7 @@
 import { View, FlatList } from "react-native"
 import { Page } from "../../layouts/Page"
 import { Header } from "../../components/Header"
-import FollowUserCard from "../../components/FollowUserCard"
+import FollowUserCard from "../../components/entities/FollowUserCard"
 import { IRecommendationUser } from "../../api/authApi"
 import { useEffect, useMemo, useState } from "react"
 import { RecommendationAPI } from "../../api/recommendationApi"
@@ -39,31 +39,33 @@ const ReadersUser = () => {
             <View style={{ paddingVertical: 10 }} />
             <SearchInput onEnterSearch={(e) => setSearch(e)} placeholder="Search users" />
 
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                data={searchList}
-                refreshing={isRefresh}
-                onRefresh={() => {
-                    fetchUsers()
-                }}
-                renderItem={({ item }) => (
-                    <FollowUserCard
-                        user={item}
-                        onToggleFollow={(e) =>
-                            setUsers(
-                                users.map((item) => {
-                                    if (e.id === item.id) {
-                                        return e
-                                    }
+            <View style={{ marginTop: 25 }}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    data={searchList}
+                    refreshing={isRefresh}
+                    onRefresh={() => {
+                        fetchUsers()
+                    }}
+                    renderItem={({ item }) => (
+                        <FollowUserCard
+                            user={item}
+                            onToggleFollow={(e) =>
+                                setUsers(
+                                    users.map((item) => {
+                                        if (e.id === item.id) {
+                                            return e
+                                        }
 
-                                    return item
-                                }),
-                            )
-                        }
-                    />
-                )}
-            />
+                                        return item
+                                    }),
+                                )
+                            }
+                        />
+                    )}
+                />
+            </View>
         </Page>
     )
 }
