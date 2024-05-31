@@ -93,7 +93,7 @@ export const UserProfileComponent = ({ id, isFollowUser = false }: propsInfo) =>
                 }
             })
         }
-    }, [isRefresh])
+    }, [isRefresh, id])
 
     useEffect(() => {
         setUserFollow(isFollowUser)
@@ -146,7 +146,7 @@ export const UserProfileComponent = ({ id, isFollowUser = false }: propsInfo) =>
             </View>
 
             <View style={[styles.profileInfoWrapper, { gap: 10, marginTop: -5 }]}>
-                {!isOwnUser() && (
+                {!isOwnUser() && userId !== info.userVO.id && (
                     <View style={{ width: 150 }}>
                         <Button type="primary" style={!userFollow ? styles.followBtn : styles.unFollowBtn} onPress={() => onFollow(id, userFollow)}>
                             <Text style={!userFollow ? styles.followBtnText : styles.unFollowBtnText}>{!userFollow ? "Follow" : "Unfollow"}</Text>

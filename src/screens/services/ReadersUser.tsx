@@ -30,7 +30,7 @@ const ReadersUser = () => {
         if (!isRefreshStore) {
             fetchUsers()
         }
-    }, [isRefreshStore, id])
+    }, [isRefreshStore, id, userId])
 
     const fetchUsers = async () => {
         let res
