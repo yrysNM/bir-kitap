@@ -32,18 +32,24 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
                 return res.data
             })
             .catch((err) => {
+                const returnObj = {
+                    result_code: -1,
+                    result_msg: err.message,
+                }
+
                 if (err.message === "refresh token faild") {
                     logOut()
                     return
+                } else if (err.message === "Network Error") {
+                    Toast.fail("Check your network")
+                    return returnObj
                 }
+
                 dispatch(setLoading(false))
                 dispatch(setError(err))
                 Toast.fail(err.response.data?.result_msg.slice(0, 20))
                 setRes(null)
-                return {
-                    result_code: -1,
-                    result_msg: err.message,
-                }
+                return returnObj
             })
             .finally(() => {
                 dispatch(setLoading(false))

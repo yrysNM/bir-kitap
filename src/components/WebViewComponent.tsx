@@ -106,6 +106,8 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
             if (!isLt5M) {
                 console.log("File size small than 5mb")
                 Toast.fail("File size small than 5mb")
+                dispatch(setLoading(false))
+                return
             }
 
             const param = new FormData()
@@ -157,7 +159,9 @@ export const WebViewComponent = ({ webViewUrl, uploadImgUrl }: propsInfo) => {
                     console.log("data is empty")
                     return {}
                 }
-                navigation.navigate(messageData.data.name, { id: messageData.data.id })
+                const { name, params } = messageData.data
+
+                navigation.navigate(name, params)
             default:
                 return {}
         }
