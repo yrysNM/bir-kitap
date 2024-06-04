@@ -32,7 +32,6 @@ export const BookReaderWebView = ({ url = "https://clicklibrary.wordpress.com/wp
                     ignoreSilentHardwareSwitch={true}
                     javaScriptEnabled={true}
                     style={{ height: "100%", width: "100%", backgroundColor: "#F7F9F6" }}
-                    onError={(e) => console.log(e)}
                     onLoadEnd={(data) => {
                         const { nativeEvent } = data
                         const { title } = nativeEvent
