@@ -16,6 +16,7 @@ import Carousel from "react-native-snap-carousel"
 import Toast from "@ant-design/react-native/lib/toast"
 import { CarouselBookList } from "../components/carousel/CarouselBookList"
 import { RecommendationAPI } from "../api/recommendationApi"
+import Icon from "@ant-design/react-native/lib/icon"
 
 type bookReviewInfo = {
     id?: string
@@ -47,7 +48,7 @@ const _reviewTemp = {
 }
 
 export const BookDetail = () => {
-    const navigate = useNavigation()
+    const navigation = useNavigation()
     const {
         userInfo: { id: userId },
     } = useAppSelector((state) => state.mainSlice)
@@ -124,7 +125,7 @@ export const BookDetail = () => {
 
     return (
         <Page>
-            <TouchableOpacity onPress={() => navigate.goBack()}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image source={ArrowBack} style={styles.iconBack} />
             </TouchableOpacity>
             <View style={styles.bookWrapper}>
@@ -161,6 +162,9 @@ export const BookDetail = () => {
             </View>
 
             <View style={{ marginTop: 35 }}>
+                <TouchableOpacity style={styles.iconBlock} onPress={() => navigation.navigate("BookReaderWebView" as never)}>
+                    <Icon name="read" color="#fff" size={36} />
+                </TouchableOpacity>
                 <Text style={styles.descrText}>Description</Text>
                 <Text style={styles.bookDescr}>{bookInfo?.book.description}</Text>
             </View>
@@ -444,5 +448,15 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 40,
         width: "auto",
+    },
+    iconBlock: {
+        position: "absolute",
+        top: -20,
+        right: 10,
+        paddingHorizontal: 5,
+        paddingVertical: 5,
+        borderRadius: 100,
+        backgroundColor: "#0A78D6",
+        zIndex: 10,
     },
 })

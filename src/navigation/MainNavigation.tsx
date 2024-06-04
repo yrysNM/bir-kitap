@@ -30,6 +30,7 @@ import { UpdatePost } from "../screens/UpdatePost"
 import { Posts } from "../screens/Posts"
 import { Welcome } from "../screens/Welcome"
 import { UserProfile } from "../screens/UserProfile"
+import { BookReaderWebView } from "../screens/web/BookReaderWebView"
 
 export type RootStackParamList = {
     Root: undefined
@@ -64,6 +65,7 @@ export type RootStackParamList = {
     UpdatePost: { id: string }
     Posts: undefined
     UserProfile: { id: string; isFollow: boolean }
+    BookReaderWebView: undefined
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
@@ -117,6 +119,7 @@ export const MainNavigation = () => {
                     <Stack.Screen name="UpdatePost" component={UpdatePost} />
                     <Stack.Screen name="Posts" component={Posts} />
                     <Stack.Screen name="UserProfile" component={UserProfile} />
+                    <Stack.Screen name="BookReaderWebView" component={BookReaderWebView} />
                 </>
             ) : (
                 <>
