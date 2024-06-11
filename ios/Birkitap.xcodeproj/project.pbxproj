@@ -14,7 +14,7 @@
 		96905EF65AED1B983A6B3ABC /* libPods-Birkitap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-Birkitap.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		53242F4CAB7348689D2206B0 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4F6FD60E134019B59F5C0C /* noop-file.swift */; };
+		5A70EF51D97E4F389A51CD00 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB45C431E64F423BBDA00892 /* noop-file.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,8 +31,8 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Birkitap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		4A4F6FD60E134019B59F5C0C /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "Birkitap/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
-		0B119C48B83E475E8F0DC6C1 /* Birkitap-Bridging-Header.h */ = {isa = PBXFileReference; name = "Birkitap-Bridging-Header.h"; path = "Birkitap/Birkitap-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		DB45C431E64F423BBDA00892 /* noop-file.swift */ = {isa = PBXFileReference; name = "noop-file.swift"; path = "Birkitap/noop-file.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
+		E944DAF6A12F489DB93C333A /* Birkitap-Bridging-Header.h */ = {isa = PBXFileReference; name = "Birkitap-Bridging-Header.h"; path = "Birkitap/Birkitap-Bridging-Header.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +57,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				4A4F6FD60E134019B59F5C0C /* noop-file.swift */,
-				0B119C48B83E475E8F0DC6C1 /* Birkitap-Bridging-Header.h */,
+				DB45C431E64F423BBDA00892 /* noop-file.swift */,
+				E944DAF6A12F489DB93C333A /* Birkitap-Bridging-Header.h */,
 			);
 			name = Birkitap;
 			sourceTree = "<group>";
@@ -198,7 +198,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				AAC464B746D5444E8E943B7B /* Birkitap-Bridging-Header.h in Resources */,
+				A9F88095F5A14A7490E4135D /* Birkitap-Bridging-Header.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,7 +274,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				53242F4CAB7348689D2206B0 /* noop-file.swift in Sources */,
+				5A70EF51D97E4F389A51CD00 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

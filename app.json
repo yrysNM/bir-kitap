@@ -20,6 +20,9 @@
                     "android": {
                         "usesCleartextTraffic": true,
                         "enableProguardInReleaseBuilds": true
+                    },
+                    "ios": {
+                        "deploymentTarget": "13.4"
                     }
                 }
             ],
