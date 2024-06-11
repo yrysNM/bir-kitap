@@ -237,7 +237,7 @@ export const ClubDetail = () => {
                 <View>
                     <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>Join Club </Text>
                     <InputStyle inputTitle="Invite code">
-                        <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type="text" style={styles.input} value={inviteCode} onChange={(e) => setInviteCode(e)} />
+                        <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" last type="text" style={styles.input} value={inviteCode} onChange={(e) => setInviteCode(e)} />
                     </InputStyle>
 
                     <Button type="primary" style={styles.createBtn} onPress={() => onJoinClub()}>

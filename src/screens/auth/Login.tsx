@@ -47,11 +47,11 @@ export const Login = () => {
 
             <View style={{ marginTop: 20, gap: 35 }}>
                 <InputStyle inputTitle={"E-mail"}>
-                    <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type="email-address" style={[styles.input]} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
+                    <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" last type="email-address" style={[styles.input]} value={info.username} onChange={(value) => setInfo((info) => ({ ...info, username: value }))}></InputItem>
                 </InputStyle>
 
                 <InputStyle inputTitle={"Password"}>
-                    <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type={!isVisiblePassword ? "password" : "text"} style={[styles.input]} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                    <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" last type={!isVisiblePassword ? "password" : "text"} style={[styles.input]} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
                     {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 6,
         shadowOpacity: 1,
+        height: 42,
     },
     inputExtensionText: {
         marginLeft: 5,

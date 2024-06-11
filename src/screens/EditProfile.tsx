@@ -111,10 +111,10 @@ export const EditProfile = () => {
                 </View>
                 <View style={styles.userInputWrapper}>
                     <InputStyle inputTitle="E-mail">
-                        <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" disabled type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
+                        <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" disabled type="email-address" style={styles.input} placeholder={"example@gmail.com"} name="email" value={edit.email} onChange={(e) => setEdit((edit) => ({ ...edit, email: e }))} />
                     </InputStyle>
                     <InputStyle inputTitle="Full name">
-                        <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
+                        <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" type="text" style={styles.input} placeholder="Jack Jones" name="fullname" value={edit.fullname} onChange={(e) => setEdit((edit) => ({ ...edit, fullname: e }))} />
                     </InputStyle>
 
                     <InputStyle inputTitle="Date of Birth">

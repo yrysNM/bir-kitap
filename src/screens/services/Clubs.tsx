@@ -241,14 +241,14 @@ export const Clubs = () => {
                 <View>
                     <Text style={{ textAlign: "center", fontSize: 20, fontWeight: "600" }}>{showAddClubModal.id === "add" ? "Add Club" : "Update Club"} </Text>
                     <InputStyle inputTitle="Title">
-                        <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type="text" style={styles.input} value={clubInfo.title} onChange={(e) => setClubInfo({ ...clubInfo, title: e })} />
+                        <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" last type="text" style={styles.input} value={clubInfo.title} onChange={(e) => setClubInfo({ ...clubInfo, title: e })} />
                     </InputStyle>
                     <InputStyle inputTitle="Is private club">
                         <Switch checked={clubInfo.isPrivate} onChange={(e) => setClubInfo({ ...clubInfo, isPrivate: e })} />
                     </InputStyle>
                     {showAddClubModal.id !== "add" && (
                         <InputStyle inputTitle="Invite code">
-                            <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" last type="text" style={styles.input} value={inviteCodeValue()} disabled />
+                            <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" last type="text" style={styles.input} value={inviteCodeValue()} disabled />
                             <TouchableOpacity onPress={() => copyToClipboard()} delayPressIn={10} style={[styles.iconWrapper, { position: "absolute", top: 37, right: 50, paddingVertical: 5, paddingHorizontal: 5 }]}>
                                 <Icon name="copy" size={18} color="#0A78D6" />
                             </TouchableOpacity>

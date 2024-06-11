@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions, Image } from "react-native"
 import { Page } from "../layouts/Page"
 import { useEffect, useState } from "react"
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { CompositeNavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { BookApi, bookInfo } from "../api/bookApi"
 import { RootStackParamList } from "../navigation/MainNavigation"
 import { StarRate } from "../components/StarRate"
@@ -17,6 +17,10 @@ import Toast from "@ant-design/react-native/lib/toast"
 import { CarouselBookList } from "../components/carousel/CarouselBookList"
 import { RecommendationAPI } from "../api/recommendationApi"
 import Icon from "@ant-design/react-native/lib/icon"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+
+type NavigateType = CompositeNavigationProp<BottomTabNavigationProp<RootStackParamList, "Root">, NativeStackNavigationProp<RootStackParamList, "BookReaderWebView">>
 
 type bookReviewInfo = {
     id?: string
@@ -48,7 +52,7 @@ const _reviewTemp = {
 }
 
 export const BookDetail = () => {
-    const navigation = useNavigation()
+    const navigation = useNavigation<NavigateType>()
     const {
         userInfo: { id: userId },
     } = useAppSelector((state) => state.mainSlice)
@@ -162,9 +166,11 @@ export const BookDetail = () => {
             </View>
 
             <View style={{ marginTop: 35 }}>
-                <TouchableOpacity style={styles.iconBlock} onPress={() => navigation.navigate("BookReaderWebView" as never)}>
-                    <Icon name="read" color="#fff" size={36} />
-                </TouchableOpacity>
+                {bookInfo?.book.bookUrl && bookInfo.book.bookUrl.length && (
+                    <TouchableOpacity style={styles.iconBlock} onPress={() => navigation.navigate("BookReaderWebView", { bookUrl: bookInfo.book.bookUrl || "" })}>
+                        <Icon name="read" color="#fff" size={36} />
+                    </TouchableOpacity>
+                )}
                 <Text style={styles.descrText}>Description</Text>
                 <Text style={styles.bookDescr}>{bookInfo?.book.description}</Text>
             </View>
@@ -197,7 +203,7 @@ export const BookDetail = () => {
                         <StarRate size={45} rateNumber={reviewInfo.rating} onChangeRate={(e) => setReviewInfo({ ...reviewInfo, rating: e })} />
                     </View>
                     <View>
-                        <TextareaItem cursorColor="#0A78D6" selectionColor="#0A78D6" last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
+                        <TextareaItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" last style={styles.textAreaInput} rows={4} count={400} value={reviewInfo.message} onChange={(e) => setReviewInfo({ ...reviewInfo, message: e || "" })} placeholder="Type review here ..." />
                     </View>
                     <Button type="primary" style={styles.btnReview} onPress={() => onSubmitReview()}>
                         Submit review

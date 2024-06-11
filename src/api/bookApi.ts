@@ -10,6 +10,7 @@ export type bookInfo = {
     pages?: number
     description?: string
     rating?: number
+    bookUrl?: string
 }
 
 export type categoryInfo = {

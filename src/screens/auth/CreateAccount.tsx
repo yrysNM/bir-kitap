@@ -64,15 +64,15 @@ export const CreateAccount = () => {
             <Header isCustomHeader={true} title={"Create an account"} />
             <View style={{ marginTop: 20, gap: 11 }}>
                 <InputStyle inputTitle={"E-mail"}>
-                    <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" type="email-address" style={styles.input} value={info.email} onChange={(value) => setInfo((info) => ({ ...info, email: value }))} placeholder={"example@gmail.com"} />
+                    <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" type="email-address" style={styles.input} value={info.email} onChange={(value) => setInfo((info) => ({ ...info, email: value }))} placeholder={"example@gmail.com"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Nickname"}>
-                    <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
+                    <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" type="text" style={styles.input} value={info.fullName} onChange={(value) => setInfo((info) => ({ ...info, fullName: value }))} placeholder={"Jack Jones"} />
                 </InputStyle>
                 <InputStyle inputTitle={"Number phone"}>
                     <MaskInput
                         cursorColor="#0A78D6"
-                        selectionColor="#0A78D6"
+                        selectionColor="rgba(10, 120, 214, 0.3)"
                         value={info.phone}
                         onChangeText={(value) => setInfo({ ...info, phone: value })}
                         placeholder="(777) 777-77-77"
@@ -83,7 +83,7 @@ export const CreateAccount = () => {
                     <Text style={styles.numberText}>+7</Text>
                 </InputStyle>
                 <InputStyle inputTitle={"Password"}>
-                    <InputItem cursorColor="#0A78D6" selectionColor="#0A78D6" type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
+                    <InputItem cursorColor="#0A78D6" selectionColor="rgba(10, 120, 214, 0.3)" type={!isVisiblePassword ? "password" : "text"} style={styles.input} value={info.password} onChange={(value) => setInfo((info) => ({ ...info, password: value }))} placeholder={"******"} />
                     {isVisiblePassword ? <Icon onPress={() => setIsVisiblePassword(false)} name={"eye"} style={styles.iconEye} /> : <Icon onPress={() => setIsVisiblePassword(true)} name={"eye-invisible"} style={styles.iconEye} />}
                     <Text style={styles.inputExtensionText}>Use at least 8 characters</Text>
                 </InputStyle>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     numberText: {
         position: "absolute",
         bottom: 0,
-        top: "50%",
+        top: "56%",
         width: 20,
         right: 0,
         left: 10,
@@ -245,6 +245,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 6,
         shadowOpacity: 1,
+        height: 42,
     },
     inputExtensionText: {
         marginLeft: 5,

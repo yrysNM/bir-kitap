@@ -47,7 +47,7 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
 
                 dispatch(setLoading(false))
                 dispatch(setError(err))
-                Toast.fail(err.response.data?.result_msg.slice(0, 20))
+                Toast.fail(err.response?.data?.result_msg.slice(0, 20) || "Unknown error")
                 setRes(null)
                 return returnObj
             })
