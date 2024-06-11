@@ -65,7 +65,7 @@ export type RootStackParamList = {
     UpdatePost: { id: string }
     Posts: undefined
     UserProfile: { id: string; isFollow: boolean }
-    BookReaderWebView: undefined
+    BookReaderWebView: { bookUrl: string }
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>()

@@ -180,7 +180,7 @@ export const CreatePostAndBook = () => {
     const tabHeader = (tabProps: TabBarPropsType) => {
         const { goToTab, onTabClick, activeTab } = tabProps
         return (
-            <View style={{ position: "relative", bottom: -10, overflow: "hidden", paddingHorizontal: -16, width: "100%", backgroundColor: "#f7f9f6" }}>
+            <View style={{ position: "relative", bottom: -10, paddingHorizontal: -16, width: "100%", backgroundColor: "#F7F9F6" }}>
                 <CustomTabs
                     valueList={tabs}
                     onClickTab={(e) => {

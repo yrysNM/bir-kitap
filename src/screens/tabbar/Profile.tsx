@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         padding: 10,
         backgroundColor: "#fff",
-        borderRadius: 1000,
+        borderRadius: 100,
     },
     profileInfoWrapper: {
         marginTop: 70,
