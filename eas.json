@@ -22,7 +22,12 @@
         "preview4": {
             "distribution": "internal"
         },
-        "production": {}
+        "production": {
+            "env": {
+                "EXPO_APPLE_PASSWORD": "WLWqP37MCDiPk7n",
+                "EXPO_APPLE_APP_SPECIFIC_PASSWORD": "test01"
+            }
+        }
     },
     "submit": {
         "production": {
@@ -31,7 +36,8 @@
                 "ascApiKeyPath": "./access-key.p8",
                 "ascApiKeyIssuerId": "0e51d281-fe10-4e35-82ec-234e5c216d0f",
                 "ascApiKeyId": "Z8WKV8BFU8",
-                "appleId": "yrysbek.or.s@gmail.com"
+                "appleId": "yrysbek.or.s@gmail.com",
+                "appleTeamId": "5YX83877Q3"
             }
         }
     }
