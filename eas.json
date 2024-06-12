@@ -22,15 +22,7 @@
         "preview4": {
             "distribution": "internal"
         },
-        "production": {
-            "env": {
-                "EXPO_APPLE_PASSWORD": "WLWqP37MCDiPk7n",
-                "EXPO_APPLE_APP_SPECIFIC_PASSWORD": "test01",
-                "APP_STORE_CONNECT_API_KEY_ID": "Z8WKV8BFU8",
-                "APP_STORE_CONNECT_ISSUER_ID": "0e51d281-fe10-4e35-82ec-234e5c216d0f",
-                "APP_STORE_CONNECT_PRIVATE_KEY": "339fa0c0671f425fb7312f9b8cb46e94"
-            }
-        }
+        "production": {}
     },
     "submit": {
         "production": {
@@ -38,7 +30,7 @@
                 "ascAppId": "6504216011",
                 "ascApiKeyPath": "./access-key.p8",
                 "ascApiKeyIssuerId": "0e51d281-fe10-4e35-82ec-234e5c216d0f",
-                "ascApiKeyId": "Z8WKV8BFU8",
+                "ascApiKeyId": "538JBLWNJQ",
                 "appleId": "estaidev@gmail.com",
                 "appleTeamId": "5YX83877Q3"
             }
