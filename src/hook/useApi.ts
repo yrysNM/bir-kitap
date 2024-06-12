@@ -40,9 +40,6 @@ const useApi = <T>(url: string, method: string = "POST"): UseApiResult<T> => {
                 if (err.message === "refresh token faild") {
                     logOut()
                     return
-                } else if (err.message === "Network Error") {
-                    Toast.fail("Check your network")
-                    return returnObj
                 }
 
                 dispatch(setLoading(false))
