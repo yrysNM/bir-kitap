@@ -2,7 +2,7 @@
     "expo": {
         "name": "Birkitap",
         "slug": "bir-kitap",
-        "version": "0.0.3",
+        "version": "0.0.4",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
@@ -39,7 +39,8 @@
             "supportsTablet": true,
             "bundleIdentifier": "mobile.birkitap",
             "jsEngine": "jsc",
-            "buildNumber": "2"
+            "buildNumber": "2",
+            "googleServicesFile": "./google-service-ios.plist"
         },
         "android": {
             "package": "mobile.birkitap",
@@ -48,7 +49,7 @@
                 "backgroundColor": "#F7F9F6"
             },
             "versionCode": 2,
-            "googleServicesFile": "./google-services.json"
+            "googleServicesFile": "./google-services-android.json"
         },
         "web": {
             "favicon": "./assets/favicon.png"
